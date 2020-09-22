@@ -5,9 +5,9 @@ from datetime import datetime
 from pymongo import MongoClient
 from flask import g, current_app
 from werkzeug.security import generate_password_hash
-from default_data import (default_master_config,
-                          default_category,
-                          default_realtime)
+from config import (default_master_config,
+                    default_realtime)
+from app.controllers.user import signup
 
 
 def get_mongo_cur():
@@ -32,25 +32,17 @@ def init_models(config):
     cur = MongoClient(config.MONGODB_URI)
     db_name = config.MONGODB_DB_NAME
     
-    # col = cur[db_name]['master_config']
-    # col.update(
-    #     {"__author__": "837477"},
-    #     {"$set": {"__author__": "837477"}},
-    #     upsert=True)
-
+    # Create master_config collection
     col = cur[db_name]['master_config']
-    master_config = list(col.find())
+    col.insert_many(default_master_config)
 
+    # Create realtime collection
+    col = cur[db_name]['realtime']
+    col.insert_one(default_realtime)
 
-    col = cur[db_name]['user']
-    col.update_one(
-        {"user_id": config.ADMIN_ID},
-        {
-            "$set":{
-                "user_id": config.ADMIN_ID,
-                "user_pw": generate_password_hash(config.ADMIN_PW),
-                "created_at": datetime.now()
-            }
-        },
-        upsert=True)
+    # Create admin account
+    signup(cur,
+           config.ADMIN_ID,
+           generate_password_hash(config.ADMIN_PW))
+    
     cur.close()

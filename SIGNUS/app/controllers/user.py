@@ -23,14 +23,26 @@ def signup(mongo_cur, user_id, user_pw):
     token > JWT (String)
     '''
     user_model = User(mongo_cur)
-    if user_model.find_one(user_id):
+    if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
         return False
     
-
-
+    # SJ_AI 대체 임시 변수
+    VEC_SIZE = 26
+    TOPICS_SZIE = 30
+    TEMP_TOPIC = numpy.ones(TOPICS_SZIE)
     user = {'user_id': user_id,
             'user_pw': generate_password_hash(user_pw),
-            'ft_vector': (numpy.zeros(FastText.VEC_SIZE)).tolist()
+            'ft_vector': (numpy.zeros(VEC_SIZE)).tolist(),
+            'tag': {},
+            'tag_sum': 1,
+            'tag_vector': (numpy.zeros(VEC_SIZE)).tolist(),
+            'topic': (TEMP_TOPIC / TEMP_TOPIC.sum()).tolist(),
+            'fav_list': [],
+            'view_list': [],
+            'newsfeed_list': [],
+            'search_list': [],
+            'updated_at': datetime.now(),
+            'cold_point': 0,
             'created_at': datetime.now()}
 
     user_model.insert_one(user)
@@ -52,7 +64,7 @@ def signin(mongo_cur, user_id, user_pw):
     token > JWT 문자열(String)
     '''
     user_model = User(mongo_cur)
-    user = user_model.find_one(user_id)
+    user = user_model.find_one(user_id, {"_id": 0, "user_id": 1})
     if not user:
         return None
     if not check_password_hash(user['user_pw'], user_pw):
@@ -63,7 +75,7 @@ def signin(mongo_cur, user_id, user_pw):
 
 def get_user(mongo_cur, user_id):
     '''
-    Get user (유저 정보 반환)
+    Get user infomation (유저 정보 반환)
 
     Params
     ---------
@@ -75,4 +87,63 @@ def get_user(mongo_cur, user_id):
     user_info > 회원 정보
     '''
     user_model = User(mongo_cur)
-    return {'user_info': user_model.find_one(user_id)}
+    return user_model.find_one(user_id, {"_id": 0,
+                                         "user_id": 1,
+                                         "fav_list": 1,
+                                         "view_list": 1,
+                                         "newsfeed_list": 1})
+
+
+def reset_tendency(mongo_cur, user_id):
+    '''
+    Reset tendency (사용자 관심사 초기화)
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+    user_id > 아이디
+
+    Return
+    ---------
+    result > True or False
+    '''
+    user_model = User(mongo_cur)
+    if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
+        return False
+    
+    # SJ_AI 대체 임시 변수
+    VEC_SIZE = 26
+    TOPICS_SZIE = 30
+    TEMP_TOPIC = numpy.ones(TOPICS_SZIE)
+    user = {'ft_vector': (numpy.zeros(VEC_SIZE)).tolist(),
+            'tag': {},
+            'tag_sum': 1,
+            'tag_vector': (numpy.zeros(VEC_SIZE)).tolist(),
+            'topic': (TEMP_TOPIC / TEMP_TOPIC.sum()).tolist(),
+            'fav_list': [],
+            'view_list': [],
+            'newsfeed_list': [],
+            'search_list': [],
+            'updated_at': datetime.now(),
+            'cold_point': 0}
+    return user_model.update_one(user_id, user)
+
+
+def update_updated_at(mongo_cur, user_id):
+    '''
+    Update user updated_at time (사용자 액션 시간 갱신)
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+    user_id > 아이디
+
+    Return
+    ---------
+    result > True or False
+    '''
+    user_model = User(mongo_cur)
+    if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
+        return False
+    
+    return user_model.update_one(user_id, {"updated_at": datetime.now()})
