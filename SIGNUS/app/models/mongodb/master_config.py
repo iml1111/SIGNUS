@@ -5,7 +5,7 @@ from flask import current_app
 
 
 class MasterConfig:
-    """RAAS DB user Model"""
+    """SIGNUS DB Masterconfig Model"""
     def __init__(self, client):
         self.col = client[current_app.config['MONGODB_DB_NAME']]['master_config']
 

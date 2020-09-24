@@ -5,7 +5,7 @@ from flask import current_app
 
 
 class Log:
-    """RAAS DB Log Model"""
+    """SIGNUS DB Log Model"""
 
     def __init__(self, client):
         self.col = client[current_app.config['MONGODB_DB_NAME']]['log']

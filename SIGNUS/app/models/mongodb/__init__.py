@@ -43,6 +43,6 @@ def init_models(config):
     # Create admin account
     signup(cur,
            config.ADMIN_ID,
-           generate_password_hash(config.ADMIN_PW))
+           config.ADMIN_PW)
     
     cur.close()

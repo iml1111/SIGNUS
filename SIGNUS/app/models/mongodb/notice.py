@@ -1,18 +1,18 @@
 '''
-MongoDB posts Collection Model
+MongoDB notice Collection Model
 '''
 from flask import current_app
 from bson.objectid import ObjectId
 
 
-class Posts:
-    """SIGNUS DB posts Model"""
+class Notice:
+    """SIGNUS DB notice Model"""
     def __init__(self, client):
-        self.col = client[current_app.config['MONGODB_DB_NAME']]['posts']
+        self.col = client[current_app.config['MONGODB_DB_NAME']]['notice']
 
-    def insert_one(self, post_obj):
+    def insert_one(self, notice_obj):
         ''' 공지사항 추가 '''
-        self.col.insert_one(post_obj)
+        self.col.insert_one(notice_obj)
         return True
 
     def find_one(self, obj_id, projection=None):
@@ -34,14 +34,6 @@ class Posts:
         self.col.update_one(
             {"_id": ObjectId(obj_id)},
             {"$set": update_object}
-        )
-        return True
-    
-    def update_increase(self, obj_id, _type, num):
-        ''' 특정 컬럼 증가/감소 '''
-        self.col.update_one(
-            {"_id": ObjectId(obj_id)},
-            {"$inc": {_type: num}}
         )
         return True
 

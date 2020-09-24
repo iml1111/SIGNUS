@@ -21,10 +21,6 @@ def manifest_robot():
 
 
 @template.route("/")
-@template.route("/XXXXXX")
-@template.route("/XXXXXX/static")
-@template.route("/XXXXXX/dynamic")
-@template.route("/XXXXXX/multi")
 def page():
     '''return client app'''
     return render_template('index.html')
