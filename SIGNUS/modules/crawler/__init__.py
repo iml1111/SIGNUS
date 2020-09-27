@@ -1,5 +1,0 @@
-MONGODB_HOST = ''
-MONGODB_ID = 'iml'
-MONGODB_PW = ''
-
-JWT_SECRET_KEY = ''
