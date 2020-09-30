@@ -1,7 +1,7 @@
 '''
 SIGNUS management Controller
 '''
-from bson import json_util
+from bson.json_util import dumps
 from app.models.mongodb.notice import Notice
 
 
@@ -21,8 +21,8 @@ def get_notice(mongo_cur, obj_id):
     '''
     Notice_model = Notice(mongo_cur)
     if obj_id:
-        return json_util.dumps(Notice_model.find_one(obj_id))
-    return json_util.dumps(Notice_model.find_many())
+        return dumps(Notice_model.find_one(obj_id))
+    return dumps(Notice_model.find_many())
 
 
 def insert_notice(mongo_cur, title, post):

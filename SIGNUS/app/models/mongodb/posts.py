@@ -3,6 +3,7 @@ MongoDB posts Collection Model
 '''
 from flask import current_app
 from bson.objectid import ObjectId
+from datetime import timedelta, datetime
 
 
 class Posts:
@@ -28,6 +29,31 @@ class Posts:
             {},
             projection
         ))
+
+    def find_recom_posts(self, info_num, default_date, _limit):
+        ''' 추천 뉴스피드 전용 '''
+        return list(self.col.find(
+            {
+                '$and':
+                [
+                    {'info_num': {'$in': info_num_list}},
+                    {'end_date': {'$gt': datetime.now()}},
+                    {'date': {'$gt': datetime.now() - timedelta(days=default_date)}}
+                ]
+            }
+        ).sort([('date', -1)]).limit(_limit))
+
+    def find_popularity_posts(self, default_date, _limit):
+        ''' 인기 뉴스피드 전용 '''
+        return list(self.col.find(
+            {
+                '$and':
+                [
+                    {'popularity': {'$gte': 0}},
+                    {'date': {'$gt': datetime.now() - timedelta(days=default_date)}}
+                ]
+            }
+        ).sort([('popularity', -1)]).limit(_limit))
 
     def update_one(self, obj_id, update_object):
         ''' 특정 공지사항 업데이트 '''

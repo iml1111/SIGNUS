@@ -5,6 +5,8 @@ import os
 import sys
 from datetime import datetime
 from logging.config import dictConfig
+from modules.tokenizer import Tokenizer
+from modules.recommender.fasttext import Recommender
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -20,6 +22,13 @@ class Config:
     MONGODB_URI = os.environ['SIGNUS_MONGODB_URI']
     MONGODB_DB_NAME = 'signus'
 
+    # FastText
+    FT = Recommender("../../model/ft/signus_ft_model")
+
+    # Tokenizer
+    TK = Tokenizer()
+
+    # Maximum API time
     SLOW_API_TIME = 0.5
 
     # master_config 기본 값
@@ -70,16 +79,13 @@ class Config:
         "RECOMMENDATION": # 추천에 필요한 지표
         {
             "FASTTEXT_SIM_PERCENT": 0.7,
-            "TOS_WEIGHT": 1,
-            "TAS_WEIGHT": 1,
             "FAS_WEIGHT": 1,
             "RANDOM_WEIGHT": 1,
             "DEFAULT_DATE": 60,
             "POSTS_NUM_BY_CATEGORY": [60, 33, 33, 33, 18],
-            # ???? 알아봐야함.
-            "SJ_RECOMMENDATION_POST_NUM": 500,
-            "SJ_RECOMMENDATION_POST_WEIGHT": 150,
-            "SJ_RECOMMENDATION_POST_MINUS_WEIGHT": -75
+            "RECOM_POST_NUM": 500,
+            "RECOM_POST_WEIGHT": 150,
+            "RECOM_POST_MINUS_WEIGHT": -75
         },
         "TENDENCY": # 관심사 측정에 필요한 지표
         {
