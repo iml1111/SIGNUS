@@ -2,8 +2,24 @@
 FastText Train Module
 '''
 import csv
+import sys
 from gensim.models import FastText
-from modules.recommender.fasttext.decorators import * 
+from gensim.models.callbacks import CallbackAny2Vec
+from modules.recommender.fasttext.decorators import *
+
+class callback(CallbackAny2Vec):
+    '''학습기 Verbose Callback 클래스'''
+
+    def __init__(self, total_epoch):
+        self.epoch = 1
+        self.total_epoch = total_epoch
+        print()
+
+    def on_epoch_end(self, model):
+        sys.stdout.write("\033[F")
+        print('Completed epoch {} / {}'.format(self.epoch, self.total_epoch)) 
+        self.epoch += 1
+
 
 class Trainer:
     '''FastText Trainer Class'''
@@ -12,7 +28,7 @@ class Trainer:
         self.VEC_SIZE = 30
         self.WINDOWS = 10
         self.MIN_COUNT = 10
-        self.ITERATION = 1000
+        self.ITERATION = 10
         self.WORKERS = 4
         
         self.model = None
@@ -72,10 +88,16 @@ class Trainer:
         self.model = FastText(
             size=self.VEC_SIZE,
             window=self.WINDOWS,
-            min_count=self.MIN_COUNT,
-            iter=self.ITERATION,
+            min_count=self.MIN_COUNT)
+        self.model.build_vocab(sentences=self.corpora)
+        self.model.train(
+            sentences=self.corpora,
+            total_examples=len(self.corpora),
+            epochs=self.ITERATION,
             workers=self.WORKERS,
-            sentences=self.corpora)
+            callbacks=[callback(self.ITERATION)],
+            compute_loss=True)
+
 
     @model_require
     @timer
@@ -84,9 +106,12 @@ class Trainer:
         '''전이학습 메소드'''
         self.model.build_vocab(self.corpora, update=True)
         self.model.train(
-            self.corpora,
-            total_examples=self.model.corpus_count,
-            epochs=self.model.epochs)
+            sentences=self.corpora,
+            total_examples=len(self.corpora),
+            epochs=self.model.epochs,
+            workers=self.WORKERS,
+            callbacks=[callback(self.ITERATION)],
+            compute_loss=True)
 
     @model_require
     def is_in_dict(self, word):

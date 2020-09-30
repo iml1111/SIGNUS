@@ -24,7 +24,7 @@ trainer.set_params(
     vec_size=10,
     windows=3,
     min_count=1,
-    iteration=1,
+    iteration=10,
     workers=1
 )
 pprint(trainer.get_params())

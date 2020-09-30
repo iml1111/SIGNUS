@@ -3,7 +3,7 @@ User View Module
 '''
 from flask import g, request, Blueprint
 from app.api import input_check
-from app.api.decorators import timer, login_required
+from app.api.decorators import timer, login_required, login_optional
 from app.controllers.user import (signup,
                                   signin,
                                   fav_push,
@@ -58,7 +58,7 @@ def api_user_fav_pull(obj_id):
 
 @user.route("/view/push/<string:obj_id>", methods=["PUT"])
 @timer
-@login_required
+@login_optional
 def api_user_view_push(obj_id):
     '''view_list에 post 추가 API'''
 

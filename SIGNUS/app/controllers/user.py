@@ -29,12 +29,9 @@ def signup(mongo_cur, user_id, user_pw):
     
     # SJ_AI 대체 임시 변수
     VEC_SIZE = 26
-    TOPICS_SZIE = 30
-    TEMP_TOPIC = numpy.ones(TOPICS_SZIE)
     user = {'user_id': user_id,
             'user_pw': generate_password_hash(user_pw),
-            'ft_vector': (numpy.zeros(VEC_SIZE)).tolist(),
-            'topic': (TEMP_TOPIC / TEMP_TOPIC.sum()).tolist(),
+            'topic_vector': (numpy.zeros(VEC_SIZE)).tolist(),
             'fav_list': [],
             'view_list': [],
             'newsfeed_list': [],
