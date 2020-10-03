@@ -75,7 +75,7 @@ if __name__ == '__main__':
 	#post_info 테이블, recent_post 테이블 생성
 	post_info(db)
 	#url 테이블 생성
-	init_url_collection(db)
+	# init_url_collection(db)
 	#date 테이블 생성 밎 dictionary화
 	init_date_collection(db)
 	#date 생성

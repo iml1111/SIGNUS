@@ -33,7 +33,8 @@ def create_table_category(db):
 				'sig48_vms_volunteer','sig50_campuspick_parttime','sig51_univ20_main','sig52_youthcenter_info',
 				'sig53_kosaf_info','sig54_naver_news'
 			],
-			'info_num': 0
+			'info_num': 0,
+			'topic_vector': 0
 		},
 		#동아리&모임
 		{
@@ -43,8 +44,8 @@ def create_table_category(db):
 				'sig27_campuspick_language', 'sig27_campuspick_job', 'sig27_campuspick_certificate',
 				'sig27_campuspick_study', 'sig28_campuspick_club'
 			],
-			'info_num': 0
-
+			'info_num': 1,
+			'topic_vector': 0
 		},
 		#공모전&행사
 		{
@@ -54,8 +55,8 @@ def create_table_category(db):
 				'sig25_thinkgood_info', 'sig26_campuspick_activity', 'sig26_campuspick_contest',
 				'sj31_dodream_event', 'sj32_dodream_promotion', 'sig35_detizen_contest', 'sig35_detizen_activity'
 			],
-			'info_num': 0
-
+			'info_num': 2,
+			'topic_vector': 0
 		},
 		#진로&구인
 		{
@@ -68,8 +69,8 @@ def create_table_category(db):
 				'sj42_jobsolutionAnother_review', 'sj42_jobsolutionAnother_interview', 'sig43_indeed_job',
 				'sig45_infor_notice','sig45_external_notice','sig45_review_data','sig50_campuspick_parttime'
 			],
-			'info_num': 0
-
+			'info_num': 3,
+			'topic_vector': 0
 		},
 		#예외(검색용)
 		{
@@ -92,8 +93,8 @@ def create_table_category(db):
 				'sj16_navercafe_eleinfoengineer', 'sj16_navercafe_imc', 'sj16_navercafe_club', 'sj21_sejong_wiki',
 				'sj9_computer_notice'
 			],
-			'info_num': 0
-
+			'info_num': 4,
+			'topic_vector': 0
 		},
 		{
 			'category_name': '미사용',
@@ -101,8 +102,8 @@ def create_table_category(db):
 			[
 				'sj23_everytime_book', 'sj34_everytime_all'
 			],
-			'info_num': 0
-
+			'info_num': 5,
+			'topic_vector': 0
 		}
 	])
 	print(":::: category 테이블 생성 완료! ::::")
