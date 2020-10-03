@@ -9,14 +9,21 @@ class Category:
     def __init__(self, client):
         self.col = client[current_app.config['MONGODB_DB_NAME']]['category']
 
-    def find_one(self, obj_id, projection=None):
+    def find_one(self, category_name, projection=None):
         ''' 특정 Document 반환 '''
         return self.col.find_one(
-            {"_id": ObjectId(obj_id)},
+            {"category_name": category_name},
             projection
         )
 
-    def find_many(self, projection=None):
+    def find_many(self, category_list, projection=None):
+        ''' 다수 Document 반환 '''
+        return list(self.col.find(
+            {"category_name": {"$in": category_list}},
+            projection
+        ))
+    
+    def find_all(self, projection=None):
         ''' 모든 Document 반환 '''
         return list(self.col.find(
             {},

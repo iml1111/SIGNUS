@@ -169,7 +169,7 @@ def fav_push(mongo_cur, obj_id, user):
     post = Posts_model.find_one(obj_id)
     fav_object = {
         '_id': str(post['_id']),
-        'topic': post['topic'],
+        'topic_vector': post['topic_vector'],
         'token': post['token'],
         'post_date': post['date'],
         'title': post['title'],
@@ -233,7 +233,7 @@ def view_push(mongo_cur, obj_id, user):
     post = Posts_model.find_one(obj_id)
     view_object = {
         '_id': str(post['_id']),
-        'topic': post['topic'],
+        'topic_vector': post['topic_vector'],
         'token': post['token'],
         'post_date': post['date'],
         'title': post['title'],

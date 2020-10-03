@@ -2,6 +2,7 @@
 SIGNUS management Controller
 '''
 from bson.json_util import dumps
+from datetime import datetime
 from app.models.mongodb.notice import Notice
 
 
@@ -40,7 +41,7 @@ def insert_notice(mongo_cur, title, post):
     True or False
     '''
     Notice_model = Notice(mongo_cur)
-    return Notice_model.insert_one({"title": title, "post": post})
+    return Notice_model.insert_one({"title": title, "post": post, "date": datetime.now()})
 
 
 def update_notice(mongo_cur, obj_id, title, post):

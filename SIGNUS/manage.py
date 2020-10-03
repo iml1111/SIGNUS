@@ -8,6 +8,7 @@ from config import config
 from app import create_app
 from app import models
 from app.models.mongodb import get_mongo_cur
+from modules import bg_process
 
 application = create_app(os.getenv('FLASK_CONFIG') or 'default')
 
@@ -17,6 +18,15 @@ def make_shell_context():
     '''Init shell context'''
     return dict(mongo_cur=get_mongo_cur())
 
+@application.cli.command()
+def bg_interest():
+    """User interest score measurement."""
+    bg_process.user_interest(config[os.getenv('FLASK_CONFIG') or 'default'])
+
+@application.cli.command()
+def bg_realtime():
+    """Realtime update."""
+    bg_process.realtime(config[os.getenv('FLASK_CONFIG') or 'default'])
 
 @application.cli.command()
 def db_init():

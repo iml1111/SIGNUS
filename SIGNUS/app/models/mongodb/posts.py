@@ -30,13 +30,15 @@ class Posts:
             projection
         ))
 
-    def find_recom_posts(self, info_num, default_date, _limit):
-        ''' 추천 뉴스피드 전용 '''
+    def find_category_posts(self, info_num, default_date, _limit):
+        ''' 추천, 카테고리 뉴스피드에서 사용 '''
+        ''' 카테고리에 매칭되는 post 찾기 '''
+        ''' 최근 x일 적용 버전 '''
         return list(self.col.find(
             {
                 '$and':
                 [
-                    {'info_num': {'$in': info_num_list}},
+                    {'info_num': info_num},
                     {'end_date': {'$gt': datetime.now()}},
                     {'date': {'$gt': datetime.now() - timedelta(days=default_date)}}
                 ]
@@ -63,11 +65,11 @@ class Posts:
         )
         return True
     
-    def update_increase(self, obj_id, _type, num):
+    def update_increase(self, obj_id, inc_object):
         ''' 특정 컬럼 증가/감소 '''
         self.col.update_one(
             {"_id": ObjectId(obj_id)},
-            {"$inc": {_type: num}}
+            {"$inc": inc_object}
         )
         return True
 

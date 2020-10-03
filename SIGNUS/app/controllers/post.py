@@ -19,7 +19,7 @@ def post_like(mongo_cur, obj_id):
     True or False
     '''
     Posts_model = Posts(mongo_cur)
-    return Posts_model.update_increase(obj_id, "fav_cnt", 1)
+    return Posts_model.update_increase(obj_id, {'fav_cnt': 1, 'popularity': 3})
 
 
 def post_unlike(mongo_cur, obj_id):
@@ -37,7 +37,7 @@ def post_unlike(mongo_cur, obj_id):
     True or False
     '''
     Posts_model = Posts(mongo_cur)
-    return Posts_model.update_increase(obj_id, "fav_cnt", -1)
+    return Posts_model.update_increase(obj_id, {'fav_cnt': -1, 'popularity': -3})
 
 def post_view(mongo_cur, obj_id):
     '''
@@ -53,4 +53,4 @@ def post_view(mongo_cur, obj_id):
     True or False
     '''
     Posts_model = Posts(mongo_cur)
-    return Posts_model.update_increase(obj_id, "view", 1)
+    return Posts_model.update_increase(obj_id, {'view': 1, 'popularity': 1})

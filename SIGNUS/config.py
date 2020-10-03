@@ -24,9 +24,11 @@ class Config:
 
     # FastText
     FT = Recommender("../../model/ft/signus_ft_model")
+    print("FastText Load Complete ...")
 
     # Tokenizer
     TK = Tokenizer()
+    print("Tokenizer Load Complete ...")
 
     # Maximum API time
     SLOW_API_TIME = 0.5
@@ -76,47 +78,36 @@ class Config:
 
     # 각종 변수
     INDICATORS = {
-        "RECOMMENDATION": # 추천에 필요한 지표
-        {
-            "FASTTEXT_SIM_PERCENT": 0.7,
-            "FAS_WEIGHT": 1,
-            "RANDOM_WEIGHT": 1,
-            "DEFAULT_DATE": 60,
-            "POSTS_NUM_BY_CATEGORY": [60, 33, 33, 33, 18],
-            "RECOM_POST_NUM": 500,
-            "RECOM_POST_WEIGHT": 150,
-            "RECOM_POST_MINUS_WEIGHT": -75
-        },
-        "TENDENCY": # 관심사 측정에 필요한 지표
-        {
-            "FAV_TAG_WEIGHT": 4,
-            "VIEW_TAG_WEIGHT": 3,
-            "TAG_SUM_WEIGHT": 1.5,
-            "FAV_TOPIC_WEIGHT": 35,
-            "VIEW_TOPIC_WEIGHT": 30,
-            "SEARCH_TOPIC_WEIGHT": 25,
-            "NEWSFEED_TOPIC_WEIGHT": 10
-        },
-        "USER": # 사용자 관련 지표
-        {
-            "LOG_LIMIT": {"view": 100, "search": 40, "fav": 20, "newsfeed": 30},
-            "COLD_START": 10,
-            "TAG_SUM_WEIGHT": 1.5,
-            "FAV_TOPIC_WEIGHT": 35,
-            "VIEW_TOPIC_WEIGHT": 30,
-            "SEARCH_TOPIC_WEIGHT": 25,
-            "NEWSFEED_TOPIC_WEIGHT": 10
-        },
-        "NUMBER_LIMIT": # 개수 및 제한 관련 지표
-        {
-            "RETURN_NUM": 150,
-            "C_S_LIMIT": 5000, # Category Search DB document 최대 호출 제한 개수
-            "T_N_LIMIT": 2000,  # Topic newsfeed DB document 최대 호출 제한 개수
-            "PUBLIC_N_LIMIT": 250, # 비회원 추천 뉴스피드 DB document 최대 호출 제한 개수
-            "C_S_DEFAULT_DATE": 365, # 카테고리 검색 날짜 제한 (최대 몇 일)
-            "REALTIME_LIMIT": 20, # 실시간 검색어 검색 제한 리미트
-            "REALTIME_RETURN_NUM": 10 # 실시간 검색어 반환 개수
-        }
+        "FAS_WEIGHT": 1, # FAS 가중치
+        "IS_WEIGHT": 1, # IS 가중치
+        "RANDOM_WEIGHT": 1, # RANDOM 가중치
+        "DEFAULT_DATE": 60, # POST 게시 날짜 Maximum (불러올 때)
+        "CATEGORY_SET": ['대학교', '동아리-모임', '공모전-행사', '진로-구인'], # 사용중인 카테고리
+        "POSTS_NUM_BY_CATEGORY": [60, 33, 33, 33, 18], # 카테고리 별 불러오는 개수
+        "GET_POST_NUM": 500, # 최대 POST 불러오는 개수
+        "RECOM_POST_WEIGHT": 150, # 추천 뉴스피드에서 사용하는 POST 개수 가중치
+        "RECOM_POST_MINUS_WEIGHT": -75, # 추천 뉴스피드에서 사용하는 POST 가감 가중치
+
+        # 관심사 측정에 필요한 지표
+        "FAV_WEIGHT": 2,
+        "VIEW_WEIGHT": 1,
+        "SEARCH_WEIGHT": 1,
+        "NEWSFEED_WEIGHT": 1,
+
+
+        # 사용자 관련 지표
+        "COLD_START": 10, # 사용자 Cold 기준
+        "TAG_SUM_WEIGHT": 1.5,
+        "FAV_TOPIC_WEIGHT": 35,
+        "VIEW_TOPIC_WEIGHT": 30,
+        "SEARCH_TOPIC_WEIGHT": 25,
+        "NEWSFEED_TOPIC_WEIGHT": 10,
+
+        # 개수 및 제한 관련 지표
+        "RETURN_NUM": 150,
+        "T_N_LIMIT": 2000,
+        "REALTIME_LIMIT": 20, # 실시간 검색어 검색 제한 리미트
+        "REALTIME_RETURN_NUM": 10 # 실시간 검색어 반환 개수
     }
 
     @staticmethod
