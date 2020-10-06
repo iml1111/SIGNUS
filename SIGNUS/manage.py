@@ -8,6 +8,7 @@ from config import config
 from app import create_app
 from app import models
 from app.models.mongodb import get_mongo_cur
+from modules.crawler.main_start import main_start as crawler_process
 from modules import bg_process
 
 application = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -17,6 +18,11 @@ application = create_app(os.getenv('FLASK_CONFIG') or 'default')
 def make_shell_context():
     '''Init shell context'''
     return dict(mongo_cur=get_mongo_cur())
+
+@application.cli.command()
+def crawler_start():
+    """Crawler start."""
+    crawler_process()
 
 @application.cli.command()
 def bg_interest():
