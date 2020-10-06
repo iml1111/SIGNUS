@@ -33,39 +33,37 @@ from modules.crawler.etc.timeLogWrite import log_write, log_ready
 from modules.crawler.etc.error_handler import error_handler, error_logging
 #############################################################################
 
-#시작위치 및 끝 위치 입력 설정
-ST_NUM = None
-END_NUM = None
-if len(sys.argv) == 1:
-	pass
-elif len(sys.argv) == 2:
-	ST_NUM = int(sys.argv[1])
-elif len(sys.argv) == 3:
-	ST_NUM = int(sys.argv[1])
-	END_NUM = int(sys.argv[2])
-else:
-	print(":::: WRONG INPUT ::::\n\n\n")
+def main_start():
+	#시작위치 및 끝 위치 입력 설정
+	ST_NUM = None
+	END_NUM = None
+	if len(sys.argv) == 1:
+		pass
+	elif len(sys.argv) == 2:
+		ST_NUM = int(sys.argv[1])
+	elif len(sys.argv) == 3:
+		ST_NUM = int(sys.argv[1])
+		END_NUM = int(sys.argv[2])
+	else:
+		print(":::: WRONG INPUT ::::\n\n\n")
 
-#프로그램 시작시간
-start_time = datetime.now()
+	#프로그램 시작시간
+	start_time = datetime.now()
 
-#DB 연결
-database = connect_db()
-db = database[1]
-client = database[0]
+	#DB 연결
+	database = connect_db()
+	db = database[1]
+	client = database[0]
 
-#url_list에서 List를 URL으로 가져옴
-if ST_NUM == None and END_NUM == None:
-	URLS = List[:]
-elif ST_NUM != None and END_NUM == None:
-	URLS = List[ST_NUM:]
-elif ST_NUM == None and END_NUM != None:
-	URLS = List[:END_NUM]
-else:
-	URLS = List[ST_NUM:END_NUM]
-
-
-if __name__ == '__main__':
+	#url_list에서 List를 URL으로 가져옴
+	if ST_NUM == None and END_NUM == None:
+		URLS = List[:]
+	elif ST_NUM != None and END_NUM == None:
+		URLS = List[ST_NUM:]
+	elif ST_NUM == None and END_NUM != None:
+		URLS = List[:END_NUM]
+	else:
+		URLS = List[ST_NUM:END_NUM]
 	print("\n\n")
 	print(":::< Signus Project >:::")
 	print("TODAY : ", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "\n\n")
@@ -113,7 +111,6 @@ if __name__ == '__main__':
 			except Exception as e:
 				error_handler(e, URL, URL["url"], db)
 				continue
-
 		print(":::: Posts in Boards Count ::::")
 		posts_cnt(db)															# 모든 게시물 빈도 출력
 
@@ -133,7 +130,8 @@ if __name__ == '__main__':
 		#===========================================
 	else:
 		print("\n\nNow Crawling!\n\n")
-
-
 	#DB 연결해제
 	disconnect_db(client)
+
+if __name__ == '__main__':
+	main_start()
