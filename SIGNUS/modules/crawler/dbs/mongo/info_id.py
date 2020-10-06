@@ -25,7 +25,20 @@ def post_info(db):
 	cnt = 1
 	print(List)
 	for URL in List:
-		collection.insert_one({"info_id": URL['info'], "title_tag": URL['title_tag'], "info_num": cnt})
+		query = {
+			"info_id": URL['info'], 
+			"info_num": cnt,
+			"url": URL['url'],
+			"info": URL['info'],
+			"title_tag": URL['title_tag'],
+			"login": URL['login'],
+			"crawling": True,
+			"stay_guideline": 0,
+			"stay_cnt": 0
+		}
+		if "post_url" in URL:
+			query["post_url"] = URL['post_url']
+		collection.insert_one(query)
 		cnt+=1
 	print(":::: post_info INSERT Complete! ::::")
 	
