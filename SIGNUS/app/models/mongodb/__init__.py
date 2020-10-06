@@ -5,8 +5,6 @@ from datetime import datetime
 from pymongo import MongoClient
 from flask import g, current_app
 from werkzeug.security import generate_password_hash
-from config import (default_master_config,
-                    default_realtime)
 from app.controllers.user import signup
 
 
@@ -34,15 +32,15 @@ def init_models(config):
     
     # Create master_config collection
     col = cur[db_name]['master_config']
-    col.insert_many(default_master_config)
+    col.insert_many(config.DEFAULT_MASTER_CONFIG)
 
     # Create realtime collection
     col = cur[db_name]['realtime']
-    col.insert_one(default_realtime)
+    col.insert_one(config.DEFAULT_REALTIME)
 
     # Create admin account
     signup(cur,
            config.ADMIN_ID,
-           generate_password_hash(config.ADMIN_PW))
+           config.ADMIN_PW)
     
     cur.close()

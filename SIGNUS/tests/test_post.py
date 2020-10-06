@@ -1,5 +1,5 @@
 '''
-User API 관련 테스트 케이스
+Post API 관련 테스트 케이스
 '''
 import unittest
 from flask import current_app
@@ -7,8 +7,8 @@ from app import create_app
 from flask_jwt_extended import create_access_token
 
 
-class UserAPITestCase(unittest.TestCase):
-    '''User 테스트 케이스 클래스'''
+class PostAPITestCase(unittest.TestCase):
+    '''Post 테스트 케이스 클래스'''
     def setUp(self):
         '''전처리 메소드'''
         self.app = create_app('testing')
@@ -33,40 +33,28 @@ class UserAPITestCase(unittest.TestCase):
         }
         return result
 
-    def test_signin(self):
-        '''로그인 API 검증 테스트'''
-        resp = self.client.post(
-            '/api/user/signin',
-            headers=self.get_headers(),
-            json={
-                "id":current_app.config['ADMIN_ID'],
-                "pw":current_app.config['ADMIN_PW']
-            }
-        )
-        self.assertEqual(resp.status_code, 200)
-    
-    def test_fav_push(self):
-        '''fav_list 추가 API 검증 테스트'''
-        resp = self.client.put(
-            '/api/user/fav/push/5f7033c5ebd493ecb1f33438',
+    def test_post_like(self):
+        '''Post 좋아요 API 검증 테스트'''
+        resp = self.client.patch(
+            '/api/signus/v1/post/like/5f7033c5ebd493ecb1f33438',
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_fav_pull(self):
-        '''fav_list 삭제 API 검증 테스트'''
-        resp = self.client.delete(
-            '/api/user/fav/pull/5f7033c5ebd493ecb1f33438',
+    def test_post_unlike(self):
+        '''Post 좋아요 취소 검증 테스트'''
+        resp = self.client.patch(
+            '/api/signus/v1/post/unlike/5f7033c5ebd493ecb1f33438',
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
-    
-    def test_view_push(self):
-        '''view_list 추가 API 검증 테스트'''
-        resp = self.client.put(
-            '/api/user/view/push/5f7033c5ebd493ecb1f33438',
+
+    def test_view_like(self):
+        '''Post 조회수 검증 테스트'''
+        resp = self.client.patch(
+            '/api/signus/v1/post/view/5f7033c5ebd493ecb1f33438',
             headers=self.get_headers(),
             json={}
         )
