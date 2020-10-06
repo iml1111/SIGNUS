@@ -13,7 +13,7 @@ import os
 TK = Tokenizer()
 
 # FT (Recommender) 클래스 선언
-FT = open(os.getenv("SIGNUS_FT_MODEL_PATH"))
+FT = Recommender(os.getenv("SIGNUS_FT_MODEL_PATH"))
 
 #md5 해쉬
 enc = hashlib.md5()
