@@ -23,7 +23,7 @@ class Config:
     MONGODB_DB_NAME = 'signus'
 
     # FastText
-    FT = Recommender("../../model/ft/signus_ft_model")
+    FT = Recommender(os.environ['SIGNUS_FT_MODEL_PATH'])
     print("FastText Load Complete ...")
 
     # Tokenizer
