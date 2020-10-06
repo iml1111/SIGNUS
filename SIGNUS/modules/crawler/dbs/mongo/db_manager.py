@@ -8,12 +8,12 @@ import hashlib
 from modules.tokenizer import Tokenizer
 from modules.recommender.fasttext import Recommender
 
-
+import os
 # Tokenizer 클래스 선언
 TK = Tokenizer()
 
 # FT (Recommender) 클래스 선언
-FT = Recommender("../../model/ft/signus_ft_model")
+FT = open(os.getenv("SIGNUS_FT_MODEL_PATH"))
 
 #md5 해쉬
 enc = hashlib.md5()
