@@ -177,10 +177,10 @@ def get_post_infoes(db):
 	infoes = db.post_info.find({}, {"_id": False, "info_id": True, "info_num": True})
 	POST_INFO = []
 	for info in infoes:
-		try:
-			info['info_id'] = info['info_id'].split('_')[1] + '_' + info['info_id'].split('_')[2]
-		except:
-			pass
+		# try:
+		# 	info['info_id'] = info['info_id'].split('_')[1] + '_' + info['info_id'].split('_')[2]
+		# except:
+		# 	pass
 		POST_INFO.append(info)
 	print(":::: Get Post_info Complete! ::::")
 	return True

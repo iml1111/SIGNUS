@@ -23,7 +23,6 @@ def post_info(db):
 	#url_list 에서 각 게시판의 info, title_tag, login 값을 post_info 테이블에 넣어준다.
 	#login은 로그인 유무
 	cnt = 1
-	print(List)
 	for URL in List:
 		query = {
 			"info_id": URL['info'], 
