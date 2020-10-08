@@ -29,7 +29,7 @@ def continue_handler(target, URL, page_url):
 	log_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	log_info = URL['info']
 	log_url = page_url
-	f = open(os.getenv("SIGNUS_CRAWLER_ERROR_LOG_PATH"),'a')
+	f = open(os.getenv("SIGNUS_CRAWLER_LOG_PATH"),'a')
 
 	f_data = "[Continue]=================================================================="
 	f_data = f_data + log_time + " :: " + log_info + "\nURL :: " + log_url + "\n"
