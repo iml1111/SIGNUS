@@ -29,6 +29,9 @@ class Recommender:
         '''입력된 토큰, 토큰 리스트에 대한 임베딩 벡터 반환'''
         if isinstance(doc, str):
             doc = [doc]
+        if doc == []:
+            raise RuntimeError("빈 리스트는 벡터화시킬 수 없습니다.")
+
         v = [self.model.wv[word] for word in doc]
         return matutils.unitvec(np.array(v).mean(axis=0))
 

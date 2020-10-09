@@ -68,10 +68,11 @@ def main_start():
 	print(":::< Signus Project >:::")
 	print("TODAY : ", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "\n\n")
 
-	#SJ_CATEGORY 테이블 생성
-	create_table_category(db)
+	
 	#post_info 테이블, recent_post 테이블 생성
 	post_info(db)
+	#SJ_CATEGORY 테이블 생성
+	create_table_category(db)
 	#url 테이블 생성
 	# init_url_collection(db)
 	#date 테이블 생성 밎 dictionary화
