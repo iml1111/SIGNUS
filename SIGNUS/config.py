@@ -84,7 +84,7 @@ class Config:
         "DEFAULT_DATE": 60, # POST 게시 날짜 Maximum (불러올 때)
         "CATEGORY_SET": ['대학교', '동아리-모임', '공모전-행사', '진로-구인'], # 사용중인 카테고리
         "POSTS_NUM_BY_CATEGORY": [60, 33, 33, 33, 18], # 카테고리 별 불러오는 개수
-        "GET_POST_NUM": 1, # 최대 POST 불러오는 개수
+        "GET_POST_NUM": 500, # 최대 POST 불러오는 개수
         "RECOM_POST_WEIGHT": 150, # 추천 뉴스피드에서 사용하는 POST 개수 가중치
         "RECOM_POST_MINUS_WEIGHT": -75, # 추천 뉴스피드에서 사용하는 POST 가감 가중치
 
