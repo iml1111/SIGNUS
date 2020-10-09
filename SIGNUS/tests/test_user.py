@@ -2,6 +2,7 @@
 User API 관련 테스트 케이스
 '''
 import unittest
+from json import loads
 from flask import current_app
 from app import create_app
 from flask_jwt_extended import create_access_token
@@ -33,7 +34,7 @@ class UserAPITestCase(unittest.TestCase):
         }
         return result
 
-    def test_signin(self):
+    def test_a_signin(self):
         '''로그인 API 검증 테스트'''
         resp = self.client.post(
             '/api/user/signin',
@@ -45,28 +46,61 @@ class UserAPITestCase(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_fav_push(self):
+    def test_b_fav_push(self):
         '''fav_list 추가 API 검증 테스트'''
+
+        # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
+        resp = self.client.get(
+            '/api/signus/v1/newsfeed/popular',
+            headers=self.get_headers(),
+            json={}
+        )
+        newsfeed = loads(loads(resp.data)['result'])
+        post_obi = newsfeed[0]['_id']['$oid']
+
+        # 본격 테스트
         resp = self.client.put(
-            '/api/user/fav/push/5f7033c5ebd493ecb1f33438',
+            '/api/user/fav/push/' + post_obi,
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_fav_pull(self):
+    def test_c_fav_pull(self):
         '''fav_list 삭제 API 검증 테스트'''
+
+        # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
+        resp = self.client.get(
+            '/api/signus/v1/newsfeed/popular',
+            headers=self.get_headers(),
+            json={}
+        )
+        newsfeed = loads(loads(resp.data)['result'])
+        post_obi = newsfeed[0]['_id']['$oid']
+
+        # 본격 테스트
         resp = self.client.delete(
-            '/api/user/fav/pull/5f7033c5ebd493ecb1f33438',
+            '/api/user/fav/pull/' + post_obi,
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_view_push(self):
+    def test_d_view_push(self):
         '''view_list 추가 API 검증 테스트'''
+
+        # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
+        resp = self.client.get(
+            '/api/signus/v1/newsfeed/popular',
+            headers=self.get_headers(),
+            json={}
+        )
+        newsfeed = loads(loads(resp.data)['result'])
+        post_obi = newsfeed[0]['_id']['$oid']
+
+        # 본격 테스트
         resp = self.client.put(
-            '/api/user/view/push/5f7033c5ebd493ecb1f33438',
+            '/api/user/view/push/' + post_obi,
             headers=self.get_headers(),
             json={}
         )

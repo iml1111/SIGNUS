@@ -38,7 +38,7 @@ class Posts:
             {
                 '$and':
                 [
-                    {'info_num': info_num},
+                    {'info_num': {'$in': info_num}},
                     {'end_date': {'$gt': datetime.now()}},
                     {'date': {'$gt': datetime.now() - timedelta(days=default_date)}}
                 ]
