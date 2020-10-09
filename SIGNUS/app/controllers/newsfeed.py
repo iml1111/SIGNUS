@@ -63,7 +63,7 @@ def newsfeed_recommendation(mongo_cur, user, FT):
     for idx, _ in enumerate(POSTS_LIST):
         POSTS_LIST[idx] = POSTS_LIST[idx][:current_app.config["INDICATORS"]["POSTS_NUM_BY_CATEGORY"][idx]]
     
-    return POSTS_LIST
+    return dumps(POSTS_LIST)
 
 
 def newsfeed_popularity(mongo_cur):
@@ -80,7 +80,7 @@ def newsfeed_popularity(mongo_cur):
     '''
     Posts_model = Posts(mongo_cur)
     return dumps(Posts_model.find_popularity_posts(current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                             current_app.config["INDICATORS"]["GET_POST_NUM"]))
+                                                   current_app.config["INDICATORS"]["GET_POST_NUM"]))
 
 
 def newsfeed_categroy(mongo_cur, category_name):

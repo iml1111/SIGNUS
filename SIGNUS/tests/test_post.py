@@ -2,6 +2,7 @@
 Post API 관련 테스트 케이스
 '''
 import unittest
+from json import loads
 from flask import current_app
 from app import create_app
 from flask_jwt_extended import create_access_token
@@ -33,28 +34,61 @@ class PostAPITestCase(unittest.TestCase):
         }
         return result
 
-    def test_post_like(self):
+    def test_a_post_like(self):
         '''Post 좋아요 API 검증 테스트'''
+
+        # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
+        resp = self.client.get(
+            '/api/signus/v1/newsfeed/popular',
+            headers=self.get_headers(),
+            json={}
+        )
+        newsfeed = loads(loads(resp.data)['result'])
+        post_obi = newsfeed[0]['_id']['$oid']
+
+        # 본격 테스트
         resp = self.client.patch(
-            '/api/signus/v1/post/like/5f7033c5ebd493ecb1f33438',
+            '/api/signus/v1/post/like/' + post_obi,
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_post_unlike(self):
+    def test_b_post_unlike(self):
         '''Post 좋아요 취소 검증 테스트'''
+
+        # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
+        resp = self.client.get(
+            '/api/signus/v1/newsfeed/popular',
+            headers=self.get_headers(),
+            json={}
+        )
+        newsfeed = loads(loads(resp.data)['result'])
+        post_obi = newsfeed[0]['_id']['$oid']
+
+        # 본격 테스트
         resp = self.client.patch(
-            '/api/signus/v1/post/unlike/5f7033c5ebd493ecb1f33438',
+            '/api/signus/v1/post/unlike/' + post_obi,
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
 
-    def test_view_like(self):
+    def test_c_view_like(self):
         '''Post 조회수 검증 테스트'''
+
+        # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
+        resp = self.client.get(
+            '/api/signus/v1/newsfeed/popular',
+            headers=self.get_headers(),
+            json={}
+        )
+        newsfeed = loads(loads(resp.data)['result'])
+        post_obi = newsfeed[0]['_id']['$oid']
+
+        # 본격 테스트
         resp = self.client.patch(
-            '/api/signus/v1/post/view/5f7033c5ebd493ecb1f33438',
+            '/api/signus/v1/post/view/' + post_obi,
             headers=self.get_headers(),
             json={}
         )
