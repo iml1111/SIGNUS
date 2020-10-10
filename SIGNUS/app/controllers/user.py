@@ -31,7 +31,7 @@ def signup(mongo_cur, user_id, user_pw):
 
     user = {'user_id': user_id,
             'user_pw': generate_password_hash(user_pw),
-            'topic_vector': (numpy.zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
+            'topic_vector': (zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
             'fav_list': [],
             'view_list': [],
             'newsfeed_list': [],
@@ -68,6 +68,27 @@ def signin(mongo_cur, user_id, user_pw):
                                                 expires_delta=False)}
 
 
+def get_user(user):
+    '''
+    유저 정보 반환 (정보 갱신)
+
+    Params
+    ---------
+    user > 사용자 객체
+
+    Return
+    ---------
+    user > (list)
+    '''
+    result = user.copy()
+    del result['cold_point']
+    del result['user_pw']
+    del result['created_at']
+    del result['updated_at']
+    del result['_id']
+    del result['topic_vector']
+    return result
+
 def reset_tendency(mongo_cur, user_id):
     '''
     Reset tendency (사용자 관심사 초기화)
@@ -86,7 +107,7 @@ def reset_tendency(mongo_cur, user_id):
     if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
         return False
 
-    user = {'topic_vector': (numpy.zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
+    user = {'topic_vector': (zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
             'fav_list': [],
             'view_list': [],
             'newsfeed_list': [],

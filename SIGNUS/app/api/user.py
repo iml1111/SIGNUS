@@ -5,6 +5,7 @@ from flask import g, request, Blueprint
 from app.api import input_check
 from app.api.decorators import timer, login_required, login_optional
 from app.controllers.user import (signup,
+                                  get_user,
                                   signin,
                                   fav_push,
                                   fav_pull,
@@ -51,7 +52,7 @@ def api_user_get():
     ''' 회원 정보 반환 '''
     return {
         "msg": "success",
-        "result": g.user
+        "result": get_user(g.user)
     }
 
 
