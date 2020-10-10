@@ -7,7 +7,7 @@ import os
 
 def log_write(start_time, end_time, db, BEFORE_DATA):
 	# 로그 파일 열기
-	f = open(os.getenv("SIGNUS_CRAWLER_ERROR_LOG_PATH"),'a')
+	f = open(os.getenv("SIGNUS_CRAWLER_LOG_PATH"),'a')
 
 
 
@@ -101,7 +101,7 @@ def log_write(start_time, end_time, db, BEFORE_DATA):
 
 def log_ready(start_time, db):
 	# 로그 파일 열기
-	f = open(os.getenv("SIGNUS_CRAWLER_ERROR_LOG_PATH"),'a')
+	f = open(os.getenv("SIGNUS_CRAWLER_LOG_PATH"),'a')
 
 	# Data 분류
 	start_time = start_time.strftime("%Y-%m-%d")			# 시작시간
