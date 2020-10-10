@@ -10,16 +10,32 @@ from app.controllers.user import (signup,
                                   fav_pull,
                                   view_push)
 
+
 user = Blueprint('user', __name__)
 
 
-@user.route("/signin", methods=['POST'])
-def api_user_signin():
-    '''Sign In'''
+@user.route("/signup", methods=['POST'])
+@timer
+def api_user_signup():
+    ''' 회원 가입 '''
     data = request.get_json()
     input_check(data, "id", str)
     input_check(data, "pw", str)
+    return {
+        "msg": "success",
+        "result": signup(g.mongo_cur,
+                         data['id'],
+                         data['pw'])
+    }
 
+
+@user.route("/signin", methods=['POST'])
+@timer
+def api_user_signin():
+    ''' 로그인 '''
+    data = request.get_json()
+    input_check(data, "id", str)
+    input_check(data, "pw", str)
     return {
         "msg": "success",
         "result": signin(g.mongo_cur,
@@ -28,43 +44,51 @@ def api_user_signin():
     }
 
 
-@user.route("/fav/push/<string:obj_id>", methods=["PUT"])
+@user.route("", methods=["GET"])
 @timer
 @login_required
-def api_user_fav_push(obj_id):
-    '''fav_list에 post 추가 API'''
+def api_user_get():
+    ''' 회원 정보 반환 '''
+    return {
+        "msg": "success",
+        "result": g.user
+    }
 
+
+@user.route("/fav/push/<string:post_oid>", methods=["PUT"])
+@timer
+@login_required
+def api_user_fav_push(post_oid):
+    ''' 회원 fav_list에 post 추가 '''
     return {
         "msg": "success",
         "result": fav_push(g.mongo_cur,
-                           obj_id,
+                           post_oid,
                            g.user)
     }
 
 
-@user.route("/fav/pull/<string:obj_id>", methods=["DELETE"])
+@user.route("/fav/pull/<string:post_oid>", methods=["DELETE"])
 @timer
 @login_required
-def api_user_fav_pull(obj_id):
-    '''fav_list에 post 삭제 API'''
-
+def api_user_fav_pull(post_oid):
+    ''' 회원 fav_list에 post 삭제 '''
     return {
         "msg": "success",
         "result": fav_pull(g.mongo_cur,
-                           obj_id,
+                           post_oid,
                            g.user)
     }
 
 
-@user.route("/view/push/<string:obj_id>", methods=["PUT"])
+@user.route("/view/push/<string:post_oid>", methods=["PUT"])
 @timer
-@login_optional
-def api_user_view_push(obj_id):
-    '''view_list에 post 추가 API'''
-
+@login_required
+def api_user_view_push(post_oid):
+    ''' 회원 view_list에 post 추가 '''
     return {
         "msg": "success",
         "result": view_push(g.mongo_cur,
-                            obj_id,
+                            post_oid,
                             g.user)
     }

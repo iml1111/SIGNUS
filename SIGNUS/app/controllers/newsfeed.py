@@ -9,7 +9,7 @@ from app.models.mongodb.posts import Posts
 from app.models.mongodb.category import Category
 
 
-def newsfeed_recommendation(mongo_cur, user, FT):
+def newsfeed_recommendation(mongo_cur, user):
     '''
     추천 뉴스피드
 
@@ -25,6 +25,8 @@ def newsfeed_recommendation(mongo_cur, user, FT):
     '''
     Posts_model = Posts(mongo_cur)
     Category_model = Category(mongo_cur)
+    
+    FT = current_app.config["FT"]
 
     # 사용자 관심사 순 카테고리 정렬
     category_list = Category_model.find_many(current_app.config["INDICATORS"]["CATEGORY_SET"])

@@ -34,7 +34,7 @@ def login_optional(func):
         if get_jwt_identity():
             user_id = get_jwt_identity()
             model = User(g.mongo_cur)
-            user_info = model.find_one(user_id)
+            user_info = model.find_one(user_id, {"_id": 0})
             if not user_id or not user_info:
                 return {"msg": "Bad Access Token"}, 401
             g.user = user_info
@@ -50,7 +50,7 @@ def login_required(func):
         verify_jwt_in_request()
         user_id = get_jwt_identity()
         model = User(g.mongo_cur)
-        user_info = model.find_one(user_id)
+        user_info = model.find_one(user_id, {"_id": 0})
         if not user_id or not user_info:
             return {"msg": "Bad Access Token"}, 401
         g.user = user_info
@@ -66,7 +66,7 @@ def admin_required(func):
         verify_jwt_in_request()
         user_id = get_jwt_identity()
         model = User(g.mongo_cur)
-        user_info = model.find_one(user_id)
+        user_info = model.find_one(user_id, {"_id": 0})
         if not user_id or not user_info or \
            user_id != current_app.config['ADMIN_ID']:
             return {"msg": "Bad Access Token"}, 401

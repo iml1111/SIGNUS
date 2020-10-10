@@ -24,6 +24,7 @@ class Config:
 
     # FastText
     FT = Recommender(os.environ['SIGNUS_FT_MODEL_PATH'])
+    FT_VEC_SIZE = FT.model.vector_size
     print("FastText Load Complete ...")
 
     # Tokenizer

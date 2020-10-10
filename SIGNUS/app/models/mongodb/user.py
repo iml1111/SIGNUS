@@ -37,7 +37,7 @@ class User:
             projection
         ))
 
-    def check_fav(self, user_id, post_obj):
+    def check_fav(self, user_id, post_oid):
         ''' 좋아요 이력 체크 '''
         return self.col.find_one(
             {"user_id": user_id},
@@ -46,7 +46,7 @@ class User:
                 {
                     "$elemMatch":
                     {
-                        '_id': ObjectId(post_obj)
+                        '_id': ObjectId(post_oid)
                     }
                 }
             }
@@ -73,14 +73,14 @@ class User:
         )
         return True
 
-    def update_list_column_pull(self, user_id, _type, obj_id):
+    def update_list_column_pull(self, user_id, _type, oid):
         ''' 특정 리스트(fav/view_list) 컬럼에 정보를 push '''
         self.col.update_one(
             {"user_id": user_id},
             {
                 "$pull":
                 {
-                    _type: {"_id": str(obj_id)}
+                    _type: {"_id": str(oid)}
                 }
             }
         )

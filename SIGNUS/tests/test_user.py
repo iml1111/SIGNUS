@@ -9,7 +9,7 @@ from flask_jwt_extended import create_access_token
 
 
 class UserAPITestCase(unittest.TestCase):
-    '''User 테스트 케이스 클래스'''
+    ''' User 테스트 케이스 클래스 '''
     def setUp(self):
         '''전처리 메소드'''
         self.app = create_app('testing')
@@ -22,7 +22,7 @@ class UserAPITestCase(unittest.TestCase):
         )
 
     def tearDown(self):
-        '''후처리 메소드'''
+        ''' 후처리 메소드 '''
         self.app_context.pop()
 
     def get_headers(self):
@@ -34,8 +34,8 @@ class UserAPITestCase(unittest.TestCase):
         }
         return result
 
-    def test_a_signin(self):
-        '''로그인 API 검증 테스트'''
+    def test_signin(self):
+        ''' 로그인 API 검증 테스트 '''
         resp = self.client.post(
             '/api/user/signin',
             headers=self.get_headers(),
@@ -45,9 +45,18 @@ class UserAPITestCase(unittest.TestCase):
             }
         )
         self.assertEqual(resp.status_code, 200)
-    
-    def test_b_fav_push(self):
-        '''fav_list 추가 API 검증 테스트'''
+
+    def test_get_user(self):
+        ''' 회원 정보 반환 API 검증 테스트 '''
+        resp = self.client.get(
+            '/api/user',
+            headers=self.get_headers(),
+            json={}
+        )
+        self.assertEqual(resp.status_code, 200)
+
+    def test_1_fav_push(self):
+        ''' fav_list 추가 API 검증 테스트 '''
 
         # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
         resp = self.client.get(
@@ -56,38 +65,38 @@ class UserAPITestCase(unittest.TestCase):
             json={}
         )
         newsfeed = loads(loads(resp.data)['result'])
-        post_obi = newsfeed[0]['_id']['$oid']
+        post_oid = newsfeed[0]['_id']['$oid']
 
-        # 본격 테스트
+        # fav_list 추가
         resp = self.client.put(
-            '/api/user/fav/push/' + post_obi,
+            '/api/user/fav/push/' + post_oid,
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_c_fav_pull(self):
-        '''fav_list 삭제 API 검증 테스트'''
+    def test_2_fav_pull(self):
+        ''' fav_list 삭제 API 검증 테스트 '''
 
-        # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
+        # 회원 정보 불러오기
         resp = self.client.get(
-            '/api/signus/v1/newsfeed/popular',
+            '/api/user',
             headers=self.get_headers(),
             json={}
         )
-        newsfeed = loads(loads(resp.data)['result'])
-        post_obi = newsfeed[0]['_id']['$oid']
+        user = loads(resp.data)
+        post_oid = user['result']['fav_list'][0]['_id']
 
-        # 본격 테스트
+        # fav_list 삭제
         resp = self.client.delete(
-            '/api/user/fav/pull/' + post_obi,
+            '/api/user/fav/pull/' + post_oid,
             headers=self.get_headers(),
             json={}
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_d_view_push(self):
-        '''view_list 추가 API 검증 테스트'''
+    def test_view_push(self):
+        ''' view_list 추가 API 검증 테스트 '''
 
         # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
         resp = self.client.get(
@@ -96,11 +105,11 @@ class UserAPITestCase(unittest.TestCase):
             json={}
         )
         newsfeed = loads(loads(resp.data)['result'])
-        post_obi = newsfeed[0]['_id']['$oid']
+        post_oid = newsfeed[0]['_id']['$oid']
 
         # 본격 테스트
         resp = self.client.put(
-            '/api/user/view/push/' + post_obi,
+            '/api/user/view/push/' + post_oid,
             headers=self.get_headers(),
             json={}
         )

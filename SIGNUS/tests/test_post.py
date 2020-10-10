@@ -34,7 +34,7 @@ class PostAPITestCase(unittest.TestCase):
         }
         return result
 
-    def test_a_post_like(self):
+    def test_1_post_like(self):
         '''Post 좋아요 API 검증 테스트'''
 
         # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
@@ -46,7 +46,7 @@ class PostAPITestCase(unittest.TestCase):
         newsfeed = loads(loads(resp.data)['result'])
         post_obi = newsfeed[0]['_id']['$oid']
 
-        # 본격 테스트
+        # Post 좋아요
         resp = self.client.patch(
             '/api/signus/v1/post/like/' + post_obi,
             headers=self.get_headers(),
@@ -54,7 +54,7 @@ class PostAPITestCase(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_b_post_unlike(self):
+    def test_2_post_unlike(self):
         '''Post 좋아요 취소 검증 테스트'''
 
         # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
@@ -66,7 +66,7 @@ class PostAPITestCase(unittest.TestCase):
         newsfeed = loads(loads(resp.data)['result'])
         post_obi = newsfeed[0]['_id']['$oid']
 
-        # 본격 테스트
+        # Post 좋아요 취소
         resp = self.client.patch(
             '/api/signus/v1/post/unlike/' + post_obi,
             headers=self.get_headers(),
@@ -74,7 +74,7 @@ class PostAPITestCase(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 200)
 
-    def test_c_view_like(self):
+    def test_view(self):
         '''Post 조회수 검증 테스트'''
 
         # 인기 뉴스피드 불러오기 (테스트 포스트 추출을 위함)
@@ -86,7 +86,7 @@ class PostAPITestCase(unittest.TestCase):
         newsfeed = loads(loads(resp.data)['result'])
         post_obi = newsfeed[0]['_id']['$oid']
 
-        # 본격 테스트
+        # Post 조회수
         resp = self.client.patch(
             '/api/signus/v1/post/view/' + post_obi,
             headers=self.get_headers(),

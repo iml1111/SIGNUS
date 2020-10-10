@@ -16,10 +16,10 @@ class Posts:
         self.col.insert_one(post_obj)
         return True
 
-    def find_one(self, obj_id, projection=None):
+    def find_one(self, oid, projection=None):
         ''' 특정 공지사항 반환 '''
         return self.col.find_one(
-            {"_id": ObjectId(obj_id)},
+            {"_id": ObjectId(oid)},
             projection
         )
 
@@ -57,25 +57,25 @@ class Posts:
             }
         ).sort([('popularity', -1)]).limit(_limit))
 
-    def update_one(self, obj_id, update_object):
+    def update_one(self, oid, update_object):
         ''' 특정 공지사항 업데이트 '''
         self.col.update_one(
-            {"_id": ObjectId(obj_id)},
+            {"_id": ObjectId(oid)},
             {"$set": update_object}
         )
         return True
     
-    def update_increase(self, obj_id, inc_object):
+    def update_increase(self, oid, inc_object):
         ''' 특정 컬럼 증가/감소 '''
         self.col.update_one(
-            {"_id": ObjectId(obj_id)},
+            {"_id": ObjectId(oid)},
             {"$inc": inc_object}
         )
         return True
 
-    def remove_one(self, obj_id):
+    def remove_one(self, oid):
         ''' 특정 공지사항 삭제 '''
         self.col.delete_one(
-            {"_id": ObjectId(obj_id)}
+            {"_id": ObjectId(oid)}
         )
         return True
