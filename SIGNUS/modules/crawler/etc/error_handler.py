@@ -31,7 +31,7 @@ def continue_handler(target, URL, page_url):
 	log_url = page_url
 	f = open(os.getenv("SIGNUS_CRAWLER_LOG_PATH"),'a')
 
-	f_data = "[Continue]=================================================================="
+	f_data = "[Continue]==================================================================\n"
 	f_data = f_data + log_time + " :: " + log_info + "\nURL :: " + log_url + "\n"
 	f_data = f_data + "Now Crawling :: " + target + "\n\n\n\n"
 	f.write(f_data)

@@ -29,7 +29,7 @@ def Parsing_post_data(bs, post_url, URL):
 	author = ''
 	# date = bs.find("li", {"class":"writer-user-id"}).nextSibling.get_text(" ", strip = True)
 	date = bs.find("li", {"class":"writer-user-id"}).find_next("li").get_text(" ", strip = True)
-	date = "20" + date + ":00"
+	date = date + ":00"
 	date = str(datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
 	post = bs.find("div", {"class": "board_detail-text"}).get_text(" ", strip = True)
 	post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
