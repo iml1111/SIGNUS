@@ -129,7 +129,7 @@ def log_ready(start_time, db):
 
 
 	# 파일 입력
-	f_data = "\n\n\n:::: CRAWLER ERROR ::::\n"
+	f_data = "----------------------------\n"
 	f_data += "TODAY : " + start_time + "\n"
 	f_data += "----------------------------\n"
 	f.write(f_data)

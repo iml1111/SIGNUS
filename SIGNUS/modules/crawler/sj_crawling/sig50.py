@@ -17,19 +17,15 @@ from modules.crawler.etc.img_size import img_size
 #게시판 page_url 을 받으면, 그 페이지의 포스트 url 들을 반환
 def Parsing_list_url(URL, page_url, driver):
 	List = []
-
 	#만약 driver이 켜져있으면 끄고, 없으면 그냥 진행
 	try:
 		driver.quit()
 	except:
 		pass
-
 	driver = chromedriver()
 
 	List.append(page_url)
-
 	data = (driver, List)
-
 	return data
 
 
@@ -46,8 +42,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	last_posts = [0]
 	while 1:
 		driver.find_element_by_tag_name("body").send_keys(Keys.END)
-		time.sleep(1)
-
+		time.sleep(5)
 		html = driver.page_source
 		bs = BeautifulSoup(html, 'html.parser')
 		posts = bs.find("div", {"class": 'articlelist'}).find("ol", {"class": 'group'}).find_all("li")

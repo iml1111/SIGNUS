@@ -76,13 +76,11 @@ def Parsing_post_data(bs, post_url, URL):
 			date = change_date_form(date_parsed[2])
 		else: #['출처','언론사','선정','n시간','전','보내기']
 			date = change_date_form(date_parsed[3])
-		print("::::",date)
 		post = item.find("dd", {"class": "txt_inline"}).find_next('dd').get_text(" ", strip = True)
 		post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
 		list_url = item.find("dt").find("a")['href']
 		driver_post = URLparser(list_url)
 		bs_post = BeautifulSoup(driver_post, 'html.parser')
-		
 		if bs_post.find("meta", {"property": "og:image"}) is None:
 			img = 7
 		else:
@@ -111,7 +109,6 @@ def Parsing_post_data(bs, post_url, URL):
 		post_data['post'] = post.lower()
 		post_data['img'] = img
 		post_data['url'] = list_url
-		print(date, "::::", title)	#현재 크롤링한 포스트의 date, title 출력
 
 		return_data.append(post_data)
 	return return_data

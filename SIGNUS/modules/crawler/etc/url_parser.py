@@ -14,12 +14,10 @@ def URLparser(URL):	#header을 지정하고 requests.get 하는 함수
 		html = requests.get(URL, verify = False, headers = header).text
 	except:
 		time.sleep(3)
-		print("::::::",URL)
 		print("Connection Error")
 		try:
 			html = requests.get(URL, verify = False,  headers = header).text
 		except:
-			print("::::::",URL)
 			print("Connection Failed")
 			return None
 	return html
