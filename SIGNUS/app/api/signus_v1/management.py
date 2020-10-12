@@ -15,8 +15,7 @@ from app.controllers.management import (get_notice,
 @api.route("/notice/<string:notice_oid>")
 @timer
 def signus_v1_get_notice(notice_oid=None):
-    ''' 공지사항 반환 '''
-    ''' (인자가 안들어오면 전체 반환) '''
+    ''' 공지 반환 (인자가 안들어오면 전체 반환) '''
     return {
         "msg": "success",
         "result": get_notice(g.mongo_cur, notice_oid)
@@ -27,7 +26,7 @@ def signus_v1_get_notice(notice_oid=None):
 @timer
 @admin_required
 def signus_v1_put_notice():
-    ''' 공지사항 추가 '''
+    ''' 공지 추가 '''
     data = request.get_json()
     input_check(data, 'title', str)
     input_check(data, 'post', str)
@@ -43,7 +42,7 @@ def signus_v1_put_notice():
 @timer
 @admin_required
 def signus_v1_patch_notice(notice_oid=None):
-    ''' 공지사항 수정 '''
+    ''' 공지 수정 '''
     data = request.get_json()
     input_check(data, 'title', str)
     input_check(data, 'post', str)
@@ -60,7 +59,7 @@ def signus_v1_patch_notice(notice_oid=None):
 @timer
 @admin_required
 def signus_v1_delete_notice(notice_oid=None):
-    ''' 공지사항 삭제 '''
+    ''' 공지 삭제 '''
     return {
         "msg": "success",
         "result": delete_notice(g.mongo_cur,

@@ -46,7 +46,7 @@ class User:
                 {
                     "$elemMatch":
                     {
-                        '_id': ObjectId(post_oid)
+                        '_id': post_oid
                     }
                 }
             }

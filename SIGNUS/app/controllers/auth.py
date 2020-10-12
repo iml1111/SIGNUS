@@ -1,5 +1,5 @@
 '''
-User Controller Module
+Auth Controller Module
 '''
 from flask import current_app
 from numpy import zeros
@@ -12,7 +12,7 @@ from app.models.mongodb.posts import Posts
 
 def signup(mongo_cur, user_id, user_pw):
     '''
-    Sign Up (회원가입 함수)
+    SignUp (회원가입)
 
     Params
     ---------
@@ -22,7 +22,7 @@ def signup(mongo_cur, user_id, user_pw):
 
     Return
     ---------
-    token > JWT (String)
+    JWT (String)
     '''
     user_model = User(mongo_cur)
 
@@ -45,7 +45,7 @@ def signup(mongo_cur, user_id, user_pw):
 
 def signin(mongo_cur, user_id, user_pw):
     '''
-    Sign In (로그인 함수)
+    SignIn (로그인 함수)
 
     Params
     ---------
@@ -55,7 +55,7 @@ def signin(mongo_cur, user_id, user_pw):
 
     Return
     ---------
-    token > JWT 문자열(String)
+    JWT (String)
     '''
     user_model = User(mongo_cur)
 
@@ -70,7 +70,8 @@ def signin(mongo_cur, user_id, user_pw):
 
 def get_user(user):
     '''
-    유저 정보 반환 (정보 갱신)
+    유저 정보 반환
+    (g.user에 있는 불필요 변수 제거)
 
     Params
     ---------
@@ -78,7 +79,7 @@ def get_user(user):
 
     Return
     ---------
-    user > (list)
+    사용자 정보 (Dict)
     '''
     result = user.copy()
     del result['cold_point']
@@ -100,7 +101,7 @@ def reset_tendency(mongo_cur, user_id):
 
     Return
     ---------
-    result > True or False
+    결과 (Bool)
     '''
     user_model = User(mongo_cur)
 
@@ -128,7 +129,7 @@ def update_updated_at(mongo_cur, user_id):
 
     Return
     ---------
-    result > True or False
+    결과 (Bool)
     '''
     user_model = User(mongo_cur)
 
@@ -144,12 +145,12 @@ def fav_push(mongo_cur, post_oid, user):
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    post_oid > Document ObjectId
-    user > user infomation
+    post_oid > 게시글 ObjectId
+    user > 사용자 정보
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     User_model = User(mongo_cur)
     Posts_model = Posts(mongo_cur)
@@ -183,17 +184,17 @@ def fav_pull(mongo_cur, post_oid, user):
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    post_oid > Document ObjectId
-    user > user infomation
+    post_oid > 게시글 ObjectId
+    user > 사용자 정보
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     User_model = User(mongo_cur)
     Posts_model = Posts(mongo_cur)
 
-    # 좋아요 중복 체크
+    # 좋아요 체크
     if "fav_list" not in User_model.check_fav(user['user_id'], post_oid):
         return False
 
@@ -211,12 +212,12 @@ def view_push(mongo_cur, post_oid, user):
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    post_oid > Document ObjectId
-    user > user infomation
+    post_oid > 게시글 ObjectId
+    user > 사용자 정보
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     User_model = User(mongo_cur)
     Posts_model = Posts(mongo_cur)

@@ -5,7 +5,7 @@ from datetime import datetime
 from pymongo import MongoClient
 from flask import g, current_app
 from werkzeug.security import generate_password_hash
-from app.controllers.user import signup
+from app.controllers.auth import signup
 
 
 def get_mongo_cur():

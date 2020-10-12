@@ -21,7 +21,7 @@ def newsfeed_recommendation(mongo_cur, user):
 
     Return
     ---------
-    POSTS_LIST > 뉴스피드 게시글 묶음
+    뉴스피드 게시글 묶음 (List)
     '''
     Posts_model = Posts(mongo_cur)
     Category_model = Category(mongo_cur)
@@ -78,7 +78,7 @@ def newsfeed_popularity(mongo_cur):
 
     Return
     ---------
-    POSTS_LIST > 뉴스피드 게시글 묶음
+    뉴스피드 게시글 묶음 (List)
     '''
     Posts_model = Posts(mongo_cur)
     return dumps(Posts_model.find_popularity_posts(current_app.config["INDICATORS"]["DEFAULT_DATE"],
@@ -96,7 +96,7 @@ def newsfeed_categroy(mongo_cur, category_name):
 
     Return
     ---------
-    POSTS_LIST > 뉴스피드 게시글 묶음
+    뉴스피드 게시글 묶음 (List)
     '''
     Category_model = Category(mongo_cur)
     Posts_model = Posts(mongo_cur)

@@ -3,7 +3,7 @@ SIGNUS V1 post API
 '''
 from flask import g, request
 from app.api.signus_v1 import signus_v1 as api
-from app.api.decorators import timer, login_required
+from app.api.decorators import timer, login_required, login_optional
 from app.controllers.post import (post_like,
                                   post_unlike,
                                   post_view)
@@ -17,7 +17,8 @@ def signus_v1_post_like(post_oid):
     return {
         "msg": "success",
         "result": post_like(g.mongo_cur,
-                            post_oid)
+                            post_oid,
+                            g.user)
     }
 
 
@@ -29,16 +30,19 @@ def signus_v1_post_unlike(post_oid):
     return {
         "msg": "success",
         "result": post_unlike(g.mongo_cur,
-                              post_oid)
+                              post_oid,
+                              g.user)
     }
 
 
 @api.route("/post/view/<string:post_oid>", methods=["PATCH"])
 @timer
+@login_optional
 def signus_v1_post_view(post_oid):
     ''' 게시글 조회수 '''
     return {
         "msg": "success",
         "result": post_view(g.mongo_cur,
-                            post_oid)
+                            post_oid,
+                            g.user)
     }

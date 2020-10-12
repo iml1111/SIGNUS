@@ -4,7 +4,7 @@ Search Controller Module
 from app.models.mongodb.posts import Posts
 
 
-def search(mongo_cur, keyword, skip, limit, order):
+def v1_search(mongo_cur, keyword, skip, limit, order):
     '''
     Search (검색)
 
