@@ -43,7 +43,7 @@ def newsfeed_recommendation(mongo_cur, user):
     for category in category_vector:
         POSTS = Posts_model.find_category_posts(category[2],
                                                 current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                current_app.config["INDICATORS"]["GET_POST_NUM"] + POST_WEIGHT)
+                                                current_app.config["INDICATORS"]["GET_NF_POST_NUM"] + POST_WEIGHT)
         POSTS_LIST += [POSTS]
         POST_WEIGHT += MINUS_WEIGHT
     
@@ -65,7 +65,7 @@ def newsfeed_recommendation(mongo_cur, user):
     for idx, _ in enumerate(POSTS_LIST):
         POSTS_LIST[idx] = POSTS_LIST[idx][:current_app.config["INDICATORS"]["POSTS_NUM_BY_CATEGORY"][idx]]
     
-    return dumps(POSTS_LIST)
+    return dumps(POSTS_LIST[:current_app.config["INDICATORS"]["RETURN_NUM"]])
 
 
 def newsfeed_popularity(mongo_cur):
@@ -82,7 +82,7 @@ def newsfeed_popularity(mongo_cur):
     '''
     Posts_model = Posts(mongo_cur)
     return dumps(Posts_model.find_popularity_posts(current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                   current_app.config["INDICATORS"]["GET_POST_NUM"]))
+                                                   current_app.config["INDICATORS"]["RETURN_NUM"]))
 
 
 def newsfeed_categroy(mongo_cur, category_name):
@@ -104,4 +104,4 @@ def newsfeed_categroy(mongo_cur, category_name):
     category = Category_model.find_one(category_name)
     return dumps(Posts_model.find_category_posts(category['info_num'],
                                                  current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                 current_app.config["INDICATORS"]["GET_POST_NUM"]))
+                                                 current_app.config["INDICATORS"]["GET_NF_POST_NUM"]))

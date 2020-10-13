@@ -85,28 +85,27 @@ class Config:
         "DEFAULT_DATE": 60, # POST 게시 날짜 Maximum (불러올 때)
         "CATEGORY_SET": ['대학교', '동아리-모임', '공모전-행사', '진로-구인'], # 사용중인 카테고리
         "POSTS_NUM_BY_CATEGORY": [60, 33, 33, 33, 18], # 카테고리 별 불러오는 개수
-        "GET_POST_NUM": 300, # 최대 POST 불러오는 개수
+        "GET_NF_POST_NUM": 500, # 뉴스피드용 POST 불러오는 최대 개수
         "RECOM_POST_WEIGHT": 150, # 추천 뉴스피드에서 사용하는 POST 개수 가중치
         "RECOM_POST_MINUS_WEIGHT": -75, # 추천 뉴스피드에서 사용하는 POST 가감 가중치
 
         # 관심사 측정에 필요한 지표
-        "FAV_WEIGHT": 2,
-        "VIEW_WEIGHT": 1,
-        "SEARCH_WEIGHT": 1,
-        "NEWSFEED_WEIGHT": 1,
-
+        "FAV_WEIGHT": 2, # 좋아요 가중치
+        "VIEW_WEIGHT": 1, # 조회수 가중치
+        "SEARCH_WEIGHT": 1, # 검색 가중치
 
         # 사용자 관련 지표
         "COLD_START": 10, # 사용자 Cold 기준
-        "TAG_SUM_WEIGHT": 1.5,
-        "FAV_TOPIC_WEIGHT": 35,
-        "VIEW_TOPIC_WEIGHT": 30,
-        "SEARCH_TOPIC_WEIGHT": 25,
-        "NEWSFEED_TOPIC_WEIGHT": 10,
+
+        # 검색 관련 지표
+        "GET_SC_POST_NUM": 15000, # 검색용 POST 불러오는 최대 개수
+        "TITLE_WEIGHT": 1.5, # TITLE TOKEN 가중치
+        "TOKEN_WEIGHT": 1, # TOKEN 가중치
+        "REGEX_WEIGHT": 1.5, # 제목 정규식 가중치
+        "LOWEST_RANK": 1.5, # 최하위 랭크
 
         # 개수 및 제한 관련 지표
-        "RETURN_NUM": 150,
-        "T_N_LIMIT": 2000,
+        "RETURN_NUM": 150, # 토탈 반환 개수
         "REALTIME_LIMIT": 20, # 실시간 검색어 검색 제한 리미트
         "REALTIME_RETURN_NUM": 10 # 실시간 검색어 반환 개수
     }

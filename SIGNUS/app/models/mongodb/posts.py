@@ -57,6 +57,19 @@ class Posts:
             }
         ).sort([('popularity', -1)]).limit(_limit))
 
+    def search_posts(self, keyword, tokens, _limit):
+        '''검색 전용'''
+        return list(self.col.find(
+            {
+                '$or':
+                [
+                    {'title': {'$regex': keyword}},
+                    {'token': {'$in': tokens}}
+                ]
+            },
+            {'_id': 0, 'title': 1, 'date': 1, 'post': 1, 'img': 1, 'url': 1, 'view': 1, 'fav_cnt': 1, 'title_token': 1, 'token': 1, 'end_date': 1}
+        ).limit(_limit))
+
     def update_one(self, oid, update_object):
         ''' 특정 공지사항 업데이트 '''
         self.col.update_one(
