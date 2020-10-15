@@ -12,14 +12,13 @@ from app.controllers.management import (get_notice,
 
 
 @api.route("/notice")
-@api.route("/notice/<string:obj_id>")
+@api.route("/notice/<string:notice_oid>")
 @timer
-def signus_v1_get_notice(obj_id=None):
-    '''공지사항을 반환해주는 API'''
-    '''인자가 안들어오면 전체 반환'''
+def signus_v1_get_notice(notice_oid=None):
+    ''' 공지 반환 (인자가 안들어오면 전체 반환) '''
     return {
         "msg": "success",
-        "result": get_notice(g.mongo_cur, obj_id)
+        "result": get_notice(g.mongo_cur, notice_oid)
     }
 
 
@@ -27,11 +26,10 @@ def signus_v1_get_notice(obj_id=None):
 @timer
 @admin_required
 def signus_v1_put_notice():
-    '''공지사항 추가 API'''
+    ''' 공지 추가 '''
     data = request.get_json()
     input_check(data, 'title', str)
     input_check(data, 'post', str)
-
     return {
         "msg": "success",
         "result": insert_notice(g.mongo_cur,
@@ -40,31 +38,30 @@ def signus_v1_put_notice():
     }
 
 
-@api.route("/notice/<string:obj_id>", methods=["PATCH"])
+@api.route("/notice/<string:notice_oid>", methods=["PATCH"])
 @timer
 @admin_required
-def signus_v1_patch_notice(obj_id=None):
-    '''공지사항 수정 API'''
+def signus_v1_patch_notice(notice_oid=None):
+    ''' 공지 수정 '''
     data = request.get_json()
     input_check(data, 'title', str)
     input_check(data, 'post', str)
-
     return {
         "msg": "success",
         "result": update_notice(g.mongo_cur,
-                                obj_id,
+                                notice_oid,
                                 data['title'],
                                 data['post'])
     }
 
 
-@api.route("/notice/<string:obj_id>", methods=["DELETE"])
+@api.route("/notice/<string:notice_oid>", methods=["DELETE"])
 @timer
 @admin_required
-def signus_v1_delete_notice(obj_id=None):
-    '''공지사항 삭제 API'''
+def signus_v1_delete_notice(notice_oid=None):
+    ''' 공지 삭제 '''
     return {
         "msg": "success",
         "result": delete_notice(g.mongo_cur,
-                                obj_id)
+                                notice_oid)
     }

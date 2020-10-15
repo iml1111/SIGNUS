@@ -3,54 +3,62 @@ SIGNUS post Controller
 '''
 from bson import json_util
 from app.models.mongodb.posts import Posts
+from app.controllers.auth import (fav_push,
+                                  fav_pull,
+                                  view_push)
 
-
-def post_like(mongo_cur, obj_id):
+def post_like(mongo_cur, post_oid, user):
     '''
     게시글 좋아요를 올려주는 함수
 
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    obj_id > Document ObjectId
+    post_oid > 게시글 ObjectId
+    user > 사용자 정보
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     Posts_model = Posts(mongo_cur)
-    return Posts_model.update_increase(obj_id, {'fav_cnt': 1, 'popularity': 3})
+    fav_push(mongo_cur, post_oid, user)
+    return Posts_model.update_increase(post_oid, {'fav_cnt': 1, 'popularity': 3})
 
 
-def post_unlike(mongo_cur, obj_id):
+def post_unlike(mongo_cur, post_oid, user):
     '''
     게시글 좋아요를 취소하는 함수
 
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    obj_id > Document ObjectId
-    user > user infomation
+    post_oid > 게시글 ObjectId
+    user > 사용자 정보
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     Posts_model = Posts(mongo_cur)
-    return Posts_model.update_increase(obj_id, {'fav_cnt': -1, 'popularity': -3})
+    fav_pull(mongo_cur, post_oid, user)
+    return Posts_model.update_increase(post_oid, {'fav_cnt': -1, 'popularity': -3})
 
-def post_view(mongo_cur, obj_id):
+
+def post_view(mongo_cur, post_oid, user):
     '''
     게시글 조회수를 올리는 함수
 
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    obj_id > Document ObjectId
+    post_oid > 게시글 ObjectId
+    user > 사용자 정보
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     Posts_model = Posts(mongo_cur)
-    return Posts_model.update_increase(obj_id, {'view': 1, 'popularity': 1})
+    view_push(mongo_cur, post_oid, user)
+    return Posts_model.update_increase(post_oid, {'view': 1, 'popularity': 1})

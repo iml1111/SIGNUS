@@ -34,7 +34,7 @@ class ManagementAPITestCase(unittest.TestCase):
         }
         return result
     
-    def test_a_put_notice(self):
+    def test_1_put_notice(self):
         '''공지사항 작성 API 검증 테스트'''
         resp = self.client.put(
             '/api/signus/v1/notice',
@@ -46,7 +46,7 @@ class ManagementAPITestCase(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_b_patch_notice(self):
+    def test_2_patch_notice(self):
         '''공지사항 수정 API 검증 테스트'''
 
         # 공지사항 전체 반환
@@ -69,7 +69,7 @@ class ManagementAPITestCase(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_c_notice_many(self):
+    def test_3_notice_many(self):
         '''공지사항 전체 반환 API 검증 테스트'''
         resp = self.client.get(
             '/api/signus/v1/notice',
@@ -78,7 +78,7 @@ class ManagementAPITestCase(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_d_notice_one(self):
+    def test_4_notice_one(self):
         '''공지사항 단일 반환 API 검증 테스트'''
 
         # 공지사항 전체 반환
@@ -98,7 +98,7 @@ class ManagementAPITestCase(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 200)
     
-    def test_e_delete_notice(self):
+    def test_5_delete_notice(self):
         '''공지사항 삭제 API 검증 테스트'''
 
         # 공지사항 추가

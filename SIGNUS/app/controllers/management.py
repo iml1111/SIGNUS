@@ -6,23 +6,23 @@ from datetime import datetime
 from app.models.mongodb.notice import Notice
 
 
-def get_notice(mongo_cur, obj_id):
+def get_notice(mongo_cur, notice_oid):
     '''
-    공지사항 obj_id에 매칭되는 Document를 반환
-    (obj_id == None, 전체 반환)
+    공지사항 notice_oid 매칭되는 Document를 반환
+    (notice_oid == None, 전체 반환)
 
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    obj_id > Document ObjectId
+    notice_oid > 공지 ObjectId
 
     Return
     ---------
-    Notice > 공지사항 (Dict or list)
+    공지 (Dict or list)
     '''
     Notice_model = Notice(mongo_cur)
-    if obj_id:
-        return dumps(Notice_model.find_one(obj_id))
+    if notice_oid:
+        return dumps(Notice_model.find_one(notice_oid))
     return dumps(Notice_model.find_many())
 
 
@@ -38,42 +38,43 @@ def insert_notice(mongo_cur, title, post):
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     Notice_model = Notice(mongo_cur)
     return Notice_model.insert_one({"title": title, "post": post, "date": datetime.now()})
 
 
-def update_notice(mongo_cur, obj_id, title, post):
+def update_notice(mongo_cur, notice_oid, title, post):
     '''
     공지사항 수정
 
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
+    notice_oid > 공지 ObjectId
     title > 제목
     post > 본문
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     Notice_model = Notice(mongo_cur)
-    return Notice_model.update_one(obj_id, {"title": title, "post": post})
+    return Notice_model.update_one(notice_oid, {"title": title, "post": post})
 
 
-def delete_notice(mongo_cur, obj_id):
+def delete_notice(mongo_cur, notice_oid):
     '''
-    공지사항 obj_id에 매칭되는 Document를 삭제
+    공지사항 notice_oid 매칭되는 Document를 삭제
 
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
-    obj_id > Document ObjectId
+    notice_oid > 공지 ObjectId
 
     Return
     ---------
-    True or False
+    결과 (Bool)
     '''
     Notice_model = Notice(mongo_cur)
-    return Notice_model.remove_one(obj_id)
+    return Notice_model.remove_one(notice_oid)

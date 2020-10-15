@@ -8,7 +8,7 @@ from config import config
 from app import api
 
 from app.api.log import log as log_bp
-from app.api.user import user as user_bp
+from app.api.auth import auth as auth_bp
 from app.api.signus_v1 import signus_v1 as signus_v1_bp
 from app.api.template import template as template_bp
 from app.api.error_handler import error_handler as error_bp
@@ -34,7 +34,7 @@ def create_app(config_name):
     app.register_blueprint(error_bp)
     app.register_blueprint(template_bp)
     app.register_blueprint(log_bp, url_prefix='/api/log')
-    app.register_blueprint(user_bp, url_prefix='/api/user')
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(signus_v1_bp, url_prefix='/api/signus/v1')
 
     return app

@@ -9,7 +9,7 @@ from app.models.mongodb.posts import Posts
 from app.models.mongodb.category import Category
 
 
-def newsfeed_recommendation(mongo_cur, user, FT):
+def newsfeed_recommendation(mongo_cur, user):
     '''
     추천 뉴스피드
 
@@ -21,10 +21,12 @@ def newsfeed_recommendation(mongo_cur, user, FT):
 
     Return
     ---------
-    POSTS_LIST > 뉴스피드 게시글 묶음
+    뉴스피드 게시글 묶음 (List)
     '''
     Posts_model = Posts(mongo_cur)
     Category_model = Category(mongo_cur)
+    
+    FT = current_app.config["FT"]
 
     # 사용자 관심사 순 카테고리 정렬
     category_list = Category_model.find_many(current_app.config["INDICATORS"]["CATEGORY_SET"])
@@ -41,7 +43,7 @@ def newsfeed_recommendation(mongo_cur, user, FT):
     for category in category_vector:
         POSTS = Posts_model.find_category_posts(category[2],
                                                 current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                current_app.config["INDICATORS"]["GET_POST_NUM"] + POST_WEIGHT)
+                                                current_app.config["INDICATORS"]["GET_NF_POST_NUM"] + POST_WEIGHT)
         POSTS_LIST += [POSTS]
         POST_WEIGHT += MINUS_WEIGHT
     
@@ -63,7 +65,7 @@ def newsfeed_recommendation(mongo_cur, user, FT):
     for idx, _ in enumerate(POSTS_LIST):
         POSTS_LIST[idx] = POSTS_LIST[idx][:current_app.config["INDICATORS"]["POSTS_NUM_BY_CATEGORY"][idx]]
     
-    return dumps(POSTS_LIST)
+    return dumps(POSTS_LIST[:current_app.config["INDICATORS"]["RETURN_NUM"]])
 
 
 def newsfeed_popularity(mongo_cur):
@@ -76,11 +78,11 @@ def newsfeed_popularity(mongo_cur):
 
     Return
     ---------
-    POSTS_LIST > 뉴스피드 게시글 묶음
+    뉴스피드 게시글 묶음 (List)
     '''
     Posts_model = Posts(mongo_cur)
     return dumps(Posts_model.find_popularity_posts(current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                   current_app.config["INDICATORS"]["GET_POST_NUM"]))
+                                                   current_app.config["INDICATORS"]["RETURN_NUM"]))
 
 
 def newsfeed_categroy(mongo_cur, category_name):
@@ -94,7 +96,7 @@ def newsfeed_categroy(mongo_cur, category_name):
 
     Return
     ---------
-    POSTS_LIST > 뉴스피드 게시글 묶음
+    뉴스피드 게시글 묶음 (List)
     '''
     Category_model = Category(mongo_cur)
     Posts_model = Posts(mongo_cur)
@@ -102,4 +104,4 @@ def newsfeed_categroy(mongo_cur, category_name):
     category = Category_model.find_one(category_name)
     return dumps(Posts_model.find_category_posts(category['info_num'],
                                                  current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                 current_app.config["INDICATORS"]["GET_POST_NUM"]))
+                                                 current_app.config["INDICATORS"]["GET_NF_POST_NUM"]))
