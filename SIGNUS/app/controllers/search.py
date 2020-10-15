@@ -28,13 +28,13 @@ def v1_search(mongo_cur, keywords, order, rank_filter=True):
     # 후보군 선정
     keyword_split = keywords.lower().strip().split()
     keyword_tokens = list(set(TK.get_tk(keywords) + keyword_split))
-    post_list = Posts_model.search_posts(keywords,
-                                         keyword_tokens,
-                                         current_app.config['INDICATORS']['GET_SC_POST_NUM'])
+    posts = Posts_model.search_posts(keywords,
+                                     keyword_tokens,
+                                     current_app.config['INDICATORS']['GET_SC_POST_NUM'])
 
     # 유사도 측정
     set_keyword_tokens = set(keyword_tokens)
-    for post in post_list:
+    for post in posts:
         post['score'] = 0
 
         # 각 영역별 매칭 유사도 평가 (현재 t_index가 없는 관계로 title_token, token 두개의 컬럼으로 진행함)
@@ -55,19 +55,19 @@ def v1_search(mongo_cur, keywords, order, rank_filter=True):
         del post['title_token']
 
     # 최하위 랭킹 제거
-    post_list.sort(key=lambda t:(-t['score']))
+    posts.sort(key=lambda t:(-t['score']))
     if (rank_filter is True and
-        len(post_list) != 0 and
-        post_list[0]['score'] != post_list[-1]['score'] and
-        post_list[-1]['score'] <= current_app.config['INDICATORS']['LOWEST_RANK']):
-        target = get_first_min(post_list,
+        len(posts) != 0 and
+        posts[0]['score'] != posts[-1]['score'] and
+        posts[-1]['score'] <= current_app.config['INDICATORS']['LOWEST_RANK']):
+        target = get_first_min(posts,
                                0,
-                               len(post_list)-1,
+                               len(posts)-1,
                                current_app.config['INDICATORS']['LOWEST_RANK'])
-        post_list = post_list[:target]
-    
-    return {'posts': post_list[:current_app.config['INDICATORS']['RETURN_NUM']],
-            'length': len(post_list)}
+        posts = posts[:target]
+
+    return {'posts': posts[:current_app.config['INDICATORS']['RETURN_NUM']],
+            'length': len(posts)}
              
 
 def match_score(set_keyword_tokens, set_post_tokens):

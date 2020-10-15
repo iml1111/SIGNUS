@@ -14,7 +14,7 @@ def api_search():
     '''search'''
     data = request.get_json()
     input_check(data, "keywords", str)
-    input_check(data, "order", str)
+    input_check(data, "order", int)
 
     return {
         "msg": "success",
