@@ -9,9 +9,9 @@ trainer = Trainer()
 trainer.set_params(
     vec_size=30,
     windows=10,
-    min_count=1,
-    iteration=10,
-    workers=4
+    min_count=30,
+    iteration=1000,
+    workers=16
 )
 
 trainer.set_corpora(train_data) 
