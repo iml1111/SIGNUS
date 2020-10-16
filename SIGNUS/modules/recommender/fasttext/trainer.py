@@ -134,15 +134,3 @@ class Trainer:
         with open(meta_path, 'w', encoding='utf-8') as f:
             writer = csv.writer(f, delimiter='\t')
             for word in words:writer.writerow([word])
-
-    @model_require
-    def export_test_docs(self, words, path = "./모델테스트.md"):
-        '''특정 키워드에 대한 모델 성능 측정 및 MD 문서화'''
-        with open(path,"w",encoding='utf-8') as f:
-            f.write("# 모델 단어 테스트\n\n")
-            for ex in words:
-                if ex == "": continue
-                if not self.is_in_dict(ex): continue
-                f.write("### " + str(ex) + " \n")
-                f.write(" **" + str(self.sim_words(ex)) + "** \n")
-                f.write("\n")

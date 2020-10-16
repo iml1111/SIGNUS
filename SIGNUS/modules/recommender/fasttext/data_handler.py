@@ -62,10 +62,20 @@ def token_analy(cur):
 	# result.iloc[0:50]
 
 
+def data_loader():
+	cli = MongoClient(MONGODB_URI)
+	col = cli['SIGNUS_TRAIN']['train_data']
+	data_list = list(col.find())
+	train_data = []
+	for data in data_list:
+		train_data.append(data['tokens'])
+	return train_data
+
+
 if __name__ == '__main__':
 	mongo_cli = MongoClient(MONGODB_URI)
 	print(MONGODB_URI)
 	cur = mongo_cli['SIGNUS_TRAIN']
 
-	#data_refine(cur)
-	result = token_analy(cur)
+	# data_refine(cur)
+	# result = token_analy(cur)
