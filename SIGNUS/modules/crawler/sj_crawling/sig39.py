@@ -19,7 +19,6 @@ def Parsing_list_url(URL, bs):
 		target = post.find("td", {"class": "tit"}).find('a')['href']
 		page = domain + target
 		List.append(page)
-
 	return List
 
 

@@ -4,68 +4,6 @@
 
 List = (\
 	#세종대 메인 게시판 "sj1_main_..."
-	#signus
-	#138 무중력지대
-	{'url': "http://youthzone.kr/program_applies?page=",\
-	'info': "sig45_infor_notice",\
-	'title_tag' : ["모집"], 'login' : 0},\
-	#139
-	{'url': "http://youthzone.kr/external_programs?page=",\
-	'info': "sig45_external_notice",\
-	'title_tag' : ["모집"], 'login' : 0},\
-	#140
-	{'url': "http://youthzone.kr/reviews?page=",\
-	'info': "sig45_review_data",\
-	'title_tag' : ["모집"], 'login' : 0},\
-	#141 애드캠퍼스
-	{'url': "https://addcampus.com/community/board/1?page=1&search_txt=",\
-	'info': "sig46_addcampus_board",\
-	'title_tag' : ["커뮤니티"], 'login' : 0},\
-	#142 20대연구소
-	{'url': "https://www.20slab.org/SNSColumn?pageidx=",\
-	'info': "sig47_20lab_column",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#143
-	{'url': "https://www.20slab.org/Infographics?pageidx=",\
-	'info': "sig47_20lab_infographics",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#144
-	{'url': "https://www.20slab.org/Press?pageidx=",\
-	'info': "sig47_20lab_announcement",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#145
-	{'url': "https://www.20slab.org/Data?pageidx=",\
-	'info': "sig47_20lab_data",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#146
-	{'url': "https://www.20slab.org/Report?pageidx=",\
-	'info': "sig47_20lab_report",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#147 VMS
-	{'url': "https://www.vms.or.kr/partspace/recruit.do?area=&areagugun=&acttype=&status=1&termgbn=&page=",\
-	'info': "sig48_vms_volunteer",\
-	'title_tag' : ["봉사"], 'login' : 0},\
-	#148 캠퍼스픽 커뮤니티 - 알바
-	{'url': "https://www.campuspick.com/community?id=3098",\
-	'info': "sig50_campuspick_parttime",\
-	'title_tag' : ["알바&구인"], 'login' : 0},\
-	#149 대학내일
-	{'url': "https://univ20.com/",\
-	'info': "sig51_univ20_main",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#150 온라인 청년센터
-	{'url': "https://www.youthcenter.go.kr/board/boardList.do?bbsNo=3&ntceStno=&pageUrl=board%2Fboard&orderBy=REG_DTM&orderMode=DESC&pageIndex=",\
-	'info': "sig52_youthcenter_info",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#151 한국 장학재단 공지사항
-	{'url': "https://www.kosaf.go.kr/ko/notice.do?&page=",\
-	'info': "sig53_kosaf_info",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	#152 Naver news 대학교
-	{'url': "https://search.naver.com/search.naver?&where=news&query=%EB%8C%80%ED%95%99%EA%B5%90&sm=tab_pge&sort=0&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&start=&refresh_start=0",\
-	'info': "sig54_naver_news",\
-	'title_tag' : ["소식"], 'login' : 0},\
-	
 	# soojle
 	#0
 	{'url': "https://home.sejong.ac.kr/bbs/bbslist.do?bbsid=1896&wslID=swc&page=1&currentPage=",\
@@ -498,11 +436,11 @@ List = (\
 	'title_tag' : ["캠퍼스픽", "공모전&대외활동"], 'login' : 0},\
 	#캠퍼스픽 스터디 [sig27_campuspick_...]
 	#100
-	{'url': "https://www.campuspick.com/study/list?category1=1&category2=0",\
+	{'url': "https://www.campuspick.com/club?category=5",\
 	'info': "sig27_campuspick_language",\
 	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
 	#101
-	{'url': "https://www.campuspick.com/study/list?category1=2&category2=0",\
+	{'url': "https://www.campuspick.com/job",\
 	'info': "sig27_campuspick_job",\
 	'title_tag' : ["캠퍼스픽", "취업&진로", "동아리&모임"], 'login' : 1},\
 	#102
@@ -510,12 +448,12 @@ List = (\
 	'info': "sig27_campuspick_certificate",\
 	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
 	#103
-	{'url': "https://www.campuspick.com/study/list?category1=4&category2=0",\
+	{'url': "https://www.campuspick.com/study",\
 	'info': "sig27_campuspick_study",\
 	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
 	#캠퍼스픽 동아리 [sig28_campuspick_club]
 	#104
-	{'url': "https://www.campuspick.com/club?category=2",\
+	{'url': "https://www.campuspick.com/club",\
 	'info': "sig28_campuspick_club",\
 	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 0},\
 	#행복기숙사 [sj29_sejong_dormitory]
@@ -664,6 +602,67 @@ List = (\
 	#137
 	{'url': "http://home.sejong.ac.kr/bbs/bbslist.do?bbsid=487&wslID=cedpt&searchField=&searchValue=&currentPage=1&page=",\
 	'info': "sj9_computer_notice",\
-	'title_tag' : ["교내", "컴퓨터공학과", "공지"], 'login' : 0}\
+	'title_tag' : ["교내", "컴퓨터공학과", "공지"], 'login' : 0},\
+	#signus
+	#138 무중력지대
+	{'url': "http://youthzone.kr/program_applies?page=",\
+	'info': "sig45_infor_notice",\
+	'title_tag' : ["모집"], 'login' : 0},\
+	#139
+	{'url': "http://youthzone.kr/external_programs?page=",\
+	'info': "sig45_external_notice",\
+	'title_tag' : ["모집"], 'login' : 0},\
+	#140
+	{'url': "http://youthzone.kr/reviews?page=",\
+	'info': "sig45_review_data",\
+	'title_tag' : ["모집"], 'login' : 0},\
+	#141 애드캠퍼스
+	{'url': "https://addcampus.com/community/board/1?page=1&search_txt=",\
+	'info': "sig46_addcampus_board",\
+	'title_tag' : ["커뮤니티"], 'login' : 0},\
+	#142 20대연구소
+	{'url': "https://www.20slab.org/SNSColumn?pageidx=",\
+	'info': "sig47_20lab_column",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#143
+	{'url': "https://www.20slab.org/Infographics?pageidx=",\
+	'info': "sig47_20lab_infographics",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#144
+	{'url': "https://www.20slab.org/Press?pageidx=",\
+	'info': "sig47_20lab_announcement",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#145
+	{'url': "https://www.20slab.org/Data?pageidx=",\
+	'info': "sig47_20lab_data",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#146
+	{'url': "https://www.20slab.org/Report?pageidx=",\
+	'info': "sig47_20lab_report",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#147 VMS
+	{'url': "https://www.vms.or.kr/partspace/recruit.do?area=&areagugun=&acttype=&status=1&termgbn=&page=",\
+	'info': "sig48_vms_volunteer",\
+	'title_tag' : ["봉사"], 'login' : 0},\
+	#148 캠퍼스픽 커뮤니티 - 알바
+	{'url': "https://www.campuspick.com/community?id=3098",\
+	'info': "sig50_campuspick_parttime",\
+	'title_tag' : ["알바&구인"], 'login' : 0},\
+	#149 대학내일
+	{'url': "https://univ20.com/",\
+	'info': "sig51_univ20_main",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#150 온라인 청년센터
+	{'url': "https://www.youthcenter.go.kr/board/boardList.do?bbsNo=3&ntceStno=&pageUrl=board%2Fboard&orderBy=REG_DTM&orderMode=DESC&pageIndex=",\
+	'info': "sig52_youthcenter_info",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#151 한국 장학재단 공지사항
+	{'url': "https://www.kosaf.go.kr/ko/notice.do?&page=",\
+	'info': "sig53_kosaf_info",\
+	'title_tag' : ["소식"], 'login' : 0},\
+	#152 Naver news 대학교
+	{'url': "https://search.naver.com/search.naver?&where=news&query=%EB%8C%80%ED%95%99%EA%B5%90&sm=tab_pge&sort=0&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&start=&refresh_start=0",\
+	'info': "sig54_naver_news",\
+	'title_tag' : ["소식"], 'login' : 0}\
 	
 	)
