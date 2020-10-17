@@ -38,7 +38,6 @@ def Crawling(URL, db):
 	#현재 크롤링하는 게시판 info 출력
 	print("Target : ", URL['info'])
 	continue_handler(URL['info'], URL, page_url)
-
 	#크롤링 유무판단
 	if is_crawling(db, URL['info']) == False:
 		return
@@ -184,7 +183,7 @@ def Crawling(URL, db):
 					pass
 				#post_data_prepare이 완성되지 않은 경우---------------------------------------------------------------------
 				# 네이버 뉴스 기사
-				elif crawling_name == "sj54":
+				elif crawling_name == "sig54":
 					if get_post_data == None:	#잘못된 포스트 데이터인 경우
 						continue
 					for item in get_post_data:	
