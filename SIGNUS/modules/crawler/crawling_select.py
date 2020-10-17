@@ -88,7 +88,7 @@ def Crawling(URL, db):
 						pageidx = page_url.split('=')[1]
 						post_urls = eval(crawling_name + '.Parsing_list_url(URL, bs_page, pageidx)')
 					#네이버 뉴스기사
-					elif crawling_name == "sj54":
+					elif crawling_name == "sig54":
 						post_urls = eval(crawling_name + '.Parsing_list_url(URL, page_url)')
 					else:		
 						post_urls = eval(crawling_name + '.Parsing_list_url(URL, bs_page)')                    
@@ -117,6 +117,8 @@ def Crawling(URL, db):
 							data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL, lastly_post)')
 						except:
 							continue
+					data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL, lastly_post)')
+
 					post_data_prepare = data[0]
 					lastly_post = data[1]
 					if lastly_post is None:

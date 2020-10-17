@@ -134,3 +134,5 @@ dmypy.json
 
 #gz
 gz_test_modules.py
+signus_crawler.log
+signus_crawler_error.log
