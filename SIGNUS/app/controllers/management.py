@@ -44,7 +44,7 @@ def insert_notice(mongo_cur, title, post, author):
     결과 (Bool)
     '''
     Notice_model = Notice(mongo_cur)
-    return Notice_model.insert_one({"title": title, "post": post, "author": author, "date": datetime.now()})
+    return Notice_model.insert_one({"title": title, "post": post, "date": datetime.now()})
 
 
 def update_notice(mongo_cur, notice_oid, title, post):
