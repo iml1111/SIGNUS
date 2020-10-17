@@ -54,23 +54,10 @@ def login_required(func):
         if not user_id or not user_info:
             return {"msg": "Bad Access Token"}, 401
         g.user = user_info
-        result = func(*args, **kwargs)
-        return result
-    return wrapper
-
-
-def admin_required(func):
-    '''토큰 검증 및 관리자 권한 검증 데코레이터'''
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        verify_jwt_in_request()
-        user_id = get_jwt_identity()
-        model = User(g.mongo_cur)
-        user_info = model.find_one(user_id)
-        if not user_id or not user_info or \
-           user_id != current_app.config['ADMIN_ID']:
-            return {"msg": "Bad Access Token"}, 401
-        g.user = user_info
+        if user_id == current_app.config['ADMIN_ID']:
+            g.user['admin'] = True
+        else:
+            g.user['admin'] = False
         result = func(*args, **kwargs)
         return result
     return wrapper

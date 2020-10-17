@@ -40,9 +40,11 @@ def signus_v1_post_unlike(post_oid):
 @login_optional
 def signus_v1_post_view(post_oid):
     ''' 게시글 조회수 '''
+    if 'user' in g:
+        result = post_view(g.mongo_cur, post_oid, g.user)
+    else:
+        result = post_view(g.mongo_cur, post_oid)
     return {
         "msg": "success",
-        "result": post_view(g.mongo_cur,
-                            post_oid,
-                            g.user)
+        "result": result
     }

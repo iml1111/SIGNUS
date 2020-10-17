@@ -22,11 +22,13 @@ def get_notice(mongo_cur, notice_oid):
     '''
     Notice_model = Notice(mongo_cur)
     if notice_oid:
-        return dumps(Notice_model.find_one(notice_oid))
+        notice = Notice_model.find_one(notice_oid)
+        notice['author'] = "SIGNUS"
+        return dumps(notice)
     return dumps(Notice_model.find_many())
 
 
-def insert_notice(mongo_cur, title, post):
+def insert_notice(mongo_cur, title, post, author):
     '''
     공지사항 추가
 
@@ -35,13 +37,14 @@ def insert_notice(mongo_cur, title, post):
     mongo_cur > 몽고디비 커넥션 Object
     title > 제목
     post > 본문
+    author > 작성자
 
     Return
     ---------
     결과 (Bool)
     '''
     Notice_model = Notice(mongo_cur)
-    return Notice_model.insert_one({"title": title, "post": post, "date": datetime.now()})
+    return Notice_model.insert_one({"title": title, "post": post, "author": author, "date": datetime.now()})
 
 
 def update_notice(mongo_cur, notice_oid, title, post):

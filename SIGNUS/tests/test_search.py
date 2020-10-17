@@ -36,7 +36,6 @@ class SearchAPITestCase(unittest.TestCase):
 
     def test_Search(self):
         '''Search API 검증 테스트'''
-
         # 검색
         resp = self.client.post(
             '/api/signus/v1/search',

@@ -45,7 +45,7 @@ def post_unlike(mongo_cur, post_oid, user):
     return Posts_model.update_increase(post_oid, {'fav_cnt': -1, 'popularity': -3})
 
 
-def post_view(mongo_cur, post_oid, user):
+def post_view(mongo_cur, post_oid, user=None):
     '''
     게시글 조회수를 올리는 함수
 
@@ -60,5 +60,6 @@ def post_view(mongo_cur, post_oid, user):
     결과 (Bool)
     '''
     Posts_model = Posts(mongo_cur)
-    view_push(mongo_cur, post_oid, user)
+    if user:
+        view_push(mongo_cur, post_oid, user)
     return Posts_model.update_increase(post_oid, {'view': 1, 'popularity': 1})
