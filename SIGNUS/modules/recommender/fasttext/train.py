@@ -7,10 +7,10 @@ train_data = data_loader()
 
 trainer = Trainer() 
 trainer.set_params(
-    vec_size=30,
+    vec_size=31,
     windows=10,
     min_count=30,
-    iteration=1000,
+    iteration=1200,
     workers=16
 )
 
