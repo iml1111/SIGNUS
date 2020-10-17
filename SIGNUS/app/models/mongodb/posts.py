@@ -42,6 +42,18 @@ class Posts:
                     {'end_date': {'$gt': datetime.now()}},
                     {'date': {'$gt': datetime.now() - timedelta(days=default_date)}}
                 ]
+            },
+            {
+                'title': 1,
+                'post': 1,
+                'img': 1,
+                'fav_cnt': 1,
+                'view': 1,
+                'url': 1,
+                'date': 1,
+                'end_date': 1,
+                'topic_vector': 1,
+                'popularity': 1
             }
         ).sort([('date', -1)]).limit(_limit))
 
@@ -54,6 +66,16 @@ class Posts:
                     {'popularity': {'$gte': 0}},
                     {'date': {'$gt': datetime.now() - timedelta(days=default_date)}}
                 ]
+            },
+            {
+                'title': 1,
+                'post': 1,
+                'img': 1,
+                'fav_cnt': 1,
+                'view': 1,
+                'url': 1,
+                'date': 1,
+                'end_date': 1
             }
         ).sort([('popularity', -1)]).limit(_limit))
 
@@ -67,7 +89,18 @@ class Posts:
                     {'token': {'$in': tokens}}
                 ]
             },
-            {'_id': 0, 'title': 1, 'date': 1, 'post': 1, 'img': 1, 'url': 1, 'view': 1, 'fav_cnt': 1, 'title_token': 1, 'token': 1, 'end_date': 1}
+            {
+                'title': 1,
+                'post': 1,
+                'img': 1,
+                'fav_cnt': 1,
+                'view': 1,
+                'url': 1,
+                'date': 1,
+                'end_date': 1,
+                'title_token': 1,
+                'token': 1
+            }
         ).limit(_limit))
 
     def update_one(self, oid, update_object):

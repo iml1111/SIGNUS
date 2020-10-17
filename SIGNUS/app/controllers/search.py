@@ -2,6 +2,7 @@
 Search Controller Module
 '''
 import math
+from bson.json_util import dumps
 from flask import current_app
 from app.models.mongodb.posts import Posts
 
@@ -66,7 +67,11 @@ def v1_search(mongo_cur, keywords, order, rank_filter=True):
                                current_app.config['INDICATORS']['LOWEST_RANK'])
         posts = posts[:target]
 
-    return {'posts': posts[:current_app.config['INDICATORS']['RETURN_NUM']],
+    # 정렬 선택
+    if order == 1:
+        posts.sort(key=lambda x:x['date'], reverse=True)
+
+    return {'posts': dumps(posts[:current_app.config['INDICATORS']['RETURN_NUM']]),
             'length': len(posts)}
              
 

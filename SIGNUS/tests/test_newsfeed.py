@@ -53,9 +53,10 @@ class NewsfeedAPITestCase(unittest.TestCase):
 
     def test_newsfeed_category(self):
         '''카테고리 뉴스피드 검증 테스트'''
-        resp = self.client.get(
-            '/api/signus/v1/newsfeed/대학교',
-            headers=self.get_headers(),
-            json={}
-        )
-        self.assertEqual(resp.status_code, 200)
+        for category in current_app.config["INDICATORS"]["CATEGORY_SET"]:
+            resp = self.client.get(
+                '/api/signus/v1/newsfeed/' + category,
+                headers=self.get_headers(),
+                json={}
+            )
+            self.assertEqual(resp.status_code, 200)

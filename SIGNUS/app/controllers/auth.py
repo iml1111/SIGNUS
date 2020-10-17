@@ -40,7 +40,8 @@ def signup(mongo_cur, user_id, user_pw):
             'cold_point': 0,
             'created_at': datetime.now()}
     user_model.insert_one(user)
-    return True
+    return {'access_token': create_access_token(identity=user_id,
+                                                expires_delta=False)}
 
 
 def signin(mongo_cur, user_id, user_pw):
