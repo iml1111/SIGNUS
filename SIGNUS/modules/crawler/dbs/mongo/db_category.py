@@ -42,7 +42,7 @@ category_university = {
 }
 #동아리_모임
 category_club = {
-	'category_name': '동아리_모임',
+	'category_name': '동아리-모임',
 	'info': 
 		[
 			'sig27_campuspick_language','sig27_campuspick_job','sig27_campuspick_certificate',
@@ -58,7 +58,7 @@ category_club = {
 }
 #공모전_행사
 category_competition = {
-	'category_name': '공모전_행사',
+	'category_name': '공모전-행사',
 	'info': 
 		[
 		'sig25_thinkgood_info', 'sig26_campuspick_activity', 'sig26_campuspick_contest',
@@ -77,7 +77,7 @@ category_competition = {
 }
 #진로_구인
 category_course = {
-	'category_name': '진로_구인',
+	'category_name': '진로-구인',
 	'info': 
 		[
 			'sj2_udream_notice','sj3_udream_jobinfo','sj4_udream_workinfo','sj5_udream_workyoung',
