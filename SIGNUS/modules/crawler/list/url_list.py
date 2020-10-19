@@ -5,6 +5,37 @@
 List = (\
 	#세종대 메인 게시판 "sj1_main_..."
 	# soojle
+	#캠퍼스픽 [sig26_campuspick_...]
+	#98
+	{'url': "https://www.campuspick.com/activity",\
+	'info': "sig26_campuspick_activity",\
+	'title_tag' : ["캠퍼스픽", "공모전&대외활동"], 'login' : 0},\
+	#99
+	{'url': "https://www.campuspick.com/contest",\
+	'info': "sig26_campuspick_contest",\
+	'title_tag' : ["캠퍼스픽", "공모전&대외활동"], 'login' : 0},\
+	#캠퍼스픽 스터디 [sig27_campuspick_...]
+	#100
+	{'url': "https://www.campuspick.com/club?category=5",\
+	'info': "sig27_campuspick_language",\
+	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
+	#101
+	{'url': "https://www.campuspick.com/job",\
+	'info': "sig55_campuspick_job",\
+	'title_tag' : ["캠퍼스픽", "취업&진로", "동아리&모임"], 'login' : 1},\
+	#102
+	{'url': "https://www.campuspick.com/study/list?category1=3&category2=0",\
+	'info': "sig56_campuspick_certificate",\
+	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
+	#103
+	{'url': "https://www.campuspick.com/study",\
+	'info': "sig57_campuspick_study",\
+	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
+	#캠퍼스픽 동아리 [sig28_campuspick_club]
+	#104
+	{'url': "https://www.campuspick.com/club",\
+	'info': "sig28_campuspick_club",\
+	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 0},\
 	#0
 	{'url': "https://home.sejong.ac.kr/bbs/bbslist.do?bbsid=1896&wslID=swc&page=1&currentPage=",\
 	'info': "sj1_main_founded",\
@@ -425,37 +456,7 @@ List = (\
 	{'url': "https://www.thinkcontest.com/Contest/CateField.html?s=ing&page=",\
 	'info': "sig25_thinkgood_info",\
 	'title_tag' : ["씽굿", "공모전&대외활동"], 'login' : 0},\
-	#캠퍼스픽 [sig26_campuspick_...]
-	#98
-	{'url': "https://www.campuspick.com/activity",\
-	'info': "sig26_campuspick_activity",\
-	'title_tag' : ["캠퍼스픽", "공모전&대외활동"], 'login' : 0},\
-	#99
-	{'url': "https://www.campuspick.com/contest",\
-	'info': "sig26_campuspick_contest",\
-	'title_tag' : ["캠퍼스픽", "공모전&대외활동"], 'login' : 0},\
-	#캠퍼스픽 스터디 [sig27_campuspick_...]
-	#100
-	{'url': "https://www.campuspick.com/club?category=5",\
-	'info': "sig27_campuspick_language",\
-	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
-	#101
-	{'url': "https://www.campuspick.com/job",\
-	'info': "sig55_campuspick_job",\
-	'title_tag' : ["캠퍼스픽", "취업&진로", "동아리&모임"], 'login' : 1},\
-	#102
-	{'url': "https://www.campuspick.com/study/list?category1=3&category2=0",\
-	'info': "sig56_campuspick_certificate",\
-	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
-	#103
-	{'url': "https://www.campuspick.com/study",\
-	'info': "sig57_campuspick_study",\
-	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
-	#캠퍼스픽 동아리 [sig28_campuspick_club]
-	#104
-	{'url': "https://www.campuspick.com/club",\
-	'info': "sig28_campuspick_club",\
-	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 0},\
+	
 	#행복기숙사 [sj29_sejong_dormitory]
 	#105
 	{'url': "https://happydorm.sejong.ac.kr/sejong/bbs/getGolist.kmc?bbs_locgbn=SJ&bbs_id=notice&pPage=",\
