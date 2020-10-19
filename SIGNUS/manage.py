@@ -9,7 +9,8 @@ from app import create_app
 from app import models
 from app.models.mongodb import get_mongo_cur
 from modules.crawler.main_start import main_start as crawler_process
-from modules import bg_process
+from modules.background.main import (process_interest,
+                                     process_realtime)
 
 application = create_app(os.getenv('FLASK_CONFIG') or 'default')
 
@@ -25,14 +26,14 @@ def crawler_start():
     crawler_process()
 
 @application.cli.command()
-def bg_interest():
+def run_interest():
     """ User interest score measurement. """
-    bg_process.user_interest(config[os.getenv('FLASK_CONFIG') or 'default'])
+    process_interest(config[os.getenv('FLASK_CONFIG') or 'default'])
 
 @application.cli.command()
-def bg_realtime():
+def run_realtime():
     """ Realtime update. """
-    bg_process.realtime(config[os.getenv('FLASK_CONFIG') or 'default'])
+    process_realtime(config[os.getenv('FLASK_CONFIG') or 'default'])
 
 @application.cli.command()
 def db_init():

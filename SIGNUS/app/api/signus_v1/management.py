@@ -41,7 +41,7 @@ def signus_v1_put_notice():
         "result": insert_notice(g.mongo_cur,
                                 data['title'],
                                 data['post'],
-                                g.user)
+                                g.user['user_id'])
     }
 
 
@@ -63,7 +63,8 @@ def signus_v1_patch_notice(notice_oid=None):
         "result": update_notice(g.mongo_cur,
                                 notice_oid,
                                 data['title'],
-                                data['post'])
+                                data['post'],
+                                g.user['user_id'])
     }
 
 
@@ -79,5 +80,6 @@ def signus_v1_delete_notice(notice_oid=None):
     return {
         "msg": "success",
         "result": delete_notice(g.mongo_cur,
-                                notice_oid)
+                                notice_oid,
+                                g.user['user_id')
     }
