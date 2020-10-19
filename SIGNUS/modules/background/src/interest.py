@@ -2,7 +2,7 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-def interest_run(db, config):
+def interest(db, config):
     renewal_time = db['master_config'].find_one({"key": "updated_at"})['value']
     target_users = list(db['user'].find({'renewal':{'$gt': renewal_time}, 'cold_point': {'$gt': config.INDICATORS["COLD_START"]}}))
     # target_users = list(db['user'].find())

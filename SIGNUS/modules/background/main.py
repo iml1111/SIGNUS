@@ -3,23 +3,23 @@ SIGNUS Background process
 '''
 import sys
 from pymongo import MongoClient
-from modules.bg_process.measure.interest import interest_run
+from modules.background.src.interest import interest
 
 
-def user_interest(config):
+def process_interest(config):
     '''
     User interest score measurement.
     '''
     cur = MongoClient(config.MONGODB_URI)
     db = cur[config.MONGODB_DB_NAME]
 
-    interest_run(db, config)
+    interest(db, config)
     
     cur.close()
     sys.stdout.write("User interest score measurement ... OK\n")
 
 
-def realtime(config):
+def process_realtime(config):
     '''
     Realtime update.
     '''
