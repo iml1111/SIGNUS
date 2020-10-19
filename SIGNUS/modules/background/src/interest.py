@@ -5,7 +5,6 @@ from datetime import datetime
 def interest(db, config):
     renewal_time = db['master_config'].find_one({"key": "updated_at"})['value']
     target_users = list(db['user'].find({'renewal':{'$gt': renewal_time}, 'cold_point': {'$gt': config.INDICATORS["COLD_START"]}}))
-    # target_users = list(db['user'].find())
     categories = list(db['category'].find())
     now_date = datetime.now()
 
@@ -30,7 +29,7 @@ def interest(db, config):
             view_token += view['token']
         
         for search in user['search_list']:
-            search_list += search['tokenizer_split']
+            search_list += search['keyword_tokens']
         
         # 취합
         assemble_doc = fav_token * config.INDICATORS["FAV_WEIGHT"] +\
@@ -61,3 +60,4 @@ def interest(db, config):
             }
         )
 
+    return len(target_users)
