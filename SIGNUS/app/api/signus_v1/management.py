@@ -5,10 +5,21 @@ from flask import g, request
 from app.api import input_check
 from app.api.signus_v1 import signus_v1 as api
 from app.api.decorators import timer, login_required
-from app.controllers.management import (get_notice,
-                                     insert_notice,
-                                     update_notice,
-                                     delete_notice)
+from app.controllers.management import (get_realtime,
+                                        get_notice,
+                                        insert_notice,
+                                        update_notice,
+                                        delete_notice)
+
+
+@api.route("/realtime", methods=["get"])
+@timer
+def signus_v1_realtime(notice_oid=None):
+    ''' 실시간 검색어 반환 '''
+    return {
+        "msg": "success",
+        "result": get_realtime(g.mongo_cur)
+    }
 
 
 @api.route("/notice")
@@ -16,7 +27,6 @@ from app.controllers.management import (get_notice,
 @timer
 def signus_v1_get_notice(notice_oid=None):
     ''' 공지 반환 (인자가 안들어오면 전체 반환) '''
-
     return {
         "msg": "success",
         "result": get_notice(g.mongo_cur, notice_oid)
@@ -28,7 +38,6 @@ def signus_v1_get_notice(notice_oid=None):
 @login_required
 def signus_v1_put_notice():
     ''' 공지 추가 '''
-    
     if not g.user['admin']:
         return {"msg": "Bad Access Token"}, 401
     
@@ -50,7 +59,6 @@ def signus_v1_put_notice():
 @login_required
 def signus_v1_patch_notice(notice_oid=None):
     ''' 공지 수정 '''
-    
     if not g.user['admin']:
         return {"msg": "Bad Access Token"}, 401
     
@@ -73,7 +81,6 @@ def signus_v1_patch_notice(notice_oid=None):
 @login_required
 def signus_v1_delete_notice(notice_oid=None):
     ''' 공지 삭제 '''
-
     if not g.user['admin']:
         return {"msg": "Bad Access Token"}, 401
 
@@ -81,5 +88,5 @@ def signus_v1_delete_notice(notice_oid=None):
         "msg": "success",
         "result": delete_notice(g.mongo_cur,
                                 notice_oid,
-                                g.user['user_id')
+                                g.user['user_id'])
     }

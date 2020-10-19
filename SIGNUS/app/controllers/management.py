@@ -3,7 +3,24 @@ SIGNUS management Controller
 '''
 from bson.json_util import dumps
 from datetime import datetime
+from app.models.mongodb.realtime import Realtime
 from app.models.mongodb.notice import Notice
+
+
+def get_realtime(mongo_cur):
+    '''
+    최신 실시간 검색어 반환
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+
+    Return
+    ---------
+    실시간 검색어 (list)
+    '''
+    realtime_model = Realtime(mongo_cur)
+    return realtime_model.find_latest()
 
 
 def get_notice(mongo_cur, notice_oid):
