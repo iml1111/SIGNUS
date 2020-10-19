@@ -154,14 +154,14 @@ def fav_push(mongo_cur, post_oid, user):
     결과 (Bool)
     '''
     User_model = User(mongo_cur)
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
 
     # 좋아요 중복 체크
     if "fav_list" in User_model.check_fav(user['user_id'], post_oid):
         return False
 
     # 사용자 좋아요 리스트 캐싱 객체
-    post = Posts_model.find_one(post_oid)
+    post = posts_model.find_one(post_oid)
     fav_object = {
         '_id': str(post['_id']),
         'topic_vector': post['topic_vector'],
@@ -193,14 +193,14 @@ def fav_pull(mongo_cur, post_oid, user):
     결과 (Bool)
     '''
     User_model = User(mongo_cur)
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
 
     # 좋아요 체크
     if "fav_list" not in User_model.check_fav(user['user_id'], post_oid):
         return False
 
     # 사용자 좋아요 리스트 캐싱 제거
-    post = Posts_model.find_one(post_oid)
+    post = posts_model.find_one(post_oid)
     User_model.update_list_column_pull(user['user_id'], "fav_list", post['_id'])
     User_model.update_one(user['user_id'], {"updated_at": datetime.now()})
     return True
@@ -221,10 +221,10 @@ def view_push(mongo_cur, post_oid, user):
     결과 (Bool)
     '''
     User_model = User(mongo_cur)
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
 
     # 사용자 좋아요 리스트 캐싱 객체
-    post = Posts_model.find_one(post_oid)
+    post = posts_model.find_one(post_oid)
     view_object = {
         '_id': str(post['_id']),
         'topic_vector': post['topic_vector'],

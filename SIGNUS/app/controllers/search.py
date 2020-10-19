@@ -23,13 +23,13 @@ def v1_search(mongo_cur, keywords, order, rank_filter=True):
     ---------
     posts > 포스트 (list)
     '''
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
     TK = current_app.config["TK"]
     
     # 후보군 선정
     keyword_split = keywords.lower().strip().split()
     keyword_tokens = list(set(TK.get_tk(keywords) + keyword_split))
-    posts = Posts_model.search_posts(keywords,
+    posts = posts_model.search_posts(keywords,
                                      keyword_tokens,
                                      current_app.config['INDICATORS']['GET_SC_POST_NUM'])
 
