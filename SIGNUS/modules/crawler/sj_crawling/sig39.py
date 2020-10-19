@@ -30,7 +30,7 @@ def Parsing_post_data(bs, post_url, URL):
 	domain = Domain_check(URL['url'])
 
 	title = bs.find("strong", {"class": "tit"}).get_text(" ", strip = True)
-	author = "0"
+	# author = "0"
 	date = bs.find("span", {"class": "each"}).text.strip()[6:]
 	date = date + " 00:00:00"
 	date = str(datetime.datetime.strptime(date, "%Y.%m.%d %H:%M:%S"))
@@ -56,7 +56,7 @@ def Parsing_post_data(bs, post_url, URL):
 			img = 1
 
 	post_data['title'] = title.upper()
-	post_data['author'] = author.upper()
+	post_data['author'] = ''
 	post_data['date'] = date
 	post_data['post'] = post.lower()
 	post_data['img'] = img

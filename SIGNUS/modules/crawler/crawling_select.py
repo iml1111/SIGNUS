@@ -19,7 +19,8 @@ sj10, sj11, sj12, sj13, sj14, sj15, sj16, sj17, sj18,\
 sj19, sj20, sj21, sj23, sj24, sig25, sig26, sig27, sig28,\
 sj29, sj30, sj31, sj32, sj33, sj34, sig35, sig36, sig37,\
 sj38, sig39, sj40, sj41, sj42, sig43, sj44,\
-sig45, sig46, sig47, sig48, sig50, sig51, sig52, sig53, sig54
+sig45, sig46, sig47, sig48, sig50, sig51, sig52, sig53, sig54,\
+sig55, sig56, sig57
 
 def Crawling(URL, db):
 	driver = None
@@ -43,8 +44,9 @@ def Crawling(URL, db):
 		return
 
 	while True:
-		if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj30", "sj44", "sig50", "sig51"]:
+		if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj30", "sj44", "sig50", "sig51","sig55","sig56","sig57"]:
 			lastly_post = get_lastly_post(URL, db)
+			print("lastly_post : ",lastly_post)
 		try:
 			print("\npage_url :::: ", page_url)	#현재 url 출력
 			print("Page : ", page)				#현재 페이지 출력
@@ -57,7 +59,7 @@ def Crawling(URL, db):
 				driver_page = URLparser(page_url)
 			#-------------------------------------------
 			#Selenium을 쓰는 경우----------------------------------------------------------------------------------------------
-			if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj29", "sj38", "sj44", "sig50", "sig51", "sig52"]:
+			if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj29", "sj38", "sj44", "sig50", "sig51", "sig52","sig55","sig56","sig57"]:
 				data = eval(crawling_name + '.Parsing_list_url(URL, page_url, driver)')
 				driver = data[0]
 				post_urls = data[1]
@@ -97,6 +99,7 @@ def Crawling(URL, db):
 			#date 규격은 "0000-00-00 00:00:00"
 			post_data_prepare = []
 			for post_url in post_urls:
+				
 				#Selenium인 경우--------------------------------------------------------------------------------------------------------------------
                 #------------------게시판 규격인 경우
 				if crawling_name in ['sj29', 'sj30', 'sig52']:
@@ -108,15 +111,17 @@ def Crawling(URL, db):
 						except:
 							continue
 				#----------------게시판 규격이 아닌 경우
-				elif crawling_name in ['sj23', 'sig26', 'sig27', 'sig28', 'sj44', 'sig50', 'sig51']:
+				elif crawling_name in ['sj23', 'sig26', 'sig27', 'sig28', 'sj44', 'sig50', 'sig51',"sig55","sig56","sig57"]:
 					try:
 						data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL, lastly_post)')
 					except:
 						try:
 							data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL, lastly_post)')
+						except Exception as e:
+							print(e)
 						except:
 							continue
-					data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL, lastly_post)')
+					# data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL, lastly_post)')
 
 					post_data_prepare = data[0]
 					lastly_post = data[1]
@@ -179,7 +184,7 @@ def Crawling(URL, db):
 				#-----------------------------------------------------------------------------------------------------------------------------------
 				
 				#post_data_prepare이 이미 완성된 경우-----------------------------------------------------------------------
-				if crawling_name in ["sj4", "sj5", "sj8", "sj16", "sj23", "sig26", "sig27", "sig28", "sj44", "sig50", "sig51"]:
+				if crawling_name in ["sj4", "sj5", "sj8", "sj16", "sj23", "sig26", "sig27", "sig28", "sj44", "sig50", "sig51","sig55","sig56","sig57"]:
 					pass
 				#post_data_prepare이 완성되지 않은 경우---------------------------------------------------------------------
 				# 네이버 뉴스 기사
@@ -212,7 +217,7 @@ def Crawling(URL, db):
 			print("add_OK : ", add_cnt)	#DB에 저장된 게시글 수 출력
 		
 			#dirver 종료 [Selenium 을 사용했을 시]
-			if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj29", "sj30", "sj38", "sj44", "sig50", "sig51", "sig52"]:
+			if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj29", "sj30", "sj38", "sj44", "sig50", "sig51", "sig52","sig55","sig56","sig57"]:
 				driver.quit()
 			
 			#DB에 추가된 게시글이 0 이면 break, 아니면 다음페이지

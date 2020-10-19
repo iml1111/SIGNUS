@@ -41,7 +41,6 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	domain = Domain_check(URL['url'])
 	end_date = date_cut(URL['info'])
 	now_num = 0
-	repeat_num = 0
 	post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
 	driver.get(post_url)
 	if (URL['info'].split("_")[2] == "campustown"):
@@ -52,6 +51,12 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 		WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.area_text"))) #div.header을 발견하면 에이작스 로딩이 완료됬다는 가정
 	last_posts = [0]
 	while 1:
+		if (now_num > 0) and (now_num % 100 == 0):
+			print("post_driver를 재시작 합니다.")
+			post_driver.close()
+			post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
+			post_driver = campuspick.login(post_driver)
+		
 		driver.find_element_by_tag_name("body").send_keys(Keys.END)
 		time.sleep(1)
 
@@ -73,7 +78,6 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 
 				try:
 					post_driver.get(url)
-					#driver.get(url)
 				except:
 					if len(post_data_prepare) == 0:
 						recent_post = None
@@ -83,6 +87,8 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					return data
 				try:
 					WebDriverWait(post_driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.txt_area"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
+				except Exception as e:
+					print(e)
 				except:
 					if len(post_data_prepare) == 0:
 						recent_post = None
@@ -167,7 +173,6 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				continue
 
 		now_num = len(posts)
-		repeat_num += 1
 		if (date <= end_date) or (title.upper() == recent_post):
 			break
 	if len(post_data_prepare) == 0:
