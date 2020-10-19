@@ -441,15 +441,15 @@ List = (\
 	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
 	#101
 	{'url': "https://www.campuspick.com/job",\
-	'info': "sig27_campuspick_job",\
+	'info': "sig55_campuspick_job",\
 	'title_tag' : ["캠퍼스픽", "취업&진로", "동아리&모임"], 'login' : 1},\
 	#102
 	{'url': "https://www.campuspick.com/study/list?category1=3&category2=0",\
-	'info': "sig27_campuspick_certificate",\
+	'info': "sig56_campuspick_certificate",\
 	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
 	#103
 	{'url': "https://www.campuspick.com/study",\
-	'info': "sig27_campuspick_study",\
+	'info': "sig57_campuspick_study",\
 	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
 	#캠퍼스픽 동아리 [sig28_campuspick_club]
 	#104
@@ -586,7 +586,7 @@ List = (\
 	'title_tag' : ["취업&진로"], 'login' : 0},\
 	#인디드 [sig43_indeed_job]
 	#134
-	{'url': "https://kr.indeed.com/jobs?q=&l=서울&start=",\
+	{'url': "https://kr.indeed.com/jobs?q=&l=서울",\
 	'info': "sig43_indeed_job",\
 	'title_tag' : ["취업&진로"], 'login' : 0},\
 	#네이버블로그 [sj44_naverblog_...]
