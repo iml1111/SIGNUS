@@ -131,8 +131,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
-#gz
-gz_test_modules.py
-signus_crawler.log
-signus_crawler_error.log
+**/secret_info.py
+secret_info.py
