@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import datetime
-from modules.crawler.login import everytime
+from modules.crawler.login import campuspick
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,7 +14,6 @@ from modules.crawler.list.date_cut import date_cut
 from modules.crawler.etc.post_wash import post_wash
 from modules.crawler.etc.img_size import img_size
 
-
 #게시판 page_url 을 받으면, 그 페이지의 포스트 url 들을 반환
 def Parsing_list_url(URL, page_url, driver):
 	List = []
@@ -26,6 +25,9 @@ def Parsing_list_url(URL, page_url, driver):
 		pass
 
 	driver = chromedriver()
+	
+	#캠퍼스픽 로그인함수
+	driver = campuspick.login(driver)
 	List.append(page_url)
 
 	data = (driver, List)
@@ -39,15 +41,17 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	domain = Domain_check(URL['url'])
 	end_date = date_cut(URL['info'])
 	now_num = 0
-
+	
 	driver.get(post_url)
 	post_driver = chromedriver()
+	post_driver = campuspick.login(post_driver)
 	last_posts = [0]
 	while 1:
 		if (now_num > 0) and (now_num % 100 == 0):
 			print("post_driver를 재시작 합니다.")
 			post_driver.close()
 			post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
+			post_driver = campuspick.login(post_driver)
 		
 		driver.find_element_by_tag_name("body").send_keys(Keys.END)
 		time.sleep(1)
@@ -56,7 +60,6 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 		bs = BeautifulSoup(html, 'html.parser')
 
 		posts = bs.find("div", {"class": 'list'}).findAll("a", {"class": "item"})
-
 		#더이상 내릴 수 없으면 break
 		if len(last_posts) == len(posts):
 			break
@@ -78,7 +81,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					data = (post_data_prepare, recent_post)
 					return data
 				try:
-					WebDriverWait(post_driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.description"))) #p.description을 발견하면 에이작스 로딩이 완료됬다는 가정
+					WebDriverWait(post_driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, "info"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
 				except Exception as e:
 					print(e)
 				except:
@@ -90,60 +93,34 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					return data
 				html_post = post_driver.page_source
 				bs_post = BeautifulSoup(html_post, 'html.parser')
-				title = bs_post.find("article", {"class": "recruit"}).find("h2").get_text(" ", strip = True)
-				date =  bs_post.find("div", {"class": "section"}).find("p", {"class": "indent"}).text.strip()
-				date = date.split("~")[1]
-				date = date.split("(")[0]
-				date = date[1:]
-				#마감을 뜻한다.
-				if date == "0년 0월 0일":
-					break
-				now_year = datetime.datetime.now().strftime("%Y")
-				date = now_year + "년 " + date + " 00:00:00"
-				date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
-				phrase = bs_post.find("p", {'class': "description"}).get_text(" ", strip = True)
-				phrase = post_wash(phrase)		#post 의 공백을 전부 제거하기 위함
-				if bs_post.find("div", {"class": "poster"}) is None:
-					img = 8
-				else:
-					try:
-						img = bs_post.find("div", {"class": 'poster'}).find("img")['src']
-						if 1000 <= len(img):
-							img = 8
-						else:
-							if img.startswith("http://") or img.startswith("https://"):		# img가 내부링크인지 외부 링크인지 판단.
-								pass
-							elif img.startswith("//"):
-								img = "http:" + img
-							else:
-								img = domain + img
-					except:
-						img = 8
-				if img != 8:
-					if img_size(img):
-						pass
-					else:
-						img = 8
+				title = bs_post.find("h1").get_text(" ", strip = True)
+				date = bs_post.find("p",{"class":"info"}).find("span").get_text(" ", strip = True)
+				date = date.split("/")
+				date = "2020-"+date[0]+'-'+date[1]+":00"
+				date = str(datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
+				post = bs_post.find("p",{"class":"text"}).get_text(" ",strip = True)
+				post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
 
 				post_data['title'] = title.upper()
-				post_data['author'] = ''
+				post_data['author'] = "0"
 				post_data['date'] = date
-				post_data['post'] = phrase.lower()
-				post_data['img'] = img
+				post_data['post'] = post.lower()
+				post_data['img'] = 7
 				post_data['url'] = url
+				
 				print(date, "::::", title)
-
 				if (date < end_date) or (title.upper() == recent_post):
 					break
 				else:
 					post_data_prepare.append(post_data)
 			except:
 				continue
+
 		now_num = len(posts)
 		print("now_num : ", now_num)
-		if (date <= end_date) or (title.upper() == recent_post) or date == "0년 0월 0일":
+		if (date <= end_date) or (title.upper() == recent_post):
 			break
-	if len(post_data_prepare) == 0:
+	if len(post_data_prepare) == 0:	
 		recent_post = None
 	else:
 		recent_post = post_data_prepare[0]['title']
@@ -151,16 +128,12 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	post_driver.close()
 	return data
 
-
-
 #url을 받으면 url 그대로 반환해준다. => Page number이 필요하지 않는 url
 def Change_page(url, page):
-
 	return url
 
 
 #입력된 url의 도메인 url 반환
 def Domain_check(url):
 	domain = url.split('/')[0] + '//' + url.split('/')[2]	#도메인 url 추출
-
 	return domain

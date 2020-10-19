@@ -27,12 +27,9 @@ def Parsing_list_url(URL, page_url, driver):
 		pass
 
 	driver = chromedriver()
-
 	List.append(page_url)
 	
-
 	data = (driver, List)
-
 	return data
 
 
@@ -43,20 +40,19 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	domain = Domain_check(URL['url'])
 	end_date = date_cut(URL['info'])
 	now_num = 0
-	repeat_num = 0
-	#driver.get(post_url)
-	#WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.badges"))) #div.header을 발견하면 에이작스 로딩이 완료됬다는 가정
 
+	driver.get(post_url)
+	post_driver = chromedriver()
 	#비교를 하기위해서 make
 	last_posts = [0]
 	while 1:
-		driver.get(post_url)
-		WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.badges"))) #div.header을 발견하면 에이작스 로딩이 완료됬다는 가정
-
-
-		for i in range(repeat_num):
-			driver.find_element_by_tag_name("body").send_keys(Keys.END)
-			time.sleep(0.5)
+		if (now_num > 0) and (now_num % 100 == 0):
+			print("post_driver를 재시작 합니다.")
+			post_driver.close()
+			post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
+		
+		driver.find_element_by_tag_name("body").send_keys(Keys.END)
+		time.sleep(1)
 
 		html = driver.page_source
 		bs = BeautifulSoup(html, 'html.parser')
@@ -69,71 +65,88 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 			last_posts = posts
 
 		for post in posts[now_num:]:
-			post_data = {}
-			url = post.find("a")['href']
-			url = domain + url
-
-			driver.get(url)
-			WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "img"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
-			html_post = driver.page_source
-			bs_post = BeautifulSoup(html_post, 'html.parser')
-
-			title = bs_post.find("div", {"class": "content"}).find("h1").get_text(" ", strip = True)
-			author = bs_post.find("div", {"class": "content"}).find("p", {"class": "company"}).text.strip()
-			date =  bs_post.find("div", {"class": "section"}).find("p", {"class": "indent"}).text.strip()
-			date = date.split("~")[1]
-			date = date.split("(")[0]
-			date = date[1:]
-			#마감을 뜻한다.
-			if date == "0년 0월 0일":
-				break
-			now_year = datetime.datetime.now().strftime("%Y")
 			try:
-				date = now_year + "년 " + date + " 00:00:00"
-				date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
-			except:
-				date = date[6:].strip()
-				date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
-			phrase = bs_post.find("article", {'class': "description"}).get_text(" ", strip = True)
-			phrase = post_wash(phrase)		#post 의 공백을 전부 제거하기 위함
-			if bs_post.find("div", {"class": "poster"}) is None:
-				img = 8
-			else:
+				post_data = {}
+				url = post.find("a")['href']
+				url = domain + url
 				try:
-					img = bs_post.find("div", {"class": 'poster'}).find("img")['src']
-					if 1000 <= len(img):
-						img = 8
-					else:
-						if img.startswith("http://") or img.startswith("https://"):		# img가 내부링크인지 외부 링크인지 판단.
-							pass
-						elif img.startswith("//"):
-							img = "http:" + img
-						else:
-							img = domain + img
+					post_driver.get(url)
 				except:
+					if len(post_data_prepare) == 0:
+						recent_post = None
+					else:
+						recent_post = post_data_prepare[0]['title']
+					data = (post_data_prepare, recent_post)
+					return data
+				try:
+					WebDriverWait(post_driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "img"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
+				except Exception as e:
+					print(e)
+				except:
+					if len(post_data_prepare) == 0:
+						recent_post = None
+					else:
+						recent_post = post_data_prepare[0]['title']
+					data = (post_data_prepare, recent_post)
+					return data				
+				html_post = post_driver.page_source
+				bs_post = BeautifulSoup(html_post, 'html.parser')
+				title = bs_post.find("div", {"class": "content"}).find("h1").get_text(" ", strip = True)
+				date =  bs_post.find("div", {"class": "section"}).find("p", {"class": "indent"}).text.strip()
+				date = date.split("~")[1]
+				date = date.split("(")[0]
+				date = date[1:]
+				#마감을 뜻한다.
+				if date == "0년 0월 0일":
+					break
+				now_year = datetime.datetime.now().strftime("%Y")
+				try:
+					date = now_year + "년 " + date + " 00:00:00"
+					date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
+				except:
+					date = date[6:].strip()
+					date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
+				phrase = bs_post.find("article", {'class': "description"}).get_text(" ", strip = True)
+				phrase = post_wash(phrase)		#post 의 공백을 전부 제거하기 위함
+				if bs_post.find("div", {"class": "poster"}) is None:
 					img = 8
-			if img != 8:
-				if img_size(img):
-					pass
 				else:
-					img = 8
+					try:
+						img = bs_post.find("div", {"class": 'poster'}).find("img")['src']
+						if 1000 <= len(img):
+							img = 8
+						else:
+							if img.startswith("http://") or img.startswith("https://"):		# img가 내부링크인지 외부 링크인지 판단.
+								pass
+							elif img.startswith("//"):
+								img = "http:" + img
+							else:
+								img = domain + img
+					except:
+						img = 8
+				if img != 8:
+					if img_size(img):
+						pass
+					else:
+						img = 8
 
-			post_data['title'] = title.upper()
-			post_data['author'] = author.upper()
-			post_data['date'] = date
-			post_data['post'] = phrase.lower()
-			post_data['img'] = img
-			post_data['url'] = url
+				post_data['title'] = title.upper()
+				post_data['author'] = ''
+				post_data['date'] = date
+				post_data['post'] = phrase.lower()
+				post_data['img'] = img
+				post_data['url'] = url
 
-			print(date, "::::", title)
+				print(date, "::::", title)
 
-			if (date < end_date) or (title.upper() == recent_post):
-				break
-			else:
-				post_data_prepare.append(post_data)
-
+				if (date < end_date) or (title.upper() == recent_post):
+					break
+				else:
+					post_data_prepare.append(post_data)
+			except:
+				continue
 		now_num = len(posts)
-		repeat_num += 1
+		print("now_num : ", now_num)
 		if (date <= end_date) or (title.upper() == recent_post) or date == "0년 0월 0일":
 			break
 	if len(post_data_prepare) == 0:
@@ -141,6 +154,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	else:
 		recent_post = post_data_prepare[0]['title']
 	data = (post_data_prepare, recent_post)
+	post_driver.close()
 	return data
 
 

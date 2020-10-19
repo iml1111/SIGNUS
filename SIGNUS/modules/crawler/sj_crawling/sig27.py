@@ -27,12 +27,10 @@ def Parsing_list_url(URL, page_url, driver):
 	driver = chromedriver()
 	#캠퍼스픽 로그인함수
 	driver = campuspick.login(driver)
-
 	List.append(page_url)
 	
 
 	data = (driver, List)
-
 	return data
 
 
@@ -43,91 +41,102 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	domain = Domain_check(URL['url'])
 	end_date = date_cut(URL['info'])
 	now_num = 0
-	repeat_num = 0
-	#driver.get(post_url)
-	#WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.badges"))) #div.header을 발견하면 에이작스 로딩이 완료됬다는 가정
 
-	#비교를 하기위해서 make
+	driver.get(post_url)
+	post_driver = chromedriver()
+	post_driver = campuspick.login(post_driver)
 	last_posts = [0]
 	while 1:
-		driver.get(post_url)
-		WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.badges"))) #div.header을 발견하면 에이작스 로딩이 완료됬다는 가정
-
-
-		for i in range(repeat_num):
-			driver.find_element_by_tag_name("body").send_keys(Keys.END)
-			time.sleep(0.5)
+		if (now_num > 0) and (now_num % 100 == 0):
+			print("post_driver를 재시작 합니다.")
+			post_driver.close()
+			post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
+			post_driver = campuspick.login(post_driver)
+		
+		driver.find_element_by_tag_name("body").send_keys(Keys.END)
+		time.sleep(1)
 
 		html = driver.page_source
 		bs = BeautifulSoup(html, 'html.parser')
-
+		
 		posts = bs.find("div", {"class": 'list'}).findAll("a", {"class": "item"})
 		#더이상 내릴 수 없으면 break
 		if len(last_posts) == len(posts):
 			break
 		else:
 			last_posts = posts
-
-
 		for post in posts[now_num:]:
-			post_data = {}
-			url = post['href']
-			url = domain + url
-
 			try:
-				driver.get(url)
-			except:
-				if len(post_data_prepare) == 0:
-					recent_post = None
+				post_data = {}
+				url = post['href']
+				url = domain + url
+				try:
+					post_driver.get(url)
+				except:
+					if len(post_data_prepare) == 0:
+						recent_post = None
+					else:
+						recent_post = post_data_prepare[0]['title']
+					data = (post_data_prepare, recent_post)
+					return data
+				try:
+					WebDriverWait(post_driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.badges"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
+				except Exception as e:
+					print(e)				
+				except:
+					if len(post_data_prepare) == 0:
+						recent_post = None
+					else:
+						recent_post = post_data_prepare[0]['title']
+					data = (post_data_prepare, recent_post)
+					return data
+				html_post = post_driver.page_source
+				bs_post = BeautifulSoup(html_post, 'html.parser')
+				title = bs_post.find("article").find("h2").get_text(" ", strip = True)
+				now = datetime.datetime.now()
+				date =  now.strftime("%Y-%m-%d %H:%M:%S")
+				phrase = bs_post.find("p", {'class': "description"}).get_text(" ", strip = True)
+				phrase = post_wash(phrase)		#post 의 공백을 전부 제거하기 위함
+
+				if bs_post.find("div", {"class": "poster"}) is None:
+					img = 7
 				else:
-					recent_post = post_data_prepare[0]['title']
-				data = (post_data_prepare, recent_post)
-				return data
-			try:
-				WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.text"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
-			except:
-				if len(post_data_prepare) == 0:
-					recent_post = None
+					try:
+						img = bs_post.find("div", {"class": "poster"}).find("img")["src"]	#게시글의 첫번째 이미지를 가져옴.
+						if 1000 <= len(img):
+							img = 7
+						else:
+							if img.startswith("http://") or img.startswith("https://"):		# img가 내부링크인지 외부 링크인지 판단.
+								pass 
+							elif img.startswith("//"):
+								img = "http:" + img
+							else:
+								img = domain + img
+					except:
+						img = 7
+				if img != 7: 
+					if img_size(img):
+						pass
+					else:
+						img = 7
+
+				post_data['title'] = title.upper()
+				post_data['author'] = ''
+				post_data['date'] = date
+				post_data['post'] = phrase.lower()
+				post_data['img'] = img
+				post_data['url'] = url
+
+				print(date, "::::", title)
+				if (date < end_date) or (title.upper() == recent_post):
+					break
 				else:
-					recent_post = post_data_prepare[0]['title']
-				data = (post_data_prepare, recent_post)
-				return data
-			html_post = driver.page_source
-			bs_post = BeautifulSoup(html_post, 'html.parser')
-
-			title = bs_post.find("article").find("h1").get_text(" ", strip = True)
-			author = bs_post.find("p", {"class": "profile"}).text.strip()
-			date =  bs_post.find("p", {"class": "info"}).find("span").text.strip()
-			if date.find("오늘") != -1:
-				date = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-			elif len(date.split("/")) != 3:
-				now_year = datetime.datetime.now().strftime("%Y")
-				date = now_year + "/" + date + ":00"
-				date = str(datetime.datetime.strptime(date, "%Y/%m/%d %H:%M:%S"))
-			else:
-				date = "20" + date + ":00"
-				date = str(datetime.datetime.strptime(date, "%Y/%m/%d %H:%M:%S"))
-			
-			phrase = bs_post.find("p", {'class': "text"}).get_text(" ", strip = True)
-			phrase = post_wash(phrase)		#post 의 공백을 전부 제거하기 위함
-			img = 8
-
-			post_data['title'] = title.upper()
-			post_data['author'] = author.upper()
-			post_data['date'] = date
-			post_data['post'] = phrase.lower()
-			post_data['img'] = img
-			post_data['url'] = url
-
-			print(date, "::::", title)
-
-			if (date < end_date) or (title.upper() == recent_post):
-				break
-			else:
-				post_data_prepare.append(post_data)
+					post_data_prepare.append(post_data)
+			except:
+				continue
 
 		now_num = len(posts)
-		repeat_num += 1
+		print("now_num : ", now_num)
 		if (date <= end_date) or (title.upper() == recent_post):
 			break
 	if len(post_data_prepare) == 0:
@@ -135,6 +144,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	else:
 		recent_post = post_data_prepare[0]['title']
 	data = (post_data_prepare, recent_post)
+	post_driver.close()
 	return data
 
 

@@ -25,11 +25,11 @@ class Trainer:
     '''FastText Trainer Class'''
     def __init__(self):
         # Hyperparameter
-        self.VEC_SIZE = 30
+        self.VEC_SIZE = 31
         self.WINDOWS = 10
-        self.MIN_COUNT = 10
-        self.ITERATION = 10
-        self.WORKERS = 4
+        self.MIN_COUNT = 30
+        self.ITERATION = 1200
+        self.WORKERS = 16
         
         self.model = None
         self.corpora = []

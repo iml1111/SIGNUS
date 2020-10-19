@@ -23,7 +23,6 @@ def Parsing_list_url(URL, bs):
 			url = domain + post
 			url = url.replace("amp;", "")
 			List.append(url)
-
 	return List
 
 
