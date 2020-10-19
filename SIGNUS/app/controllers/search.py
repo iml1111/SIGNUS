@@ -4,10 +4,13 @@ Search Controller Module
 import math
 from bson.json_util import dumps
 from flask import current_app
+from datetime import datetime
 from app.models.mongodb.posts import Posts
+from app.models.mongodb.user import User
+from app.models.mongodb.search_log import SearchLog
 
 
-def v1_search(mongo_cur, keywords, order, rank_filter=True):
+def v1_search(mongo_cur, keywords, order, user=None, rank_filter=True):
     '''
     Search (검색)
 
@@ -25,13 +28,26 @@ def v1_search(mongo_cur, keywords, order, rank_filter=True):
     '''
     posts_model = Posts(mongo_cur)
     TK = current_app.config["TK"]
-    
+
     # 후보군 선정
     keyword_split = keywords.lower().strip().split()
     keyword_tokens = list(set(TK.get_tk(keywords) + keyword_split))
     posts = posts_model.search_posts(keywords,
                                      keyword_tokens,
                                      current_app.config['INDICATORS']['GET_SC_POST_NUM'])
+
+    # 로깅 작업
+    search_log_model = SearchLog(mongo_cur)
+    User_model = User(mongo_cur)
+    log_object = {'keyword_split': keyword_split,
+                  'keyword_tokens': keyword_tokens,
+                  'date': datetime.now()}
+    if user:
+        log_object['user_id'] = user['user_id']
+        User_model.update_list_column_push(user['user_id'], "search_list", log_object)
+    else:
+        log_object['user_id'] = "guest"
+    search_log_model.insert_one(log_object)
 
     # 유사도 측정
     set_keyword_tokens = set(keyword_tokens)
