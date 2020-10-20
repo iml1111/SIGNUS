@@ -40,7 +40,7 @@ def init_app(app):
                        user_id=g.user['user_id'],
                        url=request.full_path,
                        method=request.method,
-                       params= request.get_json())
+                       params=request.data)
 
         return response
 
