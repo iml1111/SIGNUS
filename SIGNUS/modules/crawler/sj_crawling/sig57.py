@@ -117,6 +117,8 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				continue
 
 		now_num = len(posts)
+		if now_num == 2000:
+			break
 		print("now_num : ", now_num)
 		if (date <= end_date) or (title.upper() == recent_post):
 			break

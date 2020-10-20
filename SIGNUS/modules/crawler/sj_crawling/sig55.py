@@ -41,11 +41,13 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	domain = Domain_check(URL['url'])
 	end_date = date_cut(URL['info'])
 	now_num = 0
-
+	end_dday = 0
 	driver.get(post_url)
 	post_driver = chromedriver()
 	post_driver = campuspick.login(post_driver)
 	last_posts = [0]
+	flag = 0 # 마감 게시물 연속으로 인한 종료시 값 전달 변수
+
 	while 1:
 		if (now_num > 0) and (now_num % 100 == 0):
 			print("post_driver를 재시작 합니다.")
@@ -67,6 +69,9 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 			last_posts = posts
 		
 		for post in posts[now_num:]:
+			if end_dday == 20: #마감 게시물이 연속으로 20개가 보이면 종료
+				flag = 1
+				break
 			try:
 				post_data = {}
 				url = post['href']
@@ -95,36 +100,37 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				
 				html_post = post_driver.page_source
 				bs_post = BeautifulSoup(html_post, 'html.parser')
-				if str(type(bs_post.find("p",{"class":"dday"}))) == "마감":
-					continue
-
-				title = bs_post.find("p",{"class":"company"}).get_text(" ", strip = True) + bs_post.find("div",{"class":"content figure"}).find("h1").get_text(" ",strip = True)
-				now = datetime.datetime.now()
-				date =  now.strftime("%Y-%m-%d %H:%M:%S")
-				post_content = bs_post.find("div", {'id': "container"}).findAll("div",{"class":"section"})
-				post_content = post[0].get_text(" ", strip = True)+post[1].get_text(" ",strip = True)
-				post_content = post_wash(post)		#post 의 공백을 전부 제거하기 위함
-
-				post_data['title'] = title.upper()
-				post_data['author'] = ''
-				post_data['date'] = date
-				post_data['post'] = post_content.lower()
-				post_data['img'] = 7
-				post_data['url'] = url
-				print(date, "::::", title)
-				if (date < end_date) or (title.upper() == recent_post):
-					break
+				dead_line = str((bs_post.find("p",{"class":"dday"}).get_text(" ",strip=True)))
+				if dead_line == "마감":
+					end_dday = end_dday + 1
 				else:
-					post_data_prepare.append(post_data)
+					end_dday = 0
+					title = bs_post.find("p",{"class":"company"}).get_text(" ", strip = True) + bs_post.find("div",{"class":"content figure"}).find("h1").get_text(" ",strip = True)
+					now = datetime.datetime.now()
+					date =  now.strftime("%Y-%m-%d %H:%M:%S")
+					post_content = bs_post.find("div", {'id': "container"}).findAll("div",{"class":"section"})
+					post_content = post_content[0].get_text(" ", strip = True)+post_content[1].get_text(" ",strip = True)
+					post_content = post_wash(post_content)		#post 의 공백을 전부 제거하기 위함
+
+					post_data['title'] = title.upper()
+					post_data['author'] = ''
+					post_data['date'] = date
+					post_data['post'] = post_content.lower()
+					post_data['img'] = 7
+					post_data['url'] = url
+					print(date, "::::", title)
+					if (date < end_date) or (title.upper() == recent_post):
+						break
+					else:
+						post_data_prepare.append(post_data)
 			except:
 				continue
-
+		
 		now_num = len(posts)
-		if now_num == 5000:
-			break
 		print("now_num : ", now_num)
-		if (date <= end_date) or (title.upper() == recent_post):
+		if (date <= end_date) or (title.upper() == recent_post) or (flag == 1):
 			break
+
 	if len(post_data_prepare) == 0:
 		recent_post = None
 	else:
