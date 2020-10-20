@@ -102,10 +102,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				date =  bs_post.find("div", {"class": "section"}).find("p", {"class": "indent"}).text.strip()
 				date = date.split("~")[1]
 				date = date.split("(")[0]
-				date = date[1:]
-				#마감을 뜻한다.
-				if date == "0년 0월 0일":
-					break
+
 				now_year = datetime.datetime.now().strftime("%Y")
 				date = now_year + "년 " + date + " 00:00:00"
 				date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
@@ -155,7 +152,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 
 		now_num = len(posts)
 		print("now_num : ", now_num)
-		if (date <= end_date) or (title.upper() == recent_post) or (flag == 1):
+		if (flag == 1) or (title.upper() == recent_post):
 			break
 	if len(post_data_prepare) == 0:
 		recent_post = None

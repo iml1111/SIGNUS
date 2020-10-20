@@ -135,7 +135,6 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 		
 		now_num = len(posts)
 		print("now_num : ", now_num)
-		print("flag : ",flag)
 		if (flag == 1) or (title.upper() == recent_post):
 			break
 
