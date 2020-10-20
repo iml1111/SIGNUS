@@ -23,13 +23,13 @@ def newsfeed_recommendation(mongo_cur, user):
     ---------
     뉴스피드 게시글 묶음 (List)
     '''
-    Posts_model = Posts(mongo_cur)
-    Category_model = Category(mongo_cur)
+    posts_model = Posts(mongo_cur)
+    category_model = Category(mongo_cur)
     
     FT = current_app.config["FT"]
 
     # 사용자 관심사 순 카테고리 정렬
-    category_list = Category_model.find_many(current_app.config["INDICATORS"]["CATEGORY_SET"])
+    category_list = category_model.find_many(current_app.config["INDICATORS"]["CATEGORY_SET"])
     category_vector = []
     for category in category_list:
         vec = FT.vec_sim(user['topic_vector'], category['topic_vector'])
@@ -41,7 +41,7 @@ def newsfeed_recommendation(mongo_cur, user):
     POST_WEIGHT = current_app.config["INDICATORS"]["RECOM_POST_WEIGHT"]
     MINUS_WEIGHT = current_app.config["INDICATORS"]["RECOM_POST_MINUS_WEIGHT"]
     for category in category_vector:
-        POSTS = Posts_model.find_category_posts(category[2],
+        POSTS = posts_model.find_category_posts(category[2],
                                                 current_app.config["INDICATORS"]["DEFAULT_DATE"],
                                                 current_app.config["INDICATORS"]["GET_NF_POST_NUM"] + POST_WEIGHT)
         POSTS_LIST += [POSTS]
@@ -80,8 +80,8 @@ def newsfeed_popularity(mongo_cur):
     ---------
     뉴스피드 게시글 묶음 (List)
     '''
-    Posts_model = Posts(mongo_cur)
-    return dumps(Posts_model.find_popularity_posts(current_app.config["INDICATORS"]["DEFAULT_DATE"],
+    posts_model = Posts(mongo_cur)
+    return dumps(posts_model.find_popularity_posts(current_app.config["INDICATORS"]["DEFAULT_DATE"],
                                                    current_app.config["INDICATORS"]["RETURN_NUM"]))
 
 
@@ -98,10 +98,10 @@ def newsfeed_categroy(mongo_cur, category_name):
     ---------
     뉴스피드 게시글 묶음 (List)
     '''
-    Category_model = Category(mongo_cur)
-    Posts_model = Posts(mongo_cur)
+    category_model = Category(mongo_cur)
+    posts_model = Posts(mongo_cur)
 
-    category = Category_model.find_one(category_name)
-    return dumps(Posts_model.find_category_posts(category['info_num'],
+    category = category_model.find_one(category_name)
+    return dumps(posts_model.find_category_posts(category['info_num'],
                                                  current_app.config["INDICATORS"]["DEFAULT_DATE"],
                                                  current_app.config["INDICATORS"]["GET_NF_POST_NUM"]))

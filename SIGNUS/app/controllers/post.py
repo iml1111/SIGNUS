@@ -21,9 +21,11 @@ def post_like(mongo_cur, post_oid, user):
     ---------
     결과 (Bool)
     '''
-    Posts_model = Posts(mongo_cur)
-    fav_push(mongo_cur, post_oid, user)
-    return Posts_model.update_increase(post_oid, {'fav_cnt': 1, 'popularity': 3})
+    posts_model = Posts(mongo_cur)
+    if fav_push(mongo_cur, post_oid, user):
+        return posts_model.update_increase(post_oid, {'fav_cnt': 1, 'popularity': 3})
+    else:
+        return False
 
 
 def post_unlike(mongo_cur, post_oid, user):
@@ -40,9 +42,11 @@ def post_unlike(mongo_cur, post_oid, user):
     ---------
     결과 (Bool)
     '''
-    Posts_model = Posts(mongo_cur)
-    fav_pull(mongo_cur, post_oid, user)
-    return Posts_model.update_increase(post_oid, {'fav_cnt': -1, 'popularity': -3})
+    posts_model = Posts(mongo_cur)
+    if fav_pull(mongo_cur, post_oid, user):
+        return posts_model.update_increase(post_oid, {'fav_cnt': -1, 'popularity': -3})
+    else:
+        return False
 
 
 def post_view(mongo_cur, post_oid, user=None):
@@ -59,7 +63,7 @@ def post_view(mongo_cur, post_oid, user=None):
     ---------
     결과 (Bool)
     '''
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
     if user:
         view_push(mongo_cur, post_oid, user)
-    return Posts_model.update_increase(post_oid, {'view': 1, 'popularity': 1})
+    return posts_model.update_increase(post_oid, {'view': 1, 'popularity': 1})

@@ -22,7 +22,7 @@ class Notice:
             projection
         )
 
-    def find_many(self, projection=None):
+    def find_all(self, projection=None):
         ''' 모든 공지사항 반환 '''
         return list(self.col.find(
             {},

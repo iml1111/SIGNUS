@@ -6,17 +6,48 @@ from numpy import zeros
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
+from modules.SJ_Auth.sj_auth import sjlms_api, dosejong_api, uis_api
 from app.models.mongodb.user import User
 from app.models.mongodb.posts import Posts
 
 
-def signup(mongo_cur, user_id, user_pw):
+def sj_signup(sj_id, sj_pw):
+    '''
+    Sejong SignUp (회원가입) - SJ Auth 사용
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+    sj_id > 세종대학교 포털 아이디
+    sj_pw > 세종대학교 포털 비밀번호
+
+    Return
+    ---------
+    result (Bool)
+    '''
+    # 1차 두드림
+    result = dosejong_api(sj_id, sj_pw)['result']
+    if not result:
+        # 2차 세종lms
+        result = sjlms_api(sj_id, sj_pw)['result']
+        if not result:
+            # 3차 세종UIS
+            result = uis_api(sj_id, sj_pw)['result']
+    
+    if result:
+        return True
+    else:
+        return False
+
+def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
     '''
     SignUp (회원가입)
 
     Params
     ---------
     mongo_cur > 몽고디비 커넥션 Object
+    sj_id > 세종대학교 포털 아이디
+    sj_pw > 세종대학교 포털 비밀번호
     user_id > 아이디
     user_pw > 비밀번호
 
@@ -25,6 +56,9 @@ def signup(mongo_cur, user_id, user_pw):
     JWT (String)
     '''
     user_model = User(mongo_cur)
+
+    if not sj_signup(sj_id, sj_pw):
+        return False
 
     if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
         return False
@@ -154,14 +188,14 @@ def fav_push(mongo_cur, post_oid, user):
     결과 (Bool)
     '''
     User_model = User(mongo_cur)
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
 
     # 좋아요 중복 체크
     if "fav_list" in User_model.check_fav(user['user_id'], post_oid):
         return False
 
     # 사용자 좋아요 리스트 캐싱 객체
-    post = Posts_model.find_one(post_oid)
+    post = posts_model.find_one(post_oid)
     fav_object = {
         '_id': str(post['_id']),
         'topic_vector': post['topic_vector'],
@@ -193,14 +227,14 @@ def fav_pull(mongo_cur, post_oid, user):
     결과 (Bool)
     '''
     User_model = User(mongo_cur)
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
 
     # 좋아요 체크
     if "fav_list" not in User_model.check_fav(user['user_id'], post_oid):
         return False
 
     # 사용자 좋아요 리스트 캐싱 제거
-    post = Posts_model.find_one(post_oid)
+    post = posts_model.find_one(post_oid)
     User_model.update_list_column_pull(user['user_id'], "fav_list", post['_id'])
     User_model.update_one(user['user_id'], {"updated_at": datetime.now()})
     return True
@@ -221,10 +255,10 @@ def view_push(mongo_cur, post_oid, user):
     결과 (Bool)
     '''
     User_model = User(mongo_cur)
-    Posts_model = Posts(mongo_cur)
+    posts_model = Posts(mongo_cur)
 
     # 사용자 좋아요 리스트 캐싱 객체
-    post = Posts_model.find_one(post_oid)
+    post = posts_model.find_one(post_oid)
     view_object = {
         '_id': str(post['_id']),
         'topic_vector': post['topic_vector'],

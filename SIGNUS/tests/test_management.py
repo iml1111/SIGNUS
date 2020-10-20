@@ -33,7 +33,16 @@ class ManagementAPITestCase(unittest.TestCase):
             #'Content-Type': 'application/json',
         }
         return result
-    
+
+    def test_realtime(self):
+        '''실시간 검색어'''
+        resp = self.client.get(
+            '/api/signus/v1/realtime',
+            headers=self.get_headers(),
+            json={}
+        )
+        self.assertEqual(resp.status_code, 200)
+
     def test_put_notice(self):
         '''공지 작성 API 검증 테스트'''
         resp = self.client.put(
