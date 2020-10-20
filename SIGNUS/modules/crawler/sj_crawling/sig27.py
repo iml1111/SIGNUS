@@ -41,6 +41,8 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	domain = Domain_check(URL['url'])
 	end_date = date_cut(URL['info'])
 	now_num = 0
+	end_dday = 0
+	flag = 0 # 마감 게시물 연속으로 인한 종료시 값 전달 변수
 
 	driver.get(post_url)
 	post_driver = chromedriver()
@@ -66,6 +68,9 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 		else:
 			last_posts = posts
 		for post in posts[now_num:]:
+			if end_dday == 20: #마감 게시물이 연속으로 20개가 보이면 종료
+				flag = 1
+				break
 			try:
 				post_data = {}
 				url = post['href']
@@ -82,7 +87,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				try:
 					WebDriverWait(post_driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "p.badges"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
 				except Exception as e:
-					print(e)				
+					print("에러 : ",e)				
 				except:
 					if len(post_data_prepare) == 0:
 						recent_post = None
@@ -92,12 +97,12 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					return data
 				html_post = post_driver.page_source
 				bs_post = BeautifulSoup(html_post, 'html.parser')
+				
 				title = bs_post.find("article").find("h2").get_text(" ", strip = True)
 				now = datetime.datetime.now()
 				date =  now.strftime("%Y-%m-%d %H:%M:%S")
 				phrase = bs_post.find("p", {'class': "description"}).get_text(" ", strip = True)
 				phrase = post_wash(phrase)		#post 의 공백을 전부 제거하기 위함
-
 				if bs_post.find("div", {"class": "poster"}) is None:
 					img = 7
 				else:
@@ -120,24 +125,29 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					else:
 						img = 7
 
-				post_data['title'] = title.upper()
-				post_data['author'] = ''
-				post_data['date'] = date
-				post_data['post'] = phrase.lower()
-				post_data['img'] = img
-				post_data['url'] = url
-
-				print(date, "::::", title)
-				if (date < end_date) or (title.upper() == recent_post):
-					break
+				dead_line = str((bs_post.find("p",{"class":"dday"}).get_text(" ",strip=True)))
+				if dead_line == "마감":
+					end_dday = end_dday + 1
 				else:
-					post_data_prepare.append(post_data)
+					end_dday = 0
+					post_data['title'] = title.upper()
+					post_data['author'] = ''
+					post_data['date'] = date
+					post_data['post'] = phrase.lower()
+					post_data['img'] = img
+					post_data['url'] = url
+
+					print(date, "::::", title)
+					if (date < end_date) or (title.upper() == recent_post):
+						break
+					else:
+						post_data_prepare.append(post_data)
 			except:
 				continue
 
 		now_num = len(posts)
 		print("now_num : ", now_num)
-		if (date <= end_date) or (title.upper() == recent_post):
+		if (date <= end_date) or (title.upper() == recent_post) or (flag == 1):
 			break
 	if len(post_data_prepare) == 0:
 		recent_post = None
