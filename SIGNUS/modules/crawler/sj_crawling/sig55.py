@@ -100,18 +100,19 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				
 				html_post = post_driver.page_source
 				bs_post = BeautifulSoup(html_post, 'html.parser')
+				
+				title = bs_post.find("p",{"class":"company"}).get_text(" ", strip = True) + bs_post.find("div",{"class":"content figure"}).find("h1").get_text(" ",strip = True)
+				now = datetime.datetime.now()
+				date =  now.strftime("%Y-%m-%d %H:%M:%S")
+				post_content = bs_post.find("div", {'id': "container"}).findAll("div",{"class":"section"})
+				post_content = post_content[0].get_text(" ", strip = True)+post_content[1].get_text(" ",strip = True)
+				post_content = post_wash(post_content)		#post 의 공백을 전부 제거하기 위함
+
 				dead_line = str((bs_post.find("p",{"class":"dday"}).get_text(" ",strip=True)))
 				if dead_line == "마감":
 					end_dday = end_dday + 1
 				else:
 					end_dday = 0
-					title = bs_post.find("p",{"class":"company"}).get_text(" ", strip = True) + bs_post.find("div",{"class":"content figure"}).find("h1").get_text(" ",strip = True)
-					now = datetime.datetime.now()
-					date =  now.strftime("%Y-%m-%d %H:%M:%S")
-					post_content = bs_post.find("div", {'id': "container"}).findAll("div",{"class":"section"})
-					post_content = post_content[0].get_text(" ", strip = True)+post_content[1].get_text(" ",strip = True)
-					post_content = post_wash(post_content)		#post 의 공백을 전부 제거하기 위함
-
 					post_data['title'] = title.upper()
 					post_data['author'] = ''
 					post_data['date'] = date
