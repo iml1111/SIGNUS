@@ -102,8 +102,14 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				bs_post = BeautifulSoup(html_post, 'html.parser')
 				
 				title = bs_post.find("p",{"class":"company"}).get_text(" ", strip = True) + bs_post.find("div",{"class":"content figure"}).find("h1").get_text(" ",strip = True)
-				now = datetime.datetime.now()
-				date =  now.strftime("%Y-%m-%d %H:%M:%S")
+				date =  bs_post.find("div", {"class": "section"}).find("p", {"class": "indent"}).text.strip()
+				date = date.split("~")[1]
+				date = date.split("(")[0]
+				date = date[1:]
+
+				now_year = datetime.datetime.now().strftime("%Y")
+				date = now_year + "년 " + date + " 00:00:00"
+				date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
 				post_content = bs_post.find("div", {'id': "container"}).findAll("div",{"class":"section"})
 				post_content = post_content[0].get_text(" ", strip = True)+post_content[1].get_text(" ",strip = True)
 				post_content = post_wash(post_content)		#post 의 공백을 전부 제거하기 위함
@@ -129,7 +135,8 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 		
 		now_num = len(posts)
 		print("now_num : ", now_num)
-		if (date <= end_date) or (title.upper() == recent_post) or (flag == 1):
+		print("flag : ",flag)
+		if (flag == 1) or (title.upper() == recent_post):
 			break
 
 	if len(post_data_prepare) == 0:

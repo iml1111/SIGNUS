@@ -99,8 +99,16 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				bs_post = BeautifulSoup(html_post, 'html.parser')
 				
 				title = bs_post.find("article").find("h2").get_text(" ", strip = True)
-				now = datetime.datetime.now()
-				date =  now.strftime("%Y-%m-%d %H:%M:%S")
+				date =  bs_post.find("div", {"class": "section"}).find("p", {"class": "indent"}).text.strip()
+				date = date.split("~")[1]
+				date = date.split("(")[0]
+				date = date[1:]
+				#마감을 뜻한다.
+				if date == "0년 0월 0일":
+					break
+				now_year = datetime.datetime.now().strftime("%Y")
+				date = now_year + "년 " + date + " 00:00:00"
+				date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
 				phrase = bs_post.find("p", {'class': "description"}).get_text(" ", strip = True)
 				phrase = post_wash(phrase)		#post 의 공백을 전부 제거하기 위함
 				if bs_post.find("div", {"class": "poster"}) is None:
