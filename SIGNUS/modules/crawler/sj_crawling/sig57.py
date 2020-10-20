@@ -98,13 +98,13 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				date = date.split("/")
 				date = "2020-"+date[0]+'-'+date[1]+":00"
 				date = str(datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
-				post = bs_post.find("p",{"class":"text"}).get_text(" ",strip = True)
-				post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
+				post_content = bs_post.find("p",{"class":"text"}).get_text(" ",strip = True)
+				post_content = post_wash(post_content)		#post 의 공백을 전부 제거하기 위함
 
 				post_data['title'] = title.upper()
 				post_data['author'] = "0"
 				post_data['date'] = date
-				post_data['post'] = post.lower()
+				post_data['post'] = post_content.lower()
 				post_data['img'] = 7
 				post_data['url'] = url
 				

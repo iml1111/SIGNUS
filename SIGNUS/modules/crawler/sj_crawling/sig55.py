@@ -92,18 +92,23 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 						recent_post = post_data_prepare[0]['title']
 					data = (post_data_prepare, recent_post)
 					return data
+				
 				html_post = post_driver.page_source
 				bs_post = BeautifulSoup(html_post, 'html.parser')
+				if str(type(bs_post.find("p",{"class":"dday"}))) == "마감":
+					continue
+
 				title = bs_post.find("p",{"class":"company"}).get_text(" ", strip = True) + bs_post.find("div",{"class":"content figure"}).find("h1").get_text(" ",strip = True)
 				now = datetime.datetime.now()
 				date =  now.strftime("%Y-%m-%d %H:%M:%S")
-				post = bs_post.find("div", {'class': "section"}).get_text(" ", strip = True)
-				post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
+				post_content = bs_post.find("div", {'id': "container"}).findAll("div",{"class":"section"})
+				post_content = post[0].get_text(" ", strip = True)+post[1].get_text(" ",strip = True)
+				post_content = post_wash(post)		#post 의 공백을 전부 제거하기 위함
 
 				post_data['title'] = title.upper()
 				post_data['author'] = ''
 				post_data['date'] = date
-				post_data['post'] = post.lower()
+				post_data['post'] = post_content.lower()
 				post_data['img'] = 7
 				post_data['url'] = url
 				print(date, "::::", title)
@@ -115,6 +120,8 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 				continue
 
 		now_num = len(posts)
+		if now_num == 5000:
+			break
 		print("now_num : ", now_num)
 		if (date <= end_date) or (title.upper() == recent_post):
 			break

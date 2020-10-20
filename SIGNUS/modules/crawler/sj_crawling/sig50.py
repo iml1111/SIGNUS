@@ -36,16 +36,25 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	domain = Domain_check(URL['url'])
 	end_date = date_cut(URL['info'])
 	now_num = 0
-	repeat_num = 0
-	post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
+
 	driver.get(post_url)
+	post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
 	last_posts = [0]
 	while 1:
+		print("시작이다 씨빨럼아")
+		if (now_num > 0) and (now_num % 100 == 0):
+			print("post_driver를 재시작 합니다.")
+			post_driver.close()
+			post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
+		print('ㅋㅋㅋ')
 		driver.find_element_by_tag_name("body").send_keys(Keys.END)
-		time.sleep(5)
+		time.sleep(1)
+		print("시발시발")
+
 		html = driver.page_source
 		bs = BeautifulSoup(html, 'html.parser')
-		posts = bs.find("div", {"class": 'articlelist'}).find("ol", {"class": 'group'}).find_all("li")
+
+		posts = bs.find("div", {"class": 'articlelist'}).findAll("a",{"class":"article"})
 		#더이상 내릴 수 없으면 break
 		if len(last_posts) == len(posts):
 			break
@@ -55,7 +64,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 		for post in posts[now_num:]:
 			try:
 				post_data = {}
-				url = post.find("a", {"class" : "article"})['href']
+				url = post['href']
 				url = domain + url
 				try:
 					post_driver.get(url)
@@ -69,6 +78,8 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					return data
 				try:
 					WebDriverWait(post_driver, 30).until(EC.presence_of_element_located((By.TAG_NAME, "time"))) #a.item을 발견하면 에이작스 로딩이 완료됬다는 가정
+				except Exception as e:
+					print(e)
 				except:
 					if len(post_data_prepare) == 0:
 						recent_post = None
@@ -78,8 +89,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					return data
 				html_post = post_driver.page_source
 				bs_post = BeautifulSoup(html_post, 'html.parser')
-				
-				title = str(post.find("p",{"class":"text short"}).get_text(" ", strip = True)).split("<br>")[0]
+				title = bs_post.find("article",{"class":"article"}).find("p",{"class":"text"}).get_text(" ", strip = True)
 				date = bs_post.find("p", {"class": "profile"}).find("time").get_text(" ", strip = True)
 				date_len = len(date.split("/"))
 				# 작성일 현재 년도 인경우
@@ -89,32 +99,16 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					date = str(datetime.datetime.strptime(date, "%Y/%m/%d %H:%M:%S"))
 				else:
 					date = str(datetime.datetime.strptime(date, "%Y/%m/%d %H:%M:%S"))
-				post = bs_post.find("div",{"class":"articleitem"}).find("p",{"class":"text"}).get_text(" ",strip = True)
-				post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
-
-				if bs_post.find("div", {"class": "attaches full"}) is None:
-					img = 3
-				else:
-					img = bs_post.find("div", {"class": "attaches full"}).find("img")["src"]		#게시글의 첫번째 이미지를 가져옴.
-					if 1000 <= len(img):
-						img = 3
-					else:
-						if img.startswith("http://") or img.startswith("https://"):		# img가 내부링크인지 외부 링크인지 판단.
-							pass
-						elif img.startswith("//"):
-							img = "http:" + img
-						else:
-							img = domain + img
-				if img != 3:
-					if img_size(img):
-						pass
-					else:
-						img = 3	
+				post_content = bs_post.find("div",{"class":"articleitem"}).findAll("p",{"class":"text"})
+				posted = ''
+				for item in post_content:
+					posted = posted + item.get_text(" ",strip = True)
+				posted = post_wash(posted)		#post 의 공백을 전부 제거하기 위함
 				post_data['title'] = title.upper()
 				post_data['author'] = ""
 				post_data['date'] = date
-				post_data['post'] = post.lower()
-				post_data['img'] = img
+				post_data['post'] = posted.lower()
+				post_data['img'] = 7
 				post_data['url'] = url
 				print(date, "::::", title)
 
@@ -122,11 +116,14 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 					break
 				else:
 					post_data_prepare.append(post_data)
+					print("시발")
 			except:
 				continue
 
 		now_num = len(posts)
-		repeat_num += 1
+		if now_num == 5000:
+			break
+		print("now_num : ", now_num)
 		if (date <= end_date) or (title.upper() == recent_post):
 			break
 	if len(post_data_prepare) == 0:
