@@ -110,7 +110,9 @@ def Parsing_post_data(bs, post_url, URL):
 		post_data['img'] = img
 		post_data['url'] = list_url
 
+		print(date, "::::", title)
 		return_data.append(post_data)
+
 	return return_data
 
 
@@ -118,7 +120,7 @@ def Parsing_post_data(bs, post_url, URL):
 #url을 받으면 Page를 변환시켜서, 변환된 url 반환
 def Change_page(url, page):	
 	parsed_url = url.split("&start=")
-	url_done = parsed_url[0] + "&start=" + str(page) + parsed_url[1]
+	url_done = parsed_url[0] + "&start=" + str(page*10-9) + parsed_url[1]
 	return url_done
 
 
