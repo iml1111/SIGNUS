@@ -1,7 +1,7 @@
 '''
 SIGNUS V1 post API
 '''
-from flask import g, request
+from flask import g
 from app.api.signus_v1 import signus_v1 as api
 from app.api.decorators import timer, login_required, login_optional
 from app.controllers.post import (post_like,
