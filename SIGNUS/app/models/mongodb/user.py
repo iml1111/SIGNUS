@@ -99,6 +99,7 @@ class User:
         )
         return True
 
-    def remove_one(self, user_id):
+    def delete_one(self, user_id):
         ''' 특정 유저 삭제 '''
-        print("not yet")
+        self.col.delete_one({'user_id': user_id})
+        return True

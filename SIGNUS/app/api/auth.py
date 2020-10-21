@@ -5,9 +5,10 @@ from flask import g, request, Blueprint
 from app.api import input_check
 from app.api.decorators import timer, login_required
 from app.controllers.auth import (signup,
-                                  sj_signup,
-                                  get_user,
                                   signin,
+                                  auth_sejong,
+                                  secession,
+                                  get_user,
                                   fav_push,
                                   fav_pull,
                                   view_push)
@@ -16,17 +17,17 @@ from app.controllers.auth import (signup,
 auth = Blueprint('auth', __name__)
 
 
-@auth.route("/sj_signup", methods=['POST'])
+@auth.route("/sejong", methods=['POST'])
 @timer
-def api_auth_sj_signup():
-    ''' 회원 가입 '''
+def api_auth_sejong():
+    ''' 세종대학교 구성원 인증 '''
     data = request.get_json()
     input_check(data, "sj_id", str, 50)
     input_check(data, "sj_pw", str, 100)
     return {
         "msg": "success",
-        "result": sj_signup(data['sj_id'],
-                            data['sj_pw'])
+        "result": auth_sejong(data['sj_id'],
+                              data['sj_pw'])
     }
 
 
@@ -49,6 +50,21 @@ def api_auth_signup():
     }
 
 
+@auth.route("/secession", methods=['DELETE'])
+@timer
+@login_required
+def api_auth_secession():
+    ''' 회원 탈퇴 '''
+    data = request.get_json()
+    input_check(data, "pw", str, 100)
+    return {
+        "msg": "success",
+        "result": secession(g.mongo_cur,
+                            g.user,
+                            data['pw'])
+    }
+
+
 @auth.route("/signin", methods=['POST'])
 @timer
 def api_auth_signin():
@@ -64,10 +80,10 @@ def api_auth_signin():
     }
 
 
-@auth.route("", methods=["GET"])
+@auth.route("/user", methods=["GET"])
 @timer
 @login_required
-def api_auth_get():
+def api_auth_user():
     ''' 회원 정보 반환 '''
     return {
         "msg": "success",

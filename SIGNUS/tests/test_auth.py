@@ -49,7 +49,7 @@ class AuthAPITestCase(unittest.TestCase):
     def test_get_user(self):
         ''' 회원 정보 반환 API 검증 테스트 '''
         resp = self.client.get(
-            '/api/auth',
+            '/api/auth/user',
             headers=self.get_headers(),
             json={}
         )

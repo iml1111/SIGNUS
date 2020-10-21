@@ -11,9 +11,9 @@ from app.models.mongodb.user import User
 from app.models.mongodb.posts import Posts
 
 
-def sj_signup(sj_id, sj_pw):
+def auth_sejong(sj_id, sj_pw):
     '''
-    Sejong SignUp (회원가입) - SJ Auth 사용
+    Sejong authorization (세종대학교 구성원 인증) - SJ Auth 사용
 
     Params
     ---------
@@ -41,7 +41,7 @@ def sj_signup(sj_id, sj_pw):
 
 def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
     '''
-    SignUp (회원가입)
+    SignUp (회원 가입)
 
     Params
     ---------
@@ -57,7 +57,7 @@ def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
     '''
     user_model = User(mongo_cur)
 
-    if not sj_signup(sj_id, sj_pw):
+    if not auth_sejong(sj_id, sj_pw):
         return False
 
     if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
@@ -78,6 +78,28 @@ def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
                                                 expires_delta=False)}
 
 
+def secession(mongo_cur, user, user_pw):
+    '''
+    Secession (회원 탈퇴)
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+    sj_id > 세종대학교 포털 아이디
+    sj_pw > 세종대학교 포털 비밀번호
+    user_id > 아이디
+    user_pw > 비밀번호
+
+    Return
+    ---------
+    JWT (String)
+    '''
+    user_model = User(mongo_cur)
+    if not check_password_hash(user['user_pw'], user_pw):
+        return False
+    return user_model.delete_one(user['user_id'])
+
+
 def signin(mongo_cur, user_id, user_pw):
     '''
     SignIn (로그인 함수)
@@ -96,9 +118,9 @@ def signin(mongo_cur, user_id, user_pw):
 
     user = user_model.find_one(user_id)
     if not user:
-        return None
+        return False
     if not check_password_hash(user['user_pw'], user_pw):
-        return None
+        return False
     return {'access_token': create_access_token(identity=user_id,
                                                 expires_delta=False)}
 
