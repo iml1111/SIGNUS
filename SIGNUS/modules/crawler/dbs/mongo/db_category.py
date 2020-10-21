@@ -45,8 +45,8 @@ category_club = {
 	'category_name': '동아리-모임',
 	'info': 
 		[
-			'sig27_campuspick_language','sig27_campuspick_job','sig27_campuspick_certificate',
-			'sig27_campuspick_study', 'sig28_campuspick_club'
+			'sig27_campuspick_language','sig56_campuspick_certificate',
+			'sig57_campuspick_study', 'sig28_campuspick_club'
 		],
 	'tag': 
 		[
@@ -84,7 +84,8 @@ category_course = {
 			'sig36_jobkoreatip_tip','sig37_jobkorea_job','sig37_jobkorea_public','sj38_sejongbab_tip',
 			'sig39_rndjob_job','sj40_jobsolution_job','sj41_jobsolutionAnother_semina',
 			'sj42_jobsolutionAnother_review','sj42_jobsolutionAnother_interview','sig43_indeed_job',
-			'sig45_infor_notice','sig45_external_notice','sig45_review_data','sig48_vms_volunteer','sig50_campuspick_parttime'
+			'sig45_infor_notice','sig45_external_notice','sig45_review_data','sig48_vms_volunteer','sig50_campuspick_parttime',
+			'sig55_campuspick_job'
 		],
 	'tag': 
 		[
