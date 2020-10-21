@@ -7,6 +7,7 @@ from app.controllers.auth import (fav_push,
                                   fav_pull,
                                   view_push)
 
+
 def post_like(mongo_cur, post_oid, user):
     '''
     게시글 좋아요를 올려주는 함수
@@ -19,7 +20,7 @@ def post_like(mongo_cur, post_oid, user):
 
     Return
     ---------
-    결과 (Bool)
+    True of False > (Bool)
     '''
     posts_model = Posts(mongo_cur)
     if fav_push(mongo_cur, post_oid, user):
@@ -40,7 +41,7 @@ def post_unlike(mongo_cur, post_oid, user):
 
     Return
     ---------
-    결과 (Bool)
+    True of False > (Bool)
     '''
     posts_model = Posts(mongo_cur)
     if fav_pull(mongo_cur, post_oid, user):
@@ -61,7 +62,7 @@ def post_view(mongo_cur, post_oid, user=None):
 
     Return
     ---------
-    결과 (Bool)
+    True of False > (Bool)
     '''
     posts_model = Posts(mongo_cur)
     if user:

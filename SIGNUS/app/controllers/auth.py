@@ -13,7 +13,7 @@ from app.models.mongodb.posts import Posts
 
 def auth_sejong(sj_id, sj_pw):
     '''
-    Sejong authorization (세종대학교 구성원 인증) - SJ Auth 사용
+    세종대학교 구성원 인증 - SJ Auth 사용
 
     Params
     ---------
@@ -23,7 +23,7 @@ def auth_sejong(sj_id, sj_pw):
 
     Return
     ---------
-    result (Bool)
+    True or False (Bool)
     '''
     # 1차 두드림
     result = dosejong_api(sj_id, sj_pw)['result']
@@ -39,9 +39,10 @@ def auth_sejong(sj_id, sj_pw):
     else:
         return False
 
+
 def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
     '''
-    SignUp (회원 가입)
+    회원 가입
 
     Params
     ---------
@@ -53,16 +54,13 @@ def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
 
     Return
     ---------
-    JWT (String)
+    access_token > JWT (String)
     '''
     user_model = User(mongo_cur)
-
     if not auth_sejong(sj_id, sj_pw):
         return False
-
     if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
         return False
-
     user = {'user_id': user_id,
             'user_pw': generate_password_hash(user_pw),
             'topic_vector': (zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
@@ -74,35 +72,12 @@ def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
             'cold_point': 0,
             'created_at': datetime.now()}
     user_model.insert_one(user)
-    return {'access_token': create_access_token(identity=user_id,
-                                                expires_delta=False)}
-
-
-def secession(mongo_cur, user, user_pw):
-    '''
-    Secession (회원 탈퇴)
-
-    Params
-    ---------
-    mongo_cur > 몽고디비 커넥션 Object
-    sj_id > 세종대학교 포털 아이디
-    sj_pw > 세종대학교 포털 비밀번호
-    user_id > 아이디
-    user_pw > 비밀번호
-
-    Return
-    ---------
-    JWT (String)
-    '''
-    user_model = User(mongo_cur)
-    if not check_password_hash(user['user_pw'], user_pw):
-        return False
-    return user_model.delete_one(user['user_id'])
+    return {'access_token': create_access_token(identity=user_id, expires_delta=False)}
 
 
 def signin(mongo_cur, user_id, user_pw):
     '''
-    SignIn (로그인 함수)
+    로그인
 
     Params
     ---------
@@ -112,17 +87,35 @@ def signin(mongo_cur, user_id, user_pw):
 
     Return
     ---------
-    JWT (String)
+    access_token > JWT (String)
     '''
     user_model = User(mongo_cur)
-
     user = user_model.find_one(user_id)
     if not user:
         return False
     if not check_password_hash(user['user_pw'], user_pw):
         return False
-    return {'access_token': create_access_token(identity=user_id,
-                                                expires_delta=False)}
+    return {'access_token': create_access_token(identity=user_id, expires_delta=False)}
+
+
+def secession(mongo_cur, user, user_pw):
+    '''
+    회원 탈퇴
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+    user > 사용자 객체
+    user_pw > 비밀번호
+
+    Return
+    ---------
+    True of False > (Bool)
+    '''
+    user_model = User(mongo_cur)
+    if not check_password_hash(user['user_pw'], user_pw):
+        return False
+    return user_model.delete_one(user['user_id'])
 
 
 def get_user(user):
@@ -136,7 +129,7 @@ def get_user(user):
 
     Return
     ---------
-    사용자 정보 (Dict)
+    사용자 정보 > (Dict)
     '''
     result = user.copy()
     del result['cold_point']
@@ -146,6 +139,7 @@ def get_user(user):
     del result['_id']
     del result['topic_vector']
     return result
+
 
 def reset_tendency(mongo_cur, user_id):
     '''
@@ -158,13 +152,11 @@ def reset_tendency(mongo_cur, user_id):
 
     Return
     ---------
-    결과 (Bool)
+    True of False > (Bool)
     '''
     user_model = User(mongo_cur)
-
     if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
         return False
-
     user = {'topic_vector': (zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
             'fav_list': [],
             'view_list': [],
@@ -173,26 +165,6 @@ def reset_tendency(mongo_cur, user_id):
             'updated_at': datetime.now(),
             'cold_point': 0}
     return user_model.update_one(user_id, user)
-
-
-def update_updated_at(mongo_cur, user_id):
-    '''
-    Update user updated_at time (사용자 액션 시간 갱신)
-
-    Params
-    ---------
-    mongo_cur > 몽고디비 커넥션 Object
-    user_id > 아이디
-
-    Return
-    ---------
-    결과 (Bool)
-    '''
-    user_model = User(mongo_cur)
-
-    if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
-        return False
-    return user_model.update_one(user_id, {"updated_at": datetime.now()})
 
 
 def fav_push(mongo_cur, post_oid, user):
@@ -207,15 +179,13 @@ def fav_push(mongo_cur, post_oid, user):
 
     Return
     ---------
-    결과 (Bool)
+    True of False > (Bool)
     '''
     User_model = User(mongo_cur)
     posts_model = Posts(mongo_cur)
-
     # 좋아요 중복 체크
     if "fav_list" in User_model.check_fav(user['user_id'], post_oid):
         return False
-
     # 사용자 좋아요 리스트 캐싱 객체
     post = posts_model.find_one(post_oid)
     fav_object = {
@@ -230,7 +200,6 @@ def fav_push(mongo_cur, post_oid, user):
     }
     User_model.update_list_column_push(user['user_id'], "fav_list", fav_object)
     User_model.update_one(user['user_id'], {"updated_at": datetime.now()})
-
     return True
 
 
@@ -246,15 +215,13 @@ def fav_pull(mongo_cur, post_oid, user):
 
     Return
     ---------
-    결과 (Bool)
+    True of False > (Bool)
     '''
     User_model = User(mongo_cur)
     posts_model = Posts(mongo_cur)
-
     # 좋아요 체크
     if "fav_list" not in User_model.check_fav(user['user_id'], post_oid):
         return False
-
     # 사용자 좋아요 리스트 캐싱 제거
     post = posts_model.find_one(post_oid)
     User_model.update_list_column_pull(user['user_id'], "fav_list", post['_id'])
@@ -274,11 +241,10 @@ def view_push(mongo_cur, post_oid, user):
 
     Return
     ---------
-    결과 (Bool)
+    True of False > (Bool)
     '''
     User_model = User(mongo_cur)
     posts_model = Posts(mongo_cur)
-
     # 사용자 좋아요 리스트 캐싱 객체
     post = posts_model.find_one(post_oid)
     view_object = {
