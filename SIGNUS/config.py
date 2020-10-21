@@ -39,14 +39,6 @@ class Config:
         {
             "key": "updated_at",
             "value": datetime.now()
-        },
-        {
-            "key": "highest_fav_cnt",
-            "value": 1
-        },
-        {
-            "key": "highest_view_cnt",
-            "value": 1
         }
     ]
 
