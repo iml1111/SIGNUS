@@ -8,10 +8,7 @@ from app.controllers.auth import (signup,
                                   signin,
                                   auth_sejong,
                                   secession,
-                                  get_user,
-                                  fav_push,
-                                  fav_pull,
-                                  view_push)
+                                  get_user)
 
 
 auth = Blueprint('auth', __name__)
