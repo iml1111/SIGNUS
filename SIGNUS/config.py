@@ -34,6 +34,10 @@ class Config:
     # Maximum API time
     SLOW_API_TIME = 0.5
 
+    # SEJONG Auth
+    SEJONG_ID = os.environ['SIGNUS_SEJONG_ID']
+    SEJONG_PW = os.environ['SIGNUS_SEJONG_PW']
+
     # master_config 기본 값
     DEFAULT_MASTER_CONFIG = [
         {
