@@ -16,20 +16,23 @@ class SearchAPITestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         self.client = self.app.test_client()
-        self.access_token = create_access_token(
-            identity=self.app.config['ADMIN_ID'],
-            expires_delta=False
-        )
+        self.access_token = {
+            'ADMIN': create_access_token(
+                     identity=self.app.config['ADMIN_ID'],
+                     expires_delta=False),
+            'TEST': create_access_token(
+                     identity="test",
+                     expires_delta=False)}
 
     def tearDown(self):
         '''후처리 메소드'''
         self.app_context.pop()
 
-    def get_headers(self):
+    def get_headers(self, user_type="ADMIN"):
         '''API Header 생성 메소드'''
         result = {
             'Accept': 'application/json',
-            'Authorization': "Bearer " + self.access_token,
+            'Authorization': "Bearer " + self.access_token[user_type],
             #'Content-Type': 'application/json',
         }
         return result
