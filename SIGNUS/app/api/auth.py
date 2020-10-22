@@ -4,11 +4,7 @@ Auth View Module
 from flask import g, request, Blueprint
 from app.api import input_check
 from app.api.decorators import timer, login_required
-from app.controllers.auth import (signup,
-                                  signin,
-                                  auth_sejong,
-                                  secession,
-                                  get_user)
+from app.controllers.auth import signup, signin, auth_sejong, secession, update_password, update_nickname, get_user
 
 
 auth = Blueprint('auth', __name__)
@@ -37,13 +33,15 @@ def api_auth_signup():
     input_check(data, "sj_pw", str, 100)
     input_check(data, "id", str, 50)
     input_check(data, "pw", str, 100)
+    input_check(data, "nickname", str, 10)
     return {
         "msg": "success",
         "result": signup(g.mongo_cur,
                          data['sj_id'],
                          data['sj_pw'],
                          data['id'],
-                         data['pw'])
+                         data['pw'],
+                         data['nickname'])
     }
 
 
@@ -74,6 +72,39 @@ def api_auth_secession():
         "result": secession(g.mongo_cur,
                             g.user,
                             data['pw'])
+    }
+
+
+@auth.route("/user/password", methods=['PATCH'])
+@login_required
+def api_auth_patch_password():
+    '''비밀번호 변경'''
+    data = request.get_json()
+    input_check(data, "old_pw", str, 100)
+    input_check(data, "new_pw", str, 100)
+    input_check(data, "check_pw", str, 100)
+    return {
+        "msg": "success",
+        "result": update_password(g.mongo_cur,
+                                  g.user,
+                                  data['old_pw'],
+                                  data['new_pw'],
+                                  data['check_pw'])
+    }
+
+
+@auth.route("/user/nickname", methods=['PATCH'])
+@timer
+@login_required
+def api_auth_patch_nickname():
+    '''닉네임변경'''
+    data = request.get_json()
+    input_check(data, "nickname", str)
+    return {
+        "msg": "success",
+        "result": update_nickname(g.mongo_cur,
+                                  g.user,
+                                  data['nickname'])
     }
 
 

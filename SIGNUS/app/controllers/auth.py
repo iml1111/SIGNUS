@@ -40,7 +40,7 @@ def auth_sejong(sj_id, sj_pw):
         return False
 
 
-def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
+def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw, nickname):
     '''
     회원 가입
 
@@ -51,6 +51,7 @@ def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
     sj_pw > 세종대학교 포털 비밀번호
     user_id > 아이디
     user_pw > 비밀번호
+    nickname > 닉네임
 
     Return
     ---------
@@ -63,6 +64,7 @@ def signup(mongo_cur, sj_id, sj_pw, user_id, user_pw):
         return False
     user = {'user_id': user_id,
             'user_pw': generate_password_hash(user_pw),
+            'nickname': nickname,
             'topic_vector': (zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
             'fav_list': [],
             'view_list': [],
@@ -118,6 +120,47 @@ def secession(mongo_cur, user, user_pw):
     return user_model.delete_one(user['user_id'])
 
 
+def update_password(mongo_cur, user, old_pw, new_pw, check_pw):
+    '''
+    비밀번호 변경
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+    user > 사용자 객체
+    old_pw > 이전 비밀번호
+    new_pw > 새 비밀번호
+    check_pw > 새 비밀번호 확인
+
+    Return
+    ---------
+    True of False > (Bool)
+    '''
+    user_model = User(mongo_cur)
+    if new_pw != check_pw:
+        return False
+    if not check_password_hash(user['user_pw'], old_pw):
+        return False
+    return user_model.update_one(user['user_id'], {'user_pw': generate_password_hash(new_pw)})
+
+
+def update_nickname(mongo_cur, user, nickname):
+    '''
+    닉네임 변경
+
+    Params
+    ---------
+    mongo_cur > 몽고디비 커넥션 Object
+    nickname > 닉네임 변경
+
+    Return
+    ---------
+    True of False > (Bool)
+    '''
+    user_model = User(mongo_cur)
+    return user_model.update_one(user['user_id'], {'nickname': nickname})
+
+
 def get_user(user):
     '''
     유저 정보 반환
@@ -139,32 +182,6 @@ def get_user(user):
     del result['_id']
     del result['topic_vector']
     return result
-
-
-def reset_tendency(mongo_cur, user_id):
-    '''
-    Reset tendency (사용자 관심사 초기화)
-
-    Params
-    ---------
-    mongo_cur > 몽고디비 커넥션 Object
-    user_id > 아이디
-
-    Return
-    ---------
-    True of False > (Bool)
-    '''
-    user_model = User(mongo_cur)
-    if user_model.find_one(user_id, {"_id": 0, "user_id": 1}):
-        return False
-    user = {'topic_vector': (zeros(current_app.config["FT_VEC_SIZE"])).tolist(),
-            'fav_list': [],
-            'view_list': [],
-            'newsfeed_list': [],
-            'search_list': [],
-            'updated_at': datetime.now(),
-            'cold_point': 0}
-    return user_model.update_one(user_id, user)
 
 
 def fav_push(mongo_cur, post_oid, user):
