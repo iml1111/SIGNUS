@@ -5,11 +5,7 @@ from flask import g, request
 from app.api import input_check
 from app.api.signus_v1 import signus_v1 as api
 from app.api.decorators import timer, login_required
-from app.controllers.management import (get_realtime,
-                                        get_notice,
-                                        insert_notice,
-                                        update_notice,
-                                        delete_notice)
+from app.controllers.management import get_realtime, get_notice, insert_notice, update_notice, delete_notice
 
 
 @api.route("/realtime", methods=["GET"])

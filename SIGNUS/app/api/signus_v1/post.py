@@ -4,9 +4,7 @@ SIGNUS V1 post API
 from flask import g
 from app.api.signus_v1 import signus_v1 as api
 from app.api.decorators import timer, login_required, login_optional
-from app.controllers.post import (post_like,
-                                  post_unlike,
-                                  post_view)
+from app.controllers.post import post_like, post_unlike, post_view
 
 
 @api.route("/post/like/<string:post_oid>", methods=["PATCH"])

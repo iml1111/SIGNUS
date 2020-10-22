@@ -4,9 +4,7 @@ SIGNUS V1 newsfeed API
 from flask import g, request, current_app
 from app.api.signus_v1 import signus_v1 as api
 from app.api.decorators import timer, login_optional
-from app.controllers.newsfeed import (newsfeed_recommendation,
-                                      newsfeed_popularity,
-                                      newsfeed_categroy)
+from app.controllers.newsfeed import newsfeed_recommendation, newsfeed_popularity, newsfeed_categroy
 
 
 @api.route("/newsfeed/recom", methods=["GET"])
