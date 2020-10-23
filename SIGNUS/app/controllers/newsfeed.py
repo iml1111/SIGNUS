@@ -102,6 +102,25 @@ def newsfeed_categroy(mongo_cur, category_name):
     posts_model = Posts(mongo_cur)
 
     category = category_model.find_one(category_name)
+    
+    if category_name == "진로-구인":
+        col = mongo_cur[current_app.config['MONGODB_DB_NAME']]['post_info']
+        info = col.find_one({'info_id': 'sig48_vms_volunteer'})
+        category['info_num'].remove(info['info_num'])
+
+        vms_posts = posts_model.find_category_posts([info['info_num']],
+                                                    current_app.config["INDICATORS"]["DEFAULT_DATE"],
+                                                    20)
+        normal_posts = posts_model.find_category_posts(category['info_num'],
+                                                       current_app.config["INDICATORS"]["DEFAULT_DATE"],
+                                                       130)
+        
+        result = vms_posts + normal_posts
+        for post in result:
+            post['similarity'] = RANDOM = random.random()
+        result = sorted(result, key=itemgetter('similarity'), reverse=True)
+        return dumps(result)
+
     return dumps(posts_model.find_category_posts(category['info_num'],
                                                  current_app.config["INDICATORS"]["DEFAULT_DATE"],
                                                  current_app.config["INDICATORS"]["GET_NF_POST_NUM"]))
