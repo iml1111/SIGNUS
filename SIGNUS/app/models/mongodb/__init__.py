@@ -40,7 +40,10 @@ def init_models(config):
 
     # Create admin account
     signup(cur,
+           config.SEJONG_ID,
+           config.SEJONG_PW,
            config.ADMIN_ID,
-           config.ADMIN_PW)
+           config.ADMIN_PW,
+           "SIGNUS")
     
     cur.close()

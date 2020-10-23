@@ -12,16 +12,14 @@ from app.controllers.search import v1_search
 @timer
 @login_optional
 def api_search():
-    '''search'''
+    '''검색'''
     data = request.get_json()
     input_check(data, "keywords", str)
     input_check(data, "order", int)
-
     if 'user' in g:
         result = v1_search(g.mongo_cur, data['keywords'], data['order'], g.user)
     else:
         result = v1_search(g.mongo_cur, data['keywords'], data['order'])
-
     return {
         "msg": "success",
         "result": result
