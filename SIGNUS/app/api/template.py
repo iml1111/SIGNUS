@@ -30,6 +30,6 @@ def manifest_robot():
 @template.route("/notice")
 @template.route("/notice/write")
 @template.route("/notice/<string:notice_oid>")
-def page(notice_oid):
+def page(notice_oid=None):
     '''return client app'''
     return render_template('index.html')
