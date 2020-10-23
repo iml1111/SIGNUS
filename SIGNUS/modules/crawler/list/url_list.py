@@ -466,7 +466,7 @@ List = (\
 	{'url': "http://cafe484.daum.net/_c21_/bbs_list?grpid=1SVkj&fldid=KOYa&lastbbsdepth=000vLzzzzzzzzzzzzzzzzzzzzzzzzz&prev_page=1&listnum=20&page=",\
 	'info': "sj30_sejongstation_notice",\
 	'title_tag' : ["세종대역", "공지"], 'login' : 1},\
-	#107
+	#107 # 게시판 존재 x
 	{'url': "http://cafe484.daum.net/_c21_/bbs_list?grpid=1SVkj&fldid=KOaP&lastbbsdepth=000JIzzzzzzzzzzzzzzzzzzzzzzzzz&prev_page=1&listnum=20&page=",\
 	'info': "sj30_sejongstation_news",\
 	'title_tag' : ["세종대역", "소식"], 'login' : 0},\

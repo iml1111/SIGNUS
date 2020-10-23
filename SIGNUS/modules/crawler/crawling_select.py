@@ -33,7 +33,7 @@ def Crawling(URL, db):
 	if crawling_name in ["sj34"]:		# 동적 게시판 예외
 		sj34.everytime_all_board(URL, end_date, db)
 		return
-	if crawling_name in ["sj20"]:		# 제외 게시판
+	if crawling_name in ["sj20","sj30"]:		# 제외 게시판
 		return
 
 	#현재 크롤링하는 게시판 info 출력
@@ -44,7 +44,7 @@ def Crawling(URL, db):
 		return
 
 	while True:
-		if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj30", "sj44", "sig50", "sig51","sig55","sig56","sig57"]:
+		if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj44", "sig50", "sig51","sig55","sig56","sig57"]:
 			lastly_post = get_lastly_post(URL, db)
 			print("lastly_post : ",lastly_post)
 		try:
@@ -63,10 +63,10 @@ def Crawling(URL, db):
 				data = eval(crawling_name + '.Parsing_list_url(URL, page_url, driver)')
 				driver = data[0]
 				post_urls = data[1]
-			elif crawling_name in ["sj30"]:#---------------------------세종대역 예외처리
-				data = eval(crawling_name + '.Parsing_list_url(URL, page_url, lastly_post, db, driver)')
-				driver = data[0]
-				post_urls = data[1]
+			# elif crawling_name in ["sj30"]:#---------------------------세종대역 예외처리
+			# 	data = eval(crawling_name + '.Parsing_list_url(URL, page_url, lastly_post, db, driver)')
+			# 	driver = data[0]
+			# 	post_urls = data[1]
 			#Requests를 쓰는 경우----------------------------------------------------------------------------------------------
 			else:
 				#로그인을 하는 경우-------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ def Crawling(URL, db):
 				
 				#Selenium인 경우--------------------------------------------------------------------------------------------------------------------
                 #------------------게시판 규격인 경우
-				if crawling_name in ['sj29', 'sj30', 'sig52']:
+				if crawling_name in ['sj29', 'sig52']:
 					try:
 						get_post_data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL)')
 					except:
@@ -217,7 +217,7 @@ def Crawling(URL, db):
 			print("add_OK : ", add_cnt)	#DB에 저장된 게시글 수 출력
 		
 			#dirver 종료 [Selenium 을 사용했을 시]
-			if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj29", "sj30", "sj38", "sj44", "sig50", "sig51", "sig52","sig55","sig56","sig57"]:
+			if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj29", "sj38", "sj44", "sig50", "sig51", "sig52","sig55","sig56","sig57"]:
 				driver.quit()
 			
 			#DB에 추가된 게시글이 0 이면 break, 아니면 다음페이지
