@@ -34,6 +34,11 @@ def api_auth_signup():
     input_check(data, "id", str, 50)
     input_check(data, "pw", str, 100)
     input_check(data, "nickname", str, 10)
+    if (data['nickname'].upper() == "SIGNUS" or
+        data['nickname'] == "운영자" or
+        data['nickname'] == "관리자"):
+        abort(400, description="'%s' Not allowed." % (data['nickname']))
+
     return {
         "msg": "success",
         "result": signup(g.mongo_cur,

@@ -21,6 +21,15 @@ def manifest_robot():
 
 
 @template.route("/")
+@template.route("/best")
+@template.route("/newsfeed/university")
+@template.route("/newsfeed/award")
+@template.route("/newsfeed/group")
+@template.route("/newsfeed/job")
+@template.route("/search")
+@template.route("/notice")
+@template.route("/notice/write")
+@template.route("/notice/<string:notice_oid>")
 def page():
     '''return client app'''
     return render_template('index.html')
