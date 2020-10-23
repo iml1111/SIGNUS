@@ -29,7 +29,6 @@ def manifest_robot():
 @template.route("/search")
 @template.route("/notice")
 @template.route("/notice/write")
-@template.route("/notice/<string:notice_oid>")
 def page():
     '''return client app'''
     return render_template('index.html')
