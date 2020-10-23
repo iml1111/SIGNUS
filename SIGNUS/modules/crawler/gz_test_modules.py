@@ -27,22 +27,39 @@
 #-------------------------------------------------
 import timeit
 from datetime import timedelta
-from modules.crawler.list.date_cut import date_cut_dict_before
+from datetime import datetime
 import datetime
-from modules.crawler.dbs.mongo.db_connect import connect_db, disconnect_db
-import pymongo
-from modules.crawler.list.url_list import List
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from platform import platform
-import os
-from modules.crawler.login import campuspick
 import time
+
+from modules.crawler.etc.time_convert import datetime_to_mongo
+from modules.crawler.etc.time_convert import mongo_to_datetime
+from modules.crawler.list.date_cut import date_cut_dict_before
+from modules.crawler.list import filtering
+from modules.crawler.dbs.mongo.db_connect import connect_db, disconnect_db
+from modules.crawler.list.url_list import List
+from modules.crawler.login import campuspick
+from modules.tokenizer import Tokenizer
+from modules.recommender.fasttext import Recommender
+
+import pymongo
+from pymongo import MongoClient
+
+from bs4 import BeautifulSoup
+
+from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
+from platform import platform
+import os
+import hashlib
 
+
+TK = Tokenizer()
+
+# FT (Recommender) 클래스 선언
+# FT = Recommender(os.getenv("SIGNUS_FT_MODEL_PATH"))
 
 # 속도체크
 start_time = 0 
@@ -102,10 +119,11 @@ def insert_db_date(db):
 
 #  특정 info 삭제
 def remove_db_posts(db):
-	INFO_LIST=["sig26_campuspick_activity","sig50_campuspick_parttime","sig27_campuspick_language","sig26_campuspick_contest","sig28_campuspick_club","sig55_campuspick_job"]
-	for item in INFO_LIST:
-		db.posts.remove({"info":item})
-		db.recent_post.remove({"info_id":item})
+	# INFO_LIST=["sig26_campuspick_activity","sig50_campuspick_parttime","sig27_campuspick_language","sig26_campuspick_contest","sig28_campuspick_club","sig55_campuspick_job"]
+	# for item in INFO_LIST:
+	# 	db.posts.remove({"info":item})
+	# 	db.recent_post.remove({"info_id":item})
+	db.posts.remove({"info":"sig54_naver_news"})
 #  posts DB삭제
 def drop_db_collection(db):
 	INFO_LIST=["thinkgood_info","campuspick_activity","campuspick_contest","campuspick_language",\
@@ -158,6 +176,7 @@ def drop_all_collection(db):
 	db.category.drop()
 
 def get_post_url(db):
+	except_info = ["sj20","sj30"]
 	info_list = []
 	none_list = [] #posts가 0개인 url들
 	total = 0 
@@ -165,9 +184,10 @@ def get_post_url(db):
 		info_list.append({"info" : url_list['info'],"cnt":0})
 	
 	for item in info_list:
+		crawling_name = item['info'].split("_")[0]
 		cnt = db.posts.find({"info":item['info']}).count()
 		item['cnt'] = cnt
-		if cnt == 0:
+		if (cnt == 0) and (crawling_name not in except_info):
 			none_list.append(item)
 		total += cnt
 	print("--------------------------------------------------")
@@ -228,13 +248,66 @@ def test_selenium():
 	posts = bs.find("div", {"class": 'list'}).findAll("a", {"class": "top"})
 	print("포스트 개수 : ",len(posts))
 
+# post와 info_num 매칭 함수
+def matching_info_num(db):
+	for url in List:
+		info = url['info']
+		each_posts = list(db.posts.find({"info":info},{"_id":1})) #각각의 url별 모든 게시글 들을 가져온다.
+		each_info_num = db.post_info.find_one({"info_id" : url['info']})['info_num'] #각각의 url별 정해진 info_num 을 가져온다.
+		for post in each_posts:
+			db.posts.update_one(
+				{'_id': post['_id']},
+				{"$set": {"info_num": each_info_num}}
+			)
+		print(info," 완료!!")
+
+#리토크나이저 함수
+def retokenizer(db):
+	for url in List:
+		each_url_posts = list(db.posts.find(
+			{"info":url["info"]})
+			)
+		for post_one in each_url_posts:
+			if post_one["title"][-3:] == "..." and post_one["post"].startswith(post_one["title"][:-3]):
+				post_one["title_token"] = post_one["post"][:20].split(" ")
+			else:
+				post_one["title_token"] = post_one["title"].split(" ")
+			if post_one["post"].startswith(post_one["title"][:-3]):
+				post_one["token"] = TK.get_tk(post_one["post"].lower())
+			else:
+				post_one["token"] = TK.get_tk(post_one["title"].lower() + post_one["post"].lower())
+			post_one["token"] = list(url['title_tag'] + post_one["token"])
+
+			if 'token' in post_one:
+				topic_str = post_one["token"]
+			else:
+				topic_str = []
+			post_one["topic_vector"] = FT.doc2vec(topic_str).tolist()
+			db.posts.update_one(
+				{'_id':post_one['_id']},
+				{"$set":{
+
+					"title_token":post_one["title_token"],
+					"token":post_one["token"],
+					"topic_vector":post_one["topic_vector"]
+					}
+				}
+			)
+
 if __name__ == '__main__':
 	database = connect_db()
 	db = database[1]
 	client = database[0]
 
+	#리토크나이저 로컬 테스트용
+	# retokenizer(db)
+
 	#셀레니움 테스트
 	# test_selenium()
+	
+	
+	#info num, info 정상매치 함수
+	# matching_info_num(db)
 
 	#각 url별 게시글 개수
 	get_post_url(db)
