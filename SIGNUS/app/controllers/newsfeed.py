@@ -110,10 +110,10 @@ def newsfeed_categroy(mongo_cur, category_name):
 
         vms_posts = posts_model.find_category_posts([info['info_num']],
                                                     current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                    20)
+                                                    40)
         normal_posts = posts_model.find_category_posts(category['info_num'],
                                                        current_app.config["INDICATORS"]["DEFAULT_DATE"],
-                                                       130)
+                                                       210)
         
         result = vms_posts + normal_posts
         for post in result:
