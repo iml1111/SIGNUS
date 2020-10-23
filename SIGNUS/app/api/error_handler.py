@@ -1,7 +1,7 @@
 '''
 Flask Application Error Handler
 '''
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, render_template, jsonify, request
 
 error_handler = Blueprint('error_handler', __name__)
 
