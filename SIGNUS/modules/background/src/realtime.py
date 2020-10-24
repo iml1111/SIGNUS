@@ -1,6 +1,7 @@
+import re
 from tqdm import tqdm
 from datetime import datetime
-import re
+from operator import itemgetter
 from datetime import datetime, timedelta
 
 #실시간 검색어 함수 preprocess
