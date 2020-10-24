@@ -4,7 +4,13 @@ Auth View Module
 from flask import g, request, Blueprint
 from app.api import input_check
 from app.api.decorators import timer, login_required
-from app.controllers.auth import signup, signin, auth_sejong, secession, update_password, update_nickname, get_user
+from app.controllers.auth import (signup,
+                                  signin,
+                                  auth_sejong,
+                                  secession,
+                                  update_password,
+                                  update_nickname,
+                                  get_user)
 
 
 auth = Blueprint('auth', __name__)
