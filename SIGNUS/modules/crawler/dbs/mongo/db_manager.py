@@ -20,6 +20,10 @@ enc = hashlib.md5()
 
 #POST INFO
 POST_INFO = []
+
+#Hidden Posts
+hidden_posts = ["campuspick_study"]
+
 #공모전 ~까지를 위한 collum 생성
 CONTEST_LIST = ["campuspick_activity","campuspick_language","campuspick_job", "campuspick_contest", "campuspick_club", "detizen_contest", "detizen_activity", "jobkorea_job", "jobkorea_public", "jobsolution_job", "thinkgood_info", "udream_jobinfo", "dodream_event"]
 now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -94,10 +98,18 @@ def db_manager(URL, post_data_prepare, db):
 				break
 		# 중복처리====================================================================
 		duplicate_check = False
-		if db.posts.find_one({"hashed": hash_done}) != None:
-			duplicate_check = True
-		elif db.posts.find_one({"url_hashed": url_hash_done}) != None:
-			duplicate_check = True
+		for hidden_info in hidden_posts:
+    			# 중복체크
+			if post_one['info'].startswith(hidden_info):
+				if db.hidden_posts.find_one({"hashed": hash_done}) != None:
+					duplicate_check = True
+				elif db.hidden_posts.find_one({"url_hashed": url_hash_done}) != None:
+					duplicate_check = True
+			else:
+				if db.posts.find_one({"hashed": hash_done}) != None:
+					duplicate_check = True
+				elif db.posts.find_one({"url_hashed": url_hash_done}) != None:
+					duplicate_check = True
 		if duplicate_check == True:
 			continue
 		else:#=============================================================================
@@ -137,7 +149,12 @@ def db_manager(URL, post_data_prepare, db):
 				topic_str = []
 			post_one["topic_vector"] = FT.doc2vec(topic_str).tolist()
 			post_one["popularity"] = 0
-			db.posts.insert_one(post_one)
+
+			for hidden_info in hidden_posts:
+				if post_one['info'].startswith(hidden_info):
+					db.hidden_posts.insert_one(post_one)
+				else:
+					db.posts.insert_one(post_one)
 			add_cnt += 1
 	return add_cnt
 

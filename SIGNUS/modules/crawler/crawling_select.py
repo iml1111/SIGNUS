@@ -30,11 +30,9 @@ def Crawling(URL, db):
 	main_url = URL['url']	#게시판 url 추출 : 페이지 바꾸는 데에 사용
 	page_url = eval(crawling_name + '.Change_page(main_url, page)')	#현재 페이지 포스트 url 반환
 	end_date = date_cut(URL['info'])	# end_date 추출
-	if crawling_name in ["sj34"]:		# 동적 게시판 예외
-		sj34.everytime_all_board(URL, end_date, db)
+	if crawling_name in ["sj4","sj19","sj20","sj30","sj34","sig56"]:		# 제외 게시판
 		return
-	if crawling_name in ["sj20","sj30"]:		# 제외 게시판
-		return
+	
 
 	#현재 크롤링하는 게시판 info 출력
 	print("Target : ", URL['info'])
@@ -44,6 +42,9 @@ def Crawling(URL, db):
 		return
 
 	while True:
+		if crawling_name in ["sj10", "sj11","sj13"]: #추후에 보수 후에 사전으로 각 함수 실행하기
+			eval(crawling_name + '.init(URL, end_date, db)')
+			break
 		if crawling_name in ["sj23", "sig26", "sig27", "sig28", "sj44", "sig50", "sig51","sig55","sig56","sig57"]:
 			lastly_post = get_lastly_post(URL, db)
 			print("lastly_post : ",lastly_post)
@@ -51,9 +52,9 @@ def Crawling(URL, db):
 			print("\npage_url :::: ", page_url)	#현재 url 출력
 			print("Page : ", page)				#현재 페이지 출력
 			#driver_page 생성---------------------------
-			if crawling_name in ['sj10']:
-				driver_page = URLparser_EUCKR(page_url)
-			elif crawling_name in ['sj12']:
+			# if crawling_name in ['sj10']:
+			# 	driver_page = URLparser_EUCKR(page_url)
+			if crawling_name in ['sj12']:
 				driver_page = URLparser_UTF8(page_url)
 			else:
 				driver_page = URLparser(page_url)
@@ -79,9 +80,9 @@ def Crawling(URL, db):
 						break
 					else:
 						#parsing 형태--------------------------------------------------
-						if crawling_name in ['sj10']:
-							bs_page = BeautifulSoup(driver_page, 'lxml')
-						else:
+						# if crawling_name in ['sj10']:
+						# 	bs_page = BeautifulSoup(driver_page, 'lxml')
+						# else:
 							bs_page = BeautifulSoup(driver_page, 'html.parser')
 						#--------------------------------------------------------------
                     #20대연구소 예외
@@ -134,7 +135,7 @@ def Crawling(URL, db):
 					#driver_post 생성--------------------------------
 					if crawling_name in ["sj21", "sj4", "sj5", "sj8", "sj16"]: #---driver_post가 필요없는 경우
 						pass
-					elif crawling_name in ['sj10', 'sj33']:
+					elif crawling_name in ['sj33']:
 						driver_post = URLparser_EUCKR(post_url)
 					elif crawling_name in ['sj12']:
 						driver_post = URLparser_UTF8(post_url)
@@ -167,9 +168,10 @@ def Crawling(URL, db):
 							break
 						else:
 							#parsing 형태-------------------------------------------
-							if crawling_name in ['sj10']:
-								bs_post = BeautifulSoup(driver_post, 'lxml')
-							elif crawling_name in ['sj12']:
+							# if crawling_name in ['sj10']:
+							# 	bs_post = BeautifulSoup(driver_post, 'lxml')
+							# elif crawling_name in ['sj12']:
+							if crawling_name in ['sj12']:
 								bs_post = driver_post
 							else:
 								bs_post = BeautifulSoup(driver_post, 'html.parser')
@@ -223,9 +225,6 @@ def Crawling(URL, db):
 			#DB에 추가된 게시글이 0 이면 break, 아니면 다음페이지
 			if add_cnt == 0:
 					break
-			elif crawling_name == "sj54":
-				page += 10
-				page_url = eval(crawling_name + '.Change_page(main_url, page)')
 			else:
 				page += 1
 				page_url = eval(crawling_name + '.Change_page(main_url, page)')

@@ -46,7 +46,7 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	if (URL['info'].split("_")[2] == "campustown"):
 		WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.card")))
 		driver.find_element_by_xpath('//*[@id="ct"]/div[5]/div/div[1]/div/button[2]').click()
-		# //*[@id="ct"]/div[4]/div/div[1]/div/button[2]
+		
 	else:
 		WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.area_text"))) #div.header을 발견하면 에이작스 로딩이 완료됬다는 가정
 	last_posts = [0]

@@ -43,6 +43,8 @@ def retokenizer(db):
 					}
 				}
 			)
+		print(url, " : 완료!")
+	
 
 if __name__ == '__main__':
 	database = connect_db()
