@@ -72,7 +72,7 @@ List = (\
 	'title_tag' : ["취업&진로"], 'login' : 1},\
 	#세종대 학생경력개발시스템 공채속보 "sj4_..."
 	#15
-	{'url': "http://udream.sejong.ac.kr/WorkCenter/WorkRecruit.aspx?rp=",\
+	{'url': "https://udream.sejong.ac.kr/Recruit/RecruitList.aspx?sort=ceDate&asc=false&rp=",\
 	'info': "sj4_udream_workinfo",\
 	'title_tag' : ["취업&진로"], 'login' : 1},\
 	#세종대 학생경력개발시스템 청년인턴 "sj5_..."
@@ -248,35 +248,35 @@ List = (\
 	'title_tag' : ["교내", "법학부", "공지"], 'login' : 0},\
 	#세종대학교 물리학과 홈페이지 [sj10_pysics_notice]
 	#57
-	{'url': "http://physics.sejong.ac.kr/bbs/zboard.php?id=news_notice&page=",\
+	{'url': "http://home.sejong.ac.kr/~phyastrodpt/7.html",\
 	'info': "sj10_pysics_notice",\
 	'title_tag' : ["교내", "물리학과", "공지"], 'login' : 0},\
 	#세종대학교 일어일문
 	# 학과 홈페이지 [sj11_japanese_notice]
 	#58
-	{'url': "http://japan.sejong.ac.kr/index.php?mid=dpt_notice&page=",\
+	{'url': "http://home.sejong.ac.kr/~japan/6.html",\
 	'info': "sj11_japanese_notice",\
 	'title_tag' : ["교내", "일어일문학과", "공지"], 'login' : 0},\
 	#세종대학교 건축학과 홈페이지 [sj12_archi_...]
 	#59
-	{'url': "http://arch.sejong.ac.kr/events/notice",\
+	{'url': "http://architecture.sejong.ac.kr/board/notice",\
 	'info': "sj12_archi_notice",\
 	'title_tag' : ["교내", "건축학과", "공지/"], 'login' : 0},\
 	#60
-	{'url': "http://arch.sejong.ac.kr/events/news",\
+	{'url': "http://architecture.sejong.ac.kr/board/news",\
 	'info': "sj12_archi_news",\
 	'title_tag' : ["교내", "건축학과", "소식"], 'login' : 0},\
 	#세종대학교 컴퓨터공학과 홈페이지 [sj13_computer_...]
 	#61
-	{'url': "http://ce.sejong.ac.kr/index.php?mid=itinformation&page=",\
+	{'url': "http://home.sejong.ac.kr/~cedpt/32.html",\
 	'info': "sj13_computer_notice",\
 	'title_tag' : ["교내", "컴퓨터공학과", "공지"], 'login' : 0},\
 	#62
-	{'url': "http://ce.sejong.ac.kr/index.php?mid=contest&page=",\
+	{'url': "http://home.sejong.ac.kr/~cedpt/38.html",\
 	'info': "sj13_computer_event",\
 	'title_tag' : ["교내", "컴퓨터공학과", "공모전&대외활동"], 'login' : 0},\
 	#63
-	{'url': "http://ce.sejong.ac.kr/index.php?mid=job&page=",\
+	{'url': "http://home.sejong.ac.kr/~cedpt/35.html",\
 	'info': "sj13_computer_job",\
 	'title_tag' : ["교내", "컴퓨터공학과", "취업&진로"], 'login' : 0},\
 	#세종대학교 지능기전공학부 홈페이지 [sj14_imc_...]
@@ -388,7 +388,7 @@ List = (\
 	{'url': "http://www.skbs.kr/index.php?mid=skbsnews&page=",\
 	'info': "sj18_skbs_news",\
 	'title_tag' : ["방송국", "소식", "교내"], 'login' : 0},\
-	#총학생회 [sj19_chong_]
+	#총학생회 [sj19_chong_] --> 사이트 사라짐 -> 새로 개설
 	#90
 	{'url': "http://www.sejongstudent.com/xe/index.php?mid=notice&category=226&page=",\
 	'info': "sj19_chong_news",\
@@ -418,7 +418,7 @@ List = (\
 	'title_tag' : ["커뮤니티", "장터"], 'login' : 0},\
 	#세종알리 [sj24_sejong_allie]
 	#96
-	{'url': "http://univalli.com/allisejong/search_news.php?&page=",\
+	{'url': "https://univalli.com/news/section_list_all.html?sec_no=291&page=",\
 	'info': "sj24_sejong_allie",\
 	'title_tag' : ["세종알리", "교내", "소식"], 'login' : 0},\
 	#씽굿 [sig25_thinkgood_info]
@@ -438,15 +438,15 @@ List = (\
 	#100
 	{'url': "https://www.campuspick.com/club?category=5",\
 	'info': "sig27_campuspick_language",\
-	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
+	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 0},\
 	#101
 	{'url': "https://www.campuspick.com/job",\
 	'info': "sig55_campuspick_job",\
-	'title_tag' : ["캠퍼스픽", "취업&진로", "동아리&모임"], 'login' : 1},\
+	'title_tag' : ["캠퍼스픽", "취업&진로", "동아리&모임"], 'login' : 0},\
 	#102
 	{'url': "https://www.campuspick.com/study/list?category1=3&category2=0",\
 	'info': "sig56_campuspick_certificate",\
-	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 1},\
+	'title_tag' : ["캠퍼스픽", "동아리&모임"], 'login' : 0},\
 	#103
 	{'url': "https://www.campuspick.com/study",\
 	'info': "sig57_campuspick_study",\

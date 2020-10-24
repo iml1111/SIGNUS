@@ -41,15 +41,12 @@ def Parsing_post_data(driver, post_url, URL, recent_post):
 	post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
 	last_posts = [0]
 	while 1:
-		print("시작이다 씨빨럼아")
 		if (now_num > 0) and (now_num % 100 == 0):
 			print("post_driver를 재시작 합니다.")
 			post_driver.close()
 			post_driver = chromedriver()	# 포스트 페이지를 위한 드라이버
-		print('ㅋㅋㅋ')
 		driver.find_element_by_tag_name("body").send_keys(Keys.END)
 		time.sleep(1)
-		print("시발시발")
 
 		html = driver.page_source
 		bs = BeautifulSoup(html, 'html.parser')

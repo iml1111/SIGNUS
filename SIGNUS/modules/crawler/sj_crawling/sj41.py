@@ -9,17 +9,12 @@ from modules.crawler.etc.img_size import img_size
 #게시판 page_url 을 받으면, 그 페이지의 포스트 url 들을 반환
 def Parsing_list_url(URL, bs):
 	List = []
-	domain = Domain_check(URL['url'])
 
 	#리스트 반환
-	#posts = bs.find("table", {"class": 'bbs_ltype tbl30'}).findAll("tr")
 	posts = bs.find("table", {"class": 'bbs_ltype interview tbl30'}).findAll("tr")
-	posts = posts[1:]
 	for post in posts:
-		target = post.find("a")['href']
-		page = target
-		List.append(domain + '/' + page)
-
+		url = post.find("td",{"class":"thum"}).find("a")['href']
+		List.append(url)
 	return List
 
 
@@ -31,12 +26,12 @@ def Parsing_post_data(bs, post_url, URL):
 		post_data = {}
 		domain = Domain_check(URL['url'])
 
-		title = bs.find("span", {"class": "col_blue"}).get_text(" ", strip = True)
-		author = "0"
+		title = bs.find("h3", {"class": "hd"}).find("a").get_text(" ", strip = True) + " 채용설명회 후기"
+		author = ""
 		date = bs.find("dl", {"class": "explainInfoBx"}).find("dd").text.strip()
 		date = date + " 00:00:00"
 		date = str(datetime.datetime.strptime(date, "%Y.%m.%d %H:%M:%S"))
-		post = bs.find("p", {"class": "tx"}).get_text(" ", strip = True)
+		post = bs.find("div",{"class":"explainCtWrap"}).find("p", {"class": "tx"}).get_text(" ", strip = True)
 		post = post_wash(post)
 		if bs.find("div", {"class": "img"}).find("img") is None:
 			img = 1
@@ -58,7 +53,7 @@ def Parsing_post_data(bs, post_url, URL):
 				img = 1
 
 		post_data['title'] = title.upper()
-		post_data['author'] = author.upper()
+		post_data['author'] = ''
 		post_data['date'] = date
 		post_data['post'] = post.lower()
 		post_data['img'] = img

@@ -9,18 +9,14 @@ from modules.crawler.etc.img_size import img_size
 def Parsing_list_url(URL, bs):
 	List = []
 	domain = Domain_check(URL['url'])
-	try:
-		posts = bs.find("div", {"id": "result-list"}).findAll("div", {"class": "media"})
-	except:
+	if bs.find("ul", {"class": "art_list_all"}).findAll("li") is None:
 		return List
-	if len(posts) == 0:
-		pass
 	else:
+		posts = bs.find("ul", {"class": "art_list_all"}).findAll("a")
 		for post in posts:
-			url = post.find("a")['href']
+			url = post['href']
 			url = domain + url
 			List.append(url)
-
 	return List
 
 
@@ -31,20 +27,34 @@ def Parsing_post_data(bs, post_url, URL):
 	post_data = {}
 	domain = Domain_check(URL['url'])
 
-	title = bs.find("h1", {"class": "title-news"}).get_text(" ", strip = True)
-	author = bs.find("div", {"class": "info-news"}).find("span", {"class": "category"}).text.strip()
-	if author.find("관리자") != -1:
-		author = "0"
-	date = bs.find("div", {"class": "info-news"}).find("span", {"class": "date-created"}).text.strip()
-	date = date + " 00:00:00"
-	date = str(datetime.datetime.strptime(date, "%Y년 %m월 %d일 %H:%M:%S"))
-	post = bs.find("div", {"class": "main-news"}).get_text(" ", strip = True)
+	title = bs.find("div", {"class": "art_top"}).find("h2").get_text(" ", strip = True)
+	date = bs.find("ul", {"class": "art_info"}).get_text(" ",strip = True).split("등록 ")[1]
+	date = str(datetime.datetime.strptime(date, "%Y.%m.%d %H:%M:%S"))
+	post = bs.find("div", {"class": "cnt_view news_body_area"}).get_text(" ", strip = True)
 	post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
-	if bs.find("div", {"class": "main-news"}).find("img") is None:
-		img = 6
+
+	img_1 =	bs.find("div", {"id": "news_body_area"}).find("img",{"class":"img"})	
+	img_2 =	bs.find("div", {"id": "news_body_area"}).find("img",{"class":"sm-image-c"})	
+	if img_1 is None:
+		if img_2 is None:
+			img = 6
+		else:
+			try:
+				img = img_2['src']		#게시글의 첫번째 이미지를 가져옴.
+				if 1000 <= len(img):
+					img = 6
+				else:
+					if img.startswith("http://") or img.startswith("https://"):		# img가 내부링크인지 외부 링크인지 판단.
+						pass
+					elif img.startswith("//"):
+						img = "http:" + img
+					else:
+						img = domain + img
+			except:
+				img = 6
 	else:
 		try:
-			img = bs.find("div", {"class": "main-news"}).find("img")['src']		#게시글의 첫번째 이미지를 가져옴.
+			img = img_1['src']		#게시글의 첫번째 이미지를 가져옴.
 			if 1000 <= len(img):
 				img = 6
 			else:
@@ -63,7 +73,7 @@ def Parsing_post_data(bs, post_url, URL):
 			img = 6
 
 	post_data['title'] = title.upper()
-	post_data['author'] = author.upper()
+	post_data['author'] = ''
 	post_data['date'] = date
 	post_data['post'] = post.lower()
 	post_data['img'] = img

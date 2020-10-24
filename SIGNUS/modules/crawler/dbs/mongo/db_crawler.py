@@ -18,6 +18,7 @@ def init_crawler_collection(db):
 		info_list.append(component['info'])
 	info_list.remove('sj34_everytime_all')
 	info_hidden_list.append('sj34_everytime_all')
+	info_hidden_list.append('sig57_campuspick_study')
 
 	query = {
 		"is_crawling": False,
