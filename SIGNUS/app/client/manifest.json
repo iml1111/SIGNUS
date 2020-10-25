@@ -3,13 +3,13 @@
   "name": "MZ세대를 위한 트렌드 뉴스피드 제공 서비스",
   "icons": [
     {
-      "src": "favicons/favicon_24x24.png",
+      "src": "favicons/favicon_64x64.png",
       "sizes": "64x64 32x32",
       "type": "image/x-icon"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#FFFFFF",
   "background_color": "#ffffff"
 }
