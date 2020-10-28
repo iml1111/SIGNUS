@@ -6,62 +6,60 @@ from modules.crawler.list.url_list import List
 from modules.crawler.list.date_cut import date_cut_dict
 from modules.crawler.etc.post_wash import post_wash
 from modules.crawler.etc.img_size import img_size
-#게시판 page_url 을 받으면, 그 페이지의 url 반환
+
+#게시판 page_url 을 받으면, 그 페이지의 포스트 url 들을 반환
 def Parsing_list_url(URL, page_url):
 	List = []
-	
-	List.append(page_url)
+
+	#udream 로그인하는 함수
+	s = udream.login()
+
+	page = s.get(page_url).text
+	bs = BeautifulSoup(page, "lxml")	#html.parser 오류 lxml 로 가져온다.
+
+	#리스트 반환
+	posts = bs.findAll("tr", {"onmouseover": "hctrOn(this)"})
+	for post in posts:
+		num = post.find("a")["onclick"]
+
+		post_num = num.split("'")[1]
+		page = URL['post_url'] + post_num
+		List.append(page)
+	print(List)
+	s.close()
 
 	return List
 
 
 
-def Parsing_post_data(post_url, URL):
-	post_data_prepare = []
-	end_date = date_cut_dict['sj4']		# end_date 추출
+#포스트 url을 받으면, 그 포스트의 정보를 dictionary 형태로 반환
+def Parsing_post_data(bs, post_url, URL):
+	return_data = []
+	post_data = {}
 
+	title = bs.find("header", {"class": "header b-b bg-light h2"}).find("span").get_text(" ", strip = True)
+	author = bs.find("div", {"class": "col-xs-10 lbb"}).text.strip()
+	if author.find("관리자") != -1:
+		author = "0"
+	date = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+	post = bs.find("section", {"class": "wrapper-lg"}).get_text(" ", strip = True)
+	post = post_wash(post)
+	img = 1
+	end_date = bs.find("span", {"name": "Edate"}).text + " 00:00:00"
+	end_date = str(datetime.datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S"))
 
-	#udream 로그인하는 함수
-	s = udream.login()
-	
-	page = s.get(post_url).text
-	bs = BeautifulSoup(page, "html.parser")
+	post_data['title'] = title.upper()
+	post_data['author'] = author.upper()
+	post_data['date'] = date
+	post_data['post'] = post.lower()
+	post_data['img'] = img
+	post_data['url'] = post_url
+	post_data['end_date'] = end_date
 
-	posts = bs.find("tbody").findAll("tr")	#tr묶음
-	for post in posts:
-		#[title, author, post1, post2, date] 형태
-		post_infoes = post.findAll("td")	#td 묶음
-
-		post_data = {}
-		title = post_infoes[0].get_text(" ", strip = True)
-		author = post_infoes[0].find("div").text
-		if author.find("관리자") != -1:
-			author = "0"
-		end_data = post_infoes[4].text + " 00:00:00"
-		post = post_infoes[1].get_text(" ", strip = True) + post_infoes[2].get_text(" ", strip = True) + post_infoes[3].get_text(" ", strip = True) + "~" + post_infoes[4].get_text(" ", strip = True)
-		post = post_wash(post)
-		post = post[:200]
-		img = 1
-		url = post_infoes[5].find("a")["href"]
-
-		post_data['title'] = title.upper()
-		post_data['author'] = author.upper()
-		post_data['date'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-		post_data['end_data'] = datetime.datetime.strptime(end_data, "%Y-%m-%d %H:%M:%S")
-		post_data['post'] = post.upper()
-		post_data['img'] = img
-		post_data['url'] = url
-
-		print(date, "::::", title)
-
-		#게시물의 날짜가 end_date 보다 옛날 글이면 continue, 최신 글이면 append
-		if str(date) <= end_date:
-			continue
-		else:
-			post_data_prepare.append(post_data)
-	s.close()
-			
-	return post_data_prepare
+	return_data.append(post_data)
+	return_data.append(title)
+	return_data.append(date)
+	return return_data
 
 
 

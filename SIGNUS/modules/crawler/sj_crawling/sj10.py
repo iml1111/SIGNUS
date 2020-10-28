@@ -1,93 +1,95 @@
+from bs4 import BeautifulSoup
 import datetime
+from modules.crawler.login import everytime
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
+from modules.crawler.dbs.mongo.db_manager import db_manager
+
+from modules.crawler.etc.driver_agent import chromedriver
 from modules.crawler.list.url_list import List
-from modules.crawler.list.date_cut import date_cut_dict
+from modules.crawler.list.date_cut import date_cut
 from modules.crawler.etc.post_wash import post_wash
 from modules.crawler.etc.img_size import img_size
 
-#게시판 n페이지를 받으면, 그 페이지의 포스트 url 리스트 반환
-def Parsing_list_url(URL, bs):
-	List = []
-	domain = Domain_check(URL['url'])
-
-	tables = bs.find("div", {"align": "center"}).findAll("table")
-	table = tables[2]
-	a_tages = table.findAll("a")
-
-	for a_tag in a_tages:
-		if a_tag["href"].startswith("javascript"):
-			pass
-		else:
-			a_tag = str(a_tag)
-			post = a_tag.split('"')[1]
-			url = domain + post
-			url = url.replace("amp;", "")
-			List.append(url)
-	return List
+from modules.crawler.list.date_cut import date_cut
 
 
+def init(URL, end_data, db):
+	url = URL['url']
+	driver = chromedriver()
+	driver.get(url)
+	WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it('bbsFrm'))
 
-#포스트 url을 받으면, 그 포스트의 정보를 dictionary 형태로 반환
-def Parsing_post_data(bs, post_url, URL):
+	page = 1 #n번째 페이지
+	cnt = 0 #시작 페이지는 메소드 호출 x, 2번 페이지부터 js 함수 호출 위한 조건변수
+
+	while 1:
+		post_data_prepare = []
+		element = driver.find_element_by_xpath('/html/body/div/div[3]')
+		method = "sendPage('pageForm'," + str(page) + ");" #다음 페이지 로드할 메소드
+		if cnt != 0:
+			try:
+				driver.execute_script(method,element) # 다음 페이지 로드
+				WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.pagination")))
+			except :
+				print("페이지가 더이상 존재하지 않습니다.")
+				break
+		html = driver.page_source
+		bs = BeautifulSoup(html, 'html.parser')
+
+		data = list(bs.find("tbody").findAll("tr"))
+		posts = []
+		for item in data:
+			link = item.find("td",{"class":"subject"}).find("a")["href"]
+			posts.append(link)
+
+		page = page + 1	
+		cnt = cnt + 1
+		
+		post_data_prepare = get_data(posts, URL, end_data)
+		added_post_cnt = db_manager(URL, post_data_prepare, db) 
+		print("Added Post Count : ", added_post_cnt)
+	driver.close()
+
+# 페이지 하나의 각각의 게시글들 들어가서 데이터 뽑아오는 메소드
+def get_data(posts, URL, end_data):
+	driver = chromedriver()
 	return_data = []
-	post_data = {}
-	domain = Domain_check(URL['url'])
+	for post in posts:
+		post_data = {}
+		post_url = Domain_check(URL['url']) + "/bbs/" + post
+		driver.get(post_url)
+		post_source = driver.page_source
+		bs_post = BeautifulSoup(post_source,'html.parser')
+		title = bs_post.find("td",{"class":"subject-value"}).get_text(" ",strip = True)
+		post_content = bs_post.find("td",{"class":"content"}).get_text(" ",strip = True)
+		date = bs_post.find("td",{"class":"date"}).get_text(" ",strip = True).split("작성일")
+		date = date[0] + " 00:00:00"
+		date = str(datetime.datetime.strptime(date, "%Y.%m.%d %H:%M:%S"))
 
+		post_data['title'] = title.upper()
+		post_data['author'] = ''
+		post_data['date'] = date
+		post_data['post'] = post_content.lower()
+		post_data['img'] = 7
+		post_data['url'] = post_url
+		print(date, "::::", title)
 
-	tables = bs.find("div", {"align": "center"}).findAll("table")
-	title_table = tables[3]
-
-
-	tds = title_table.findAll("td")
-
-	title = tds[1].get_text(" ", strip = True)
-	author = "0"
-	date = tds[0].text.strip()
-	date = str(datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S"))
-	post = bs.find("td", {"class": "sf_contents"}).get_text(" ", strip = True)
-	post = post_wash(post)		#post 의 공백을 전부 제거하기 위함
-	if bs.find("td", {"class": "sf_contents"}).find("img") is None:
-		img = 1
-	else:
-		img = bs.find("td", {"class": "sf_contents"}).find("img")['src']		#게시글의 첫번째 이미지를 가져옴.
-		if 1000 <= len(img):
-			img = 1
+		if str(date) <= end_data:
+			continue
 		else:
-			if img.startswith("http://") or img.startswith("https://"):		# img가 내부링크인지 외부 링크인지 판단.
-				pass
-			elif img.startswith("//"):
-				img = "http:" + img
-			else:
-				img = domain + img
-	if img != 1:
-		if img_size(img):
-			pass
-		else:
-			img = 1
-
-	post_data['title'] = title.upper()
-	post_data['author'] = author.upper()
-	post_data['date'] = date
-	post_data['post'] = post.lower()
-	post_data['img'] = img
-	post_data['url'] = post_url
-
-	return_data.append(post_data)
-	return_data.append(title)
-	return_data.append(date)
+			return_data.append(post_data)
+	driver.close()
 	return return_data
 
+	
 
-
-#url을 받으면 Page를 변환시켜서, 변환된 url 반환
 def Change_page(url, page):
-	url_done = url + str(page)
+	return url
 
-	return url_done
-
-
-#입력된 url의 도메인 url 반환 :::: sj10 에 한해서 /bbs/ 까지 뽑힘
 def Domain_check(url):
-	domain = url.split('/')[0] + '//' + url.split('/')[2] + '/' + url.split('/')[3] + '/'	#도메인 url 추출
-
+	domain = url.split('/')[0] + '//' + url.split('/')[2]	#도메인 url 추출
 	return domain
