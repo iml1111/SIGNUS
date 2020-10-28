@@ -4,7 +4,7 @@ from datetime import datetime
 
 def interest(db, config):
     renewal_time = db['master_config'].find_one({"key": "updated_at"})['value']
-    target_users = list(db['user'].find({'renewal':{'$gt': renewal_time}}))
+    target_users = list(db['user'].find({'updated_at':{'$gt': renewal_time}}))
     categories = list(db['category'].find())
     now_date = datetime.now()
 
@@ -59,5 +59,7 @@ def interest(db, config):
                 }
             }
         )
+
+    db['master_config'].update_one({"key": "updated_at"}, {"$set": {"value": now_date}})
 
     return len(target_users)
