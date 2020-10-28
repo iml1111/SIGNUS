@@ -29,7 +29,7 @@ def interest(db, config):
             view_token += view['token']
         
         for search in user['search_list']:
-            search_list += search['keyword_tokens']
+            search_keywords += search['keyword_tokens']
         
         # 취합
         assemble_doc = fav_token * config.INDICATORS["FAV_WEIGHT"] +\
