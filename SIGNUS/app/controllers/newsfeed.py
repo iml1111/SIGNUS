@@ -7,7 +7,7 @@ from operator import itemgetter
 from numpy import random
 from app.models.mongodb.posts import Posts
 from app.models.mongodb.category import Category
-
+import random
 
 def newsfeed_recommendation(mongo_cur, user):
     '''
@@ -62,10 +62,13 @@ def newsfeed_recommendation(mongo_cur, user):
         POSTS_LIST[idx] = sorted(POSTS_LIST[idx],
                                  key=itemgetter('similarity'),
                                  reverse=True)
-    for idx, _ in enumerate(POSTS_LIST):
-        POSTS_LIST[idx] = POSTS_LIST[idx][:current_app.config["INDICATORS"]["POSTS_NUM_BY_CATEGORY"][idx]]
     
-    return dumps(POSTS_LIST[:current_app.config["INDICATORS"]["RETURN_NUM"]])
+    result = []
+    for idx, _ in enumerate(POSTS_LIST):
+        result += POSTS_LIST[idx][:current_app.config["INDICATORS"]["POSTS_NUM_BY_CATEGORY"][idx]]
+    random.shuffle(result)
+
+    return dumps(result)
 
 
 def newsfeed_popularity(mongo_cur):
