@@ -75,7 +75,7 @@ class Config:
 
     # 각종 변수
     INDICATORS = {
-        "FAS_WEIGHT": 1, # FAS 가중치
+        "FAS_WEIGHT": 2, # FAS 가중치
         "IS_WEIGHT": 1, # IS 가중치
         "RANDOM_WEIGHT": 1, # RANDOM 가중치
         "DEFAULT_DATE": 60, # POST 게시 날짜 Maximum (불러올 때)
@@ -86,7 +86,7 @@ class Config:
         "RECOM_POST_MINUS_WEIGHT": -75, # 추천 뉴스피드에서 사용하는 POST 가감 가중치
 
         # 관심사 측정에 필요한 지표
-        "FAV_WEIGHT": 2, # 좋아요 가중치
+        "FAV_WEIGHT": 3, # 좋아요 가중치
         "VIEW_WEIGHT": 1, # 조회수 가중치
         "SEARCH_WEIGHT": 1, # 검색 가중치
 
