@@ -58,8 +58,8 @@ import hashlib
 
 TK = Tokenizer()
 
-# FT (Recommender) 클래스 선언
-# FT = Recommender(os.getenv("SIGNUS_FT_MODEL_PATH"))
+# FT (Recommender) 클래스 선언 
+FT = Recommender(os.getenv("SIGNUS_FT_MODEL_PATH"))
 
 # 속도체크
 start_time = 0 
@@ -176,7 +176,7 @@ def drop_all_collection(db):
 	db.category.drop()
 
 def get_post_url(db):
-	except_info = ["sj20","sj30"]
+	except_info = ["sj4","sj17","sj19","sj20","sj23","sj30","sj34","sj44","sig56"]
 	info_list = []
 	none_list = [] #posts가 0개인 url들
 	total = 0 
@@ -300,7 +300,7 @@ if __name__ == '__main__':
 	client = database[0]
 
 	#리토크나이저 로컬 테스트용
-	# retokenizer(db)
+	retokenizer(db)
 
 	#셀레니움 테스트
 	# test_selenium()
@@ -310,7 +310,7 @@ if __name__ == '__main__':
 	# matching_info_num(db)
 
 	#각 url별 게시글 개수
-	get_post_url(db)
+	# get_post_url(db)
 
 	#signus db collection 전체 삭제
 	# drop_all_collection(db)
