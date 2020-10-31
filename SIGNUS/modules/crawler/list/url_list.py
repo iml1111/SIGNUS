@@ -605,7 +605,7 @@ List = (\
 	'title_tag' : ["교내", "컴퓨터공학과", "공지"], 'login' : 0},\
 	#signus
 	#138 무중력지대
-	{'url': "http://youthzone.kr/program_applies?page=",\
+	{'url': "https://youth.seoul.go.kr/site/youthzone/youth/politics/program/list?cp=",\
 	'info': "sig45_infor_notice",\
 	'title_tag' : ["모집"], 'login' : 0},\
 	#139
