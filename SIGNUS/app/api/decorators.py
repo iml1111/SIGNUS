@@ -31,11 +31,11 @@ def login_optional(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request_optional()
-        if get_jwt_identity():
-            user_id = get_jwt_identity()
+        user_id = get_jwt_identity()
+        if user_id:
             model = User(g.mongo_cur)
             user_info = model.find_one(user_id)
-            if not user_id or not user_info:
+            if not user_info:
                 return {"msg": "Bad Access Token"}, 401
             g.user = user_info
         result = func(*args, **kwargs)

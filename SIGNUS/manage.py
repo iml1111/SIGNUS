@@ -10,6 +10,7 @@ from app import models
 from app.models.mongodb import get_mongo_cur
 from modules.crawler.main_start import main_start as crawler_process
 from modules.background.main import (process_interest,
+                                     process_temp_interest,
                                      process_realtime)
 
 application = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -31,6 +32,11 @@ def crawler_start():
 def run_interest():
     """User interest score measurement."""
     process_interest(config[os.getenv('FLASK_CONFIG') or 'default'])
+
+@application.cli.command()
+def temp_run_interest():
+    """User temp_interest score measurement."""
+    process_temp_interest(config[os.getenv('FLASK_CONFIG') or 'default'])
 
 
 @application.cli.command()
