@@ -30,6 +30,8 @@ def Crawling(URL, db):
 	main_url = URL['url']	#게시판 url 추출 : 페이지 바꾸는 데에 사용
 	page_url = eval(crawling_name + '.Change_page(main_url, page)')	#현재 페이지 포스트 url 반환
 	end_date = date_cut(URL['info'])	# end_date 추출
+	if URL['info'] in ["sig45_external_notice","sig45_review_data"]:
+		return
 	if crawling_name in ["sj4","sj17","sj19","sj20","sj23","sj30","sj34","sj44","sig56"]:		# 제외 게시판
 		return
 	
@@ -60,7 +62,7 @@ def Crawling(URL, db):
 				driver_page = URLparser(page_url)
 			#-------------------------------------------
 			#Selenium을 쓰는 경우----------------------------------------------------------------------------------------------
-			if crawling_name in ["sig26", "sig27", "sig28", "sj29", "sj38", "sj44", "sig50", "sig51", "sig52","sig55","sig56","sig57"]:
+			if crawling_name in ["sig26", "sig27", "sig28", "sj29", "sj38", "sj44", "sig45", "sig50", "sig51", "sig52","sig55","sig56","sig57"]:
 				data = eval(crawling_name + '.Parsing_list_url(URL, page_url, driver)')
 				driver = data[0]
 				post_urls = data[1]
@@ -100,10 +102,9 @@ def Crawling(URL, db):
 			#date 규격은 "0000-00-00 00:00:00"
 			post_data_prepare = []
 			for post_url in post_urls:
-				
 				#Selenium인 경우--------------------------------------------------------------------------------------------------------------------
                 #------------------게시판 규격인 경우
-				if crawling_name in ['sj29', 'sig52']:
+				if crawling_name in ['sj29', 'sig52','sig45']:
 					try:
 						get_post_data = eval(crawling_name + '.Parsing_post_data(driver, post_url, URL)')
 					except:
@@ -219,12 +220,12 @@ def Crawling(URL, db):
 			print("add_OK : ", add_cnt)	#DB에 저장된 게시글 수 출력
 		
 			#dirver 종료 [Selenium 을 사용했을 시]
-			if crawling_name in ["sig26", "sig27", "sig28", "sj29", "sj38", "sj44", "sig50", "sig51", "sig52","sig55","sig56","sig57"]:
+			if crawling_name in ["sig26", "sig27", "sig28", "sj29", "sj38", "sj44", "sig45","sig50", "sig51", "sig52","sig55","sig56","sig57"]:
 				driver.quit()
 			
 			#DB에 추가된 게시글이 0 이면 break, 아니면 다음페이지
 			if add_cnt == 0:
-					break
+				break
 			else:
 				page += 1
 				page_url = eval(crawling_name + '.Change_page(main_url, page)')

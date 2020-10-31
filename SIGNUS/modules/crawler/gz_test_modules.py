@@ -123,7 +123,9 @@ def remove_db_posts(db):
 	# for item in INFO_LIST:
 	# 	db.posts.remove({"info":item})
 	# 	db.recent_post.remove({"info_id":item})
-	db.posts.remove({"info":"sig54_naver_news"})
+	db.posts.remove({"info":"sig45_infor_notice"})
+	db.posts.remove({"info":"sig45_external_notice"})
+	db.posts.remove({"info":"sig45_review_data"})
 #  posts DB삭제
 def drop_db_collection(db):
 	INFO_LIST=["thinkgood_info","campuspick_activity","campuspick_contest","campuspick_language",\
@@ -293,6 +295,7 @@ def retokenizer(db):
 					}
 				}
 			)
+		print(url["info"] + " : 완료!!")
 
 if __name__ == '__main__':
 	database = connect_db()
