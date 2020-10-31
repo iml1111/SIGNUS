@@ -68,7 +68,7 @@ def interest(db, config):
     return len(target_users)
 
 # 예외 함수
-def interest_2(db, config):
+def interest_temp(db, config):
     renewal_time = db['master_config'].find_one({"key": "updated_at"})['value']
     target_users = list(db['user'].find({'updated_at':{'$gt': renewal_time}}))
     categories = list(db['category'].find())
