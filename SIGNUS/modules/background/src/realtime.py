@@ -90,9 +90,12 @@ def realtime(db, config):
         overlap_keyword = list(set(dict(result_keywords)) & set(dict(latest_realtime)))
 
         for keyword in latest_realtime:
+            flag = False
             for overlap in overlap_keyword:
                 if keyword[0] == overlap:
-                    continue
+                    flag = True
+            if flag:
+                continue
             if len(result_keywords) == config.INDICATORS['REALTIME_KEYWORD_LEN']:
                 break
             result_keywords.append([keyword[0], min_value])
