@@ -1,7 +1,7 @@
 # SIGNUS - 대학생을 위한 뉴스피드
 ![img](https://gblobscdn.gitbook.com/assets%2F-MHBtcixyD3pB5WEsMLf%2F-MJzCCiiBrsRdu9_cGtV%2F-MJzFcvBv0K6iac8qhXC%2Fimage.png?alt=media&token=ca209931-afb6-4daa-9657-4048975508bb)
 
-![image](https://user-images.githubusercontent.com/29897277/117573942-b1c77300-b115-11eb-9d9e-66cfeafb5f08.png)
+![image](https://user-images.githubusercontent.com/29897277/117655509-1fd17000-b1d2-11eb-8b41-0f3274522a1a.png)
 
 
 
